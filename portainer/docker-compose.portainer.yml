@@ -2,7 +2,7 @@ version: '3'
 
 services:
   portainer:
-    image: portainer/portainer
+    image: portainer/portainer-ce:${PORTAINER_IMAGE_VERSION:-latest}
     networks:
       - 'srv'
     volumes:
