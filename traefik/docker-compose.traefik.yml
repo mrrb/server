@@ -1,22 +1,25 @@
-version: '2'
+version: '3'
 
 services:
   traefik:
-    image: traefik:${TRAEFIK_IMAGE_VERSION:-v2.7}
+    image: traefik:${TRAEFIK_IMAGE_VERSION:-v2.9}
     command:
-      # Provider
+      # Providers
       - '--providers.docker'
-      - '--providers.docker.exposedbydefault=${TRAEFIK_EXPOSED_BY_DEFAULT:-false}'
-      - '--providers.docker.network=make-my-server_srv'
+      - '--providers.docker.exposedbydefault=${TRAEFIK_DOCKER_EXPOSED_BY_DEFAULT:-false}'
+      - '--providers.docker.network=${TRAEFIK_DOCKER_NETWORK:-traefik}'
+      - '--providers.file'
+      - '--providers.file.directory=/dynamic/'
+      - '--providers.file.watch=true'
       # Entrypoints
       - '--entrypoints.web.address=:${TRAEFIK_WEB_ENTRYPOINT:-80}'
       - '--entrypoints.web.http.redirections.entrypoint.to=websecure'
       - '--entrypoints.websecure.address=:${TRAEFIK_WEBSECURE_ENTRYPOINT:-443}'
       # Let's Encrypt
-      - '--certificatesresolvers.myresolver.acme.email=${ROOT_EMAIL:-changeme@changeme.org}'
-      - '--certificatesresolvers.myresolver.acme.httpchallenge.entrypoint=web'
-      - '--certificatesresolvers.myresolver.acme.httpchallenge=true'
-      - '--entrypoints.websecure.http.tls.certresolver=myresolver'
+      - '--certificatesresolvers.letsEncrypt.acme.email=${ROOT_EMAIL:-changeme@changeme.org}'
+      - '--certificatesresolvers.letsEncrypt.acme.tlschallenge=true'
+      - '--certificatesresolvers.letsEncrypt.acme.storage=/acme.json'
+      - '--entrypoints.websecure.http.tls.certresolver=letsEncrypt'
       # Logs
       - '--accesslog.filepath=/logs/access.log'
       - '--accesslog.format=json'
@@ -28,13 +31,10 @@ services:
       - '--api.dashboard'
       - '--entrypoints.websecure.http.middlewares=compress@file,headers@file${TRAEFIK_PLUGINS:-}'
       - '--experimental.plugins.fail2ban.modulename=github.com/tommoulard/fail2ban'
-      - '--experimental.plugins.fail2ban.version=v0.6.0'
+      - '--experimental.plugins.fail2ban.version=v0.6.6'
       - '--global.checknewversion=${TRAEFIK_CHECK_NEW_VERSION:-false}'
       - '--global.sendanonymoususage=${TRAEFIK_SEND_ANONYMOUS_USAGE:-false}'
-      - '--pilot.token=${TRAEFIK_PILOT_TOKEN:-}'
       - '--ping'
-      - '--providers.file.directory=/dynamic_conf/'
-      - '--providers.file.watch=true'
     ports:
       - '${TRAEFIK_WEB_ENTRYPOINT:-80}:${TRAEFIK_WEB_ENTRYPOINT:-80}'
       - '${TRAEFIK_WEBSECURE_ENTRYPOINT:-443}:${TRAEFIK_WEBSECURE_ENTRYPOINT:-443}'
@@ -48,7 +48,7 @@ services:
       retries: 5
     labels:
       - 'traefik.enable=true'
-      - 'traefik.http.routers.traefik.rule=Host(`traefik.${SITE:-localhost}`)'
+      - 'traefik.http.routers.traefik.rule=Host(`${TRAEFIK_HOST:-traefik.${SITE:-localhost}}`)'
       - 'traefik.http.routers.traefik.service=api@internal'
       - 'traefik.http.routers.traefik.middlewares=basic_auth@docker'
       # Middleware definitions
@@ -57,4 +57,15 @@ services:
     volumes:
       - '/var/run/docker.sock:/var/run/docker.sock'
       - './traefik/logs:/logs'
-      - './traefik/dynamic_conf:/dynamic_conf'
+      - './traefik/dynamic:/dynamic'
+      - './traefik/acme.json:/acme.json'
+    depends_on:
+      traefik-init:
+        condition: service_started
+
+  traefik-init:
+    image: traefik:${TRAEFIK_IMAGE_VERSION:-v2.9}
+    command: |
+      chmod 600 /acme.json
+    volumes:
+      - './traefik/acme.json:/acme.json'
