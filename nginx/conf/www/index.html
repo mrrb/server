@@ -1,2 +1,31 @@
-<h1>Simple web page</h1>
-Hello, World!
+<!DOCTYPE html>
+<html>
+
+<head>
+  <link href="https://fonts.googleapis.com/css?family=Raleway:200" rel="stylesheet">
+  <title>Test page!</title>
+  <style>
+    body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .main_text {
+      text-align: center;
+      font-family: 'Raleway', sans-serif;
+      font-weight: 200;
+      font-size: 30px;
+    }
+  </style>
+</head>
+
+<body>
+  <p class="main_text">1, 2, 3, testing...<br>It works! Hello from <span id="page_url"></span>!</p>
+  <script>
+    url = window.location.href;
+    document.getElementById('page_url').innerHTML = url.replace(/(^\w+:|^)\/\//, '');
+  </script>
+</body>
+
+</html>
