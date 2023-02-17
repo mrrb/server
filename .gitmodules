@@ -1,0 +1,3 @@
+[submodule "refs/make-my-server"]
+	path = refs/make-my-server
+	url = https://github.com/tomMoulard/make-my-server.git
