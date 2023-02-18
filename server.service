@@ -1,0 +1,15 @@
+[Unit]
+Description=Start all the server docker containers
+Requires=docker.service
+After=docker.service
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+WorkingDirectory=/srv/server/
+ExecStart=sh -c 'source /srv/server/.srv_ctrl && server_up'
+ExecStop=sh -c 'source /srv/server/.srv_ctrl && server_down'
+TimeoutStartSec=0
+
+[Install]
+WantedBy=multi-user.target
