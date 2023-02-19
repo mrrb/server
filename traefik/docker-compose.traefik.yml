@@ -54,10 +54,11 @@ services:
       # Middleware definitions
       - 'traefik.http.middlewares.basic_auth.basicauth.users=${USERS}'
       - 'traefik.http.middlewares.basic_auth.basicauth.removeHeader=true'
-      - "traefik.http.middlewares.shadow_auth.basicauth.usersfile=./.shadow"
+      - "traefik.http.middlewares.shadow_auth.basicauth.usersfile=/.shadow"
       - 'traefik.http.middlewares.shadow_auth.basicauth.removeHeader=true'
     volumes:
       - '/var/run/docker.sock:/var/run/docker.sock'
+      - '${USERS_FILE:-./.shadow}:/.shadow:ro'
       - './traefik/logs:/logs'
       - './traefik/dynamic:/dynamic'
       - './traefik/acme.json:/acme.json'
