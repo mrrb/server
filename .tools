@@ -1,0 +1,8 @@
+function sha256_passwd () {
+    if (( $# != 2 )); then
+        >&2 echo "$(basename $0) <user> <password>"
+    else
+        echo -n $1':{SHA256}'
+        echo $2 | sha256sum --zero | cut -d ' ' -f 1
+    fi
+}
