@@ -1,0 +1,21 @@
+version: "3.3"
+
+services:
+  homepage:
+    image: ghcr.io/benphelps/homepage:${HOMEPAGE_IMAGE_VERSION:-latest}
+    networks:
+      - 'srv'
+    restart: always
+    labels:
+      - 'traefik.enable=true'
+      - 'traefik.http.routers.homepage.rule=Host(`${HOMEPAGE_HOST:-dashboard.${SITE:-localhost}}`)'
+      - 'traefik.http.services.homepage.loadbalancer.server.port=3000'
+      - 'traefik.http.routers.homepage.middlewares=basic_auth@docker,shadow_auth@docker'
+    healthcheck:
+      test: ['CMD', 'curl', '0.0.0.0:3000']
+      interval: 10s
+      timeout: 10s
+      retries: 5
+    volumes:
+      - './homepage/config:/app/config'
+      - '/var/run/docker.sock:/var/run/docker.sock:ro'
