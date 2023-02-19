@@ -10,7 +10,7 @@ services:
       - 'traefik.enable=true'
       - 'traefik.http.routers.homepage.rule=Host(`${HOMEPAGE_HOST:-dashboard.${SITE:-localhost}}`)'
       - 'traefik.http.services.homepage.loadbalancer.server.port=3000'
-      - 'traefik.http.routers.homepage.middlewares=basic_auth@docker,shadow_auth@docker'
+      - 'traefik.http.routers.homepage.middlewares=shadow_auth@docker'
     healthcheck:
       test: ['CMD', 'curl', '0.0.0.0:3000']
       interval: 10s
