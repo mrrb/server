@@ -68,3 +68,4 @@ services:
       chmod 600 /acme.json
     volumes:
       - './traefik/acme.json:/acme.json'
+    network_mode: none
