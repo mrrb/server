@@ -54,10 +54,8 @@ services:
       # Middleware definitions
       - 'traefik.http.middlewares.basic_auth.basicauth.users=${USERS}'
       - 'traefik.http.middlewares.basic_auth.basicauth.removeHeader=true'
-      - "traefik.http.middlewares.basic_auth.basicauth.hash=sha1"
       - "traefik.http.middlewares.shadow_auth.basicauth.usersfile=./.shadow"
       - 'traefik.http.middlewares.shadow_auth.basicauth.removeHeader=true'
-      - "traefik.http.middlewares.shadow_auth.basicauth.hash=sha1"
     volumes:
       - '/var/run/docker.sock:/var/run/docker.sock'
       - './traefik/logs:/logs'
