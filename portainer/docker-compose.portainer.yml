@@ -16,7 +16,7 @@ services:
       # Frontend
       - 'traefik.http.routers.portainer.rule=Host(`${PORTAINER_HOST:-portainer.${SITE:-localhost}}`)'
       - 'traefik.http.services.portainer.loadbalancer.server.port=9000'
-      - "traefik.http.routers.portainer.service=frontend"
+      - "traefik.http.routers.portainer.service=portainer"
 
       # Edge
       - 'traefik.http.routers.edge.rule=Host(`${PORTAINER_EDGE_HOST:-edge.${SITE:-localhost}}`)'
