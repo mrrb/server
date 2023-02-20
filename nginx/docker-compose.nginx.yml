@@ -5,6 +5,7 @@ services:
     image: nginx:${NGINX_IMAGE_VERSION:-stable-alpine}
     volumes:
       - './nginx/conf:/etc/nginx/conf.d'
+      - './nginx/www:/srv/www'
       - './nginx/logs:/var/log/nginx/'
     networks:
       - 'srv'
