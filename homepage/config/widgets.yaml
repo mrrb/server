@@ -1,0 +1,21 @@
+- datetime:
+    text_size: xl
+    locale: es
+    format:
+      dateStyle: long
+      timeStyle: long
+
+- search:
+    provider: duckduckgo
+    focus: true
+    target: _blank
+
+- resources:
+    label: System
+    cpu: true
+    memory: true
+
+- resources:
+    label: Storage
+    disk:
+      - /
