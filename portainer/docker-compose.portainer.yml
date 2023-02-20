@@ -1,16 +1,24 @@
-version: '3'
+version: '3.3'
 
 services:
   portainer:
     image: portainer/portainer-ce:${PORTAINER_IMAGE_VERSION:-latest}
     networks:
       - 'srv'
+    command: -H unix:///var/run/docker.sock
     volumes:
       - '/var/run/docker.sock:/var/run/docker.sock'
       - './portainer/data:/data'
     restart: always
     labels:
       - 'traefik.enable=true'
+
+      # Frontend
       - 'traefik.http.routers.portainer.rule=Host(`${PORTAINER_HOST:-portainer.${SITE:-localhost}}`)'
       - 'traefik.http.services.portainer.loadbalancer.server.port=9000'
-      - 'traefik.http.routers.portainer.middlewares=shadow_auth@docker'
+      - "traefik.http.routers.portainer.service=frontend"
+
+      # Edge
+      - 'traefik.http.routers.edge.rule=Host(`${PORTAINER_EDGE_HOST:-edge.${SITE:-localhost}}`)'
+      - "traefik.http.services.edge.loadbalancer.server.port=8000"
+      - "traefik.http.routers.edge.service=edge"
