@@ -1,3 +1,6 @@
 [submodule "refs/make-my-server"]
 	path = refs/make-my-server
 	url = https://github.com/tomMoulard/make-my-server.git
+[submodule "refs/server-private"]
+	path = refs/server-private
+	url = git@github.com:mrrb/server-private.git
