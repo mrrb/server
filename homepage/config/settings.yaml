@@ -1,0 +1,15 @@
+title: BASE Homepage
+
+layout:
+  Media:
+    style: row
+    columns: 4
+
+headerStyle: underlined
+# headerStyle: boxed
+
+base: https://dashboard.localhost/
+
+quicklaunch:
+    searchDescriptions: true
+    hideInternetSearch: true
