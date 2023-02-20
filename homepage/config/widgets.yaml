@@ -5,6 +5,11 @@
       dateStyle: long
       timeStyle: long
 
+- search:
+    provider: duckduckgo
+    focus: true
+    target: _blank
+
 - resources:
     label: System
     cpu: true
