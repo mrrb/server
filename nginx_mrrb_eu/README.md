@@ -1,6 +1,6 @@
 # nginx
 
-https://www.nginx.com/
+[https://www.nginx.com/](https://www.nginx.com/)
 
 Nginx (pronounced "engine X", /ˌɛndʒɪnˈɛks/ EN-jin-EKS), stylized as NGINX
 or nginx or NginX, is a web server that can also be used as a reverse proxy,
