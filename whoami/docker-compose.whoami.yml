@@ -3,6 +3,9 @@ version: "3.3"
 services:
   whoami:
     image: containous/whoami:${WHOAMI_IMAGE_VERSION:-latest}
+    restart: always
+    networks:
+      - 'srv'
     labels:
       - 'traefik.enable=true'
       - 'traefik.http.routers.whoami.rule=Host(`${WHOAMI_HOST:-whoami.${SITE:-localhost}}`)'
