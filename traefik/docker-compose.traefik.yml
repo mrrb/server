@@ -14,10 +14,11 @@ services:
       # Entrypoints
       - '--entrypoints.web.address=:${TRAEFIK_WEB_ENTRYPOINT:-80}'
       - '--entrypoints.web.http.redirections.entrypoint.to=websecure'
+      - '--entrypoints.web.http.redirections.entrypoint.scheme=https'
       - '--entrypoints.websecure.address=:${TRAEFIK_WEBSECURE_ENTRYPOINT:-443}'
       # Enable HTTP/3
       - '--experimental.http3=true'
-      - '--entrypoints.websecure.http3'
+      - '--entrypoints.websecure.http3.advertisedPort=${TRAEFIK_WEBSECURE_ENTRYPOINT:-443}'
       # Let's Encrypt
       - '--certificatesresolvers.letsEncrypt.acme.email=${ROOT_EMAIL:-changeme@changeme.org}'
       - '--certificatesresolvers.letsEncrypt.acme.tlschallenge=true'
