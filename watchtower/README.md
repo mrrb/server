@@ -1,6 +1,6 @@
 # Watchtower
 
-https://containrrr.dev/watchtower/
+[https://containrrr.dev/watchtower/](https://containrrr.dev/watchtower/)
 
 A container-based solution for automating Docker container base image updates.
 
