@@ -7,8 +7,8 @@ After=docker.service
 Type=oneshot
 RemainAfterExit=yes
 WorkingDirectory=/srv/server/
-ExecStart=sh -c 'source /srv/server/.srv_ctrl && server_up'
-ExecStop=sh -c 'source /srv/server/.srv_ctrl && server_down'
+ExecStart=sh -c 'source /srv/server/server.sh && server_up'
+ExecStop=sh -c 'source /srv/server/server.sh && server_down'
 TimeoutStartSec=0
 
 [Install]
