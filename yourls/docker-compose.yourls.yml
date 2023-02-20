@@ -1,0 +1,45 @@
+version: '3.3'
+
+services:
+  yourls:
+    image: yourls:${YOURLS_IMAGE_VERSION:-latest}
+    restart: always
+    networks:
+      - 'srv'
+      - 'yourls-internal'
+    restart: always
+    depends_on:
+      - yourls-db
+    environment:
+      YOURLS_SITE: ${YOURLS_HOST:-yourls.${SITE:-localhost}}
+      YOURLS_DB_NAME: ${YOURLS_MARIADB_DATABASE:-yourls}
+      YOURLS_DB_USER: ${YOURLS_MARIADB_USER:-yourls}
+      YOURLS_DB_PASS: ${YOURLS_MARIADB_PASSWORD:-yourls}
+      YOURLS_USER: ${YOURLS_USER:-admin}
+      YOURLS_PASS: ${YOURLS_PASS:-nimda}
+    labels:
+      - 'traefik.enable=true'
+      - 'traefik.http.routers.framadate.rule=Host(`${YOURLS_HOST:-yourls.${SITE:-localhost}}`)'
+      - 'traefik.http.services.framadate.loadbalancer.server.port=80'
+  yourls-db:
+    image: mariadb:${MARIADB_IMAGE_VERSION:-latest}
+    restart: always
+    healthcheck:
+      test: ['CMD', 'mysqlcheck', '--all-databases', '-ppass']
+      interval: 10s
+      timeout: 10s
+      retries: 5
+    networks:
+      - 'yourls-internal'
+    volumes:
+      - './yourls/db:/var/lib/mysql'
+    labels:
+      - 'traefik.enable=false'
+    environment:
+      MYSQL_ROOT_PASSWORD: ${YOURLS_MARIADB_ROOT_PASSWORD:-pass}
+      MYSQL_PASSWORD: ${YOURLS_MARIADB_PASSWORD:-yourls}
+      MYSQL_DATABASE: ${YOURLS_MARIADB_DATABASE:-yourls}
+      MYSQL_USER: ${YOURLS_MARIADB_USER:-yourls}
+
+networks:
+  yourls-internal:
