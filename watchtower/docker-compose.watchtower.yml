@@ -12,3 +12,8 @@ services:
       traefik.enable: false
     volumes:
       - '/var/run/docker.sock:/var/run/docker.sock'
+    labels:
+      - 'homepage.group=Docker'
+      - 'homepage.name=Watchtower'
+      - 'homepage.icon=watchtower.png'
+      - 'homepage.description=A container-based solution for automating Docker container base image updates'
