@@ -1,4 +1,4 @@
-title: ${HOMEPAGE_TITLE}
+title: ${HOMEPAGE_TITLE:-Homepage}
 
 layout:
   Media:
