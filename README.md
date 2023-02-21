@@ -8,6 +8,12 @@ Base server configuration for all the VPSs/servers
 source server.sh && gen_server_default_env
 ```
 
+## Gen the homepage configuration
+
+```
+source server.sh && gen_homepage_config
+```
+
 ## Start server
 
 ```
