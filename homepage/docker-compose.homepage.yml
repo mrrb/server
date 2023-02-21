@@ -5,6 +5,7 @@ services:
     image: ghcr.io/benphelps/homepage:${HOMEPAGE_IMAGE_VERSION:-latest}
     networks:
       - 'srv'
+      - 'srv-metrics'
     restart: always
     labels:
       - 'traefik.enable=true'

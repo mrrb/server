@@ -3,12 +3,24 @@ version: '3'
 services:
   watchtower:
     image: containrrr/watchtower:${WATCHTOWER_IMAGE_VERSION:-latest}
+    networks:
+      - 'srv-metrics'
     environment:
       WATCHTOWER_CLEANUP: ${WATCHTOWER_CLEANUP:-true}
       WATCHTOWER_ROLLING_RESTART: ${WATCHTOWER_ROLLING_RESTART:-true}
       WATCHTOWER_SCHEDULE: ${WATCHTOWER_SCHEDULE:-'0 0 2 * * *'} # run at 2am everyday
+      WATCHTOWER_HTTP_API_METRICS: ${WATCHTOWER_HTTP_API_METRICS:-true}
+      WATCHTOWER_HTTP_API_TOKEN: ${WATCHTOWER_HTTP_API_TOKEN:-super_fancy_watchtower_token}
     restart: always
     labels:
       traefik.enable: false
     volumes:
       - '/var/run/docker.sock:/var/run/docker.sock'
+    labels:
+      - 'homepage.group=Docker'
+      - 'homepage.name=Watchtower'
+      - 'homepage.icon=watchtower.png'
+      - 'homepage.description=A container-based solution for automating Docker container base image updates.'
+    #   - 'homepage.widget.type=watchtower'
+    #   - 'homepage.widget.url=localhost:8080'
+    #   - 'homepage.widget.key=${WATCHTOWER_HTTP_API_TOKEN:-super_fancy_watchtower_token}'

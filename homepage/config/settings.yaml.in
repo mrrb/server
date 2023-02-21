@@ -1,4 +1,4 @@
-title: ${HOMEPAGE_TITLE}
+title: ${HOMEPAGE_TITLE:-Homepage}
 
 layout:
   Media:
@@ -8,7 +8,7 @@ layout:
 headerStyle: underlined
 # headerStyle: boxed
 
-base: ${HOMEPAGE_HOST}
+base: ${HOMEPAGE_HOST:-dashboard.${SITE:-localhost}}
 
 quicklaunch:
     searchDescriptions: true
