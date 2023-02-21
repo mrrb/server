@@ -61,7 +61,11 @@ services:
       - 'homepage.name=Traefik'
       - 'homepage.icon=traefik.png'
       - 'homepage.href=https://${TRAEFIK_HOST:-traefik.${SITE:-localhost}}'
-      - 'homepage.description=Traefik is an open-source Edge Router that makes publishing your services a fun and easy experience'
+      - 'homepage.description=Traefik is an open-source Edge Router that makes publishing your services a fun and easy experience.'
+      - 'homepage.widget.type=traefik'
+      - 'homepage.widget.url=https://${TRAEFIK_HOST:-traefik.${SITE:-localhost}}'
+      - 'homepage.widget.username=${HOMEPAGE_TRAEFIK_USERNAME}'
+      - 'homepage.widget.password=${HOMEPAGE_TRAEFIK_PASSWORD}'
     volumes:
       - '/var/run/docker.sock:/var/run/docker.sock'
       - '${USERS_FILE:-./.shadow}:/.shadow:ro'

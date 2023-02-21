@@ -19,3 +19,8 @@ services:
       - 'traefik.enable=true'
       - 'traefik.http.routers.nginx.rule=Host(`${NGINX_HOST:-${SITE:-localhost}}`)'
       - 'traefik.http.services.nginx.loadbalancer.server.port=80'
+      - 'homepage.group=Web'
+      - 'homepage.name=NginX'
+      - 'homepage.icon=nginx.png'
+      - 'homepage.href=https://${NGINX_HOST:-${SITE:-localhost}}'
+      - 'homepage.description=Default webserver for the server.'

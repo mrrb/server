@@ -16,4 +16,7 @@ services:
       - 'homepage.group=Docker'
       - 'homepage.name=Watchtower'
       - 'homepage.icon=watchtower.png'
-      - 'homepage.description=A container-based solution for automating Docker container base image updates'
+      - 'homepage.description=A container-based solution for automating Docker container base image updates.'
+      - 'homepage.widget.type=watchtower'
+      - 'homepage.widget.url=${HOMEPAGE_WATCHTOWER_URL:-localhost:8080}'
+      - 'homepage.widget.key=${HOMEPAGE_WATCHTOWER_KEY:-demotoken}'
