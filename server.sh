@@ -8,13 +8,13 @@ _SCRIPTPATH=$(dirname "$_SCRIPT")
 set -a
 _env_default_found=false
 if [ -f '.env.default' ]; then
-  source .env.default
+  source $_SCRIPTPATH/.env.default
   _env_default_found=true
 fi
 
 _env_found=false
 if [ -f '.env' ]; then
-  source .env
+  source $_SCRIPTPATH/.env
   _env_found=true
 fi
 set +a
