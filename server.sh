@@ -4,9 +4,33 @@
 _SCRIPT=$(realpath -s "$0")
 _SCRIPTPATH=$(dirname "$_SCRIPT")
 
+## Load env file(s)
+set -a
+_env_default_found=false
+if [ -f '.env.default' ]; then
+  source .env.default
+  _env_default_found=true
+fi
+
+_env_found=false
+if [ -f '.env' ]; then
+  source .env
+  _env_found=true
+fi
+set +a
+
+
 ## Environment functions
 function gen_server_default_env () {
   "$_SCRIPTPATH/env.py" $(find $_SCRIPTPATH -type f ! -path "*/refs/*" -name 'docker-compose.*.yml') $(find $_SCRIPTPATH/homepage/config -type f ! -path "*/refs/*" -name '*.yaml.in') > "$_SCRIPTPATH/.env.default"
+}
+
+function gen_homepage_config () {
+  for i in $(find $_SCRIPTPATH/homepage/config -type f ! -path "*/refs/*" -name '*.yaml.in')
+  do
+    envsubst < $i > ${i::-3}
+    eval "echo \"$(cat ${i::-3})\"" > ${i::-3}
+  done
 }
 
 ## Crypt functions
@@ -34,16 +58,3 @@ function server_up () {
 function server_down () {
   _srv_docker_compose down
 }
-
-## Load env file(s)
-_env_default_found=false
-if [ -f '.env.default' ]; then
-    source .env.default
-    _env_default_found=true
-fi
-
-_env_found=false
-if [ -f '.env' ]; then
-    source .env
-    _env_found=true
-fi
