@@ -6,7 +6,7 @@ _SCRIPTPATH=$(dirname "$_SCRIPT")
 
 ## Environment functions
 function gen_server_default_env () {
-  "$_SCRIPTPATH/env.py" $(find $_SCRIPTPATH -type f ! -path "refs/*" -name 'docker-compose.*.yml') > "$_SCRIPTPATH.env.default"
+  "$_SCRIPTPATH/env.py" $(find $_SCRIPTPATH -type f ! -path "*/refs/*" -name 'docker-compose.*.yml') $(find $_SCRIPTPATH/homepage/config -type f ! -path "*/refs/*" -name '*.yaml.in') > "$_SCRIPTPATH/.env.default"
 }
 
 ## Crypt functions

@@ -6,7 +6,7 @@
       timeStyle: long
 
 - search:
-    provider: duckduckgo
+    provider: ${HOMEPAGE_SEARCH_PROVIDER:-duckduckgo}
     focus: true
     target: _blank
 
