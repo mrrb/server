@@ -44,6 +44,12 @@ function sha256_passwd () {
 }
 
 ## Control functions
+function _check_create () {
+  if [ ! -e "$1" ] ; then
+    touch "$1"
+  fi
+}
+
 function _srv_docker_compose () {
   _curr_pwd=$(pwd)
   cd $_SCRIPTPATH
@@ -52,8 +58,8 @@ function _srv_docker_compose () {
 }
 
 function server_up () {
-  touch $_SCRIPTPATH/.shadow
-  touch $_SCRIPTPATH/traefik/acme.json
+  _check_create $_SCRIPTPATH/.shadow
+  _check_create $_SCRIPTPATH/traefik/acme.json
   _srv_docker_compose up -d
 }
 
