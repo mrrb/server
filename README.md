@@ -53,3 +53,25 @@ List of files or folders to configure the system
   * [mrrb.eu](https://mrrb.eu) 
 * [YOURLS](yourls)
   * [go.mrrb.eu](https://go.mrrb.eu) 
+
+## First start steps
+
+0. Prerequisites
+   * Docker should be installed and running on the host machine.
+   * Root permissions required.
+1. Go to `/srv/` directory.
+2. Download repo (`sudo git clone https://github.com/mrrb/server.git`), add `--recursive` to download reference repos. CD into it `cd /srv/server/`.
+3. Checkout to VPS1 branch `sudo git checkout vps1`.
+4. Create the `.shadow` file `touch .shadow` and add into it all the required users.
+   * Gen hased user:password strings with `htpasswd -nb USER PASSWORD`.
+   * It should include the user `homepage` to integrate traefik into homepage.
+5. Edit the environment file (`.env`) as requiered.
+   * `HOMEPAGE_TRAEFIK_PASSWORD` and `HOMEPAGE_TRAEFIK_USERNAME` should match the password and user generated previously.
+   * Set `YOURLS_USER` and `YOURLS_PASS`.
+   * `HOMEPAGE_PORTAINER_KEY` can be ignored for the moment.
+6. Gen homepage config files `sudo sh -c 'source /srv/server/server.sh && gen_homepage_config'`.
+7. Copy the SystemD service `sudo cp server.service /usr/lib/systemd/system/server.service` and enable it `sudo systemctl enable --now server.service`.
+8. Check that everything works.
+9.  Go to the portainer page and set it up.
+    * Gen a KEY and save it into the environment file (`HOMEPAGE_PORTAINER_KEY`).
+10. Enjoy 😉.

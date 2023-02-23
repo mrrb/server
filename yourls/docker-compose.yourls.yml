@@ -19,8 +19,8 @@ services:
       YOURLS_PASS: ${YOURLS_PASS:-nimda}
     labels:
       - 'traefik.enable=true'
-      - 'traefik.http.routers.framadate.rule=Host(`${YOURLS_HOST:-yourls.${SITE:-localhost}}`)'
-      - 'traefik.http.services.framadate.loadbalancer.server.port=80'
+      - 'traefik.http.routers.yourls.rule=Host(`${YOURLS_HOST:-yourls.${SITE:-localhost}}`)'
+      - 'traefik.http.services.yourls.loadbalancer.server.port=80'
   yourls-db:
     image: mariadb:${MARIADB_IMAGE_VERSION:-latest}
     restart: always
