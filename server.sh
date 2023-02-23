@@ -7,13 +7,13 @@ _SCRIPTPATH=$(dirname "$_SCRIPT")
 ## Load env file(s)
 set -a
 _env_default_found=false
-if [ -f '.env.default' ]; then
+if [ -f "$_SCRIPTPATH/.env.default" ]; then
   source $_SCRIPTPATH/.env.default
   _env_default_found=true
 fi
 
 _env_found=false
-if [ -f '.env' ]; then
+if [ -f "$_SCRIPTPATH/.env" ]; then
   source $_SCRIPTPATH/.env
   _env_found=true
 fi
@@ -52,6 +52,8 @@ function _srv_docker_compose () {
 }
 
 function server_up () {
+  touch $_SCRIPTPATH/.shadow
+  touch $_SCRIPTPATH/traefik/acme.json
   _srv_docker_compose up -d
 }
 
