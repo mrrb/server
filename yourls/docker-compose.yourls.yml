@@ -11,7 +11,8 @@ services:
     depends_on:
       - yourls-db
     environment:
-      YOURLS_SITE: ${YOURLS_HOST:-yourls.${SITE:-localhost}}
+      YOURLS_SITE: https://${YOURLS_HOST:-yourls.${SITE:-localhost}}
+      YOURLS_DB_HOST: yourls-db
       YOURLS_DB_NAME: ${YOURLS_MARIADB_DATABASE:-yourls}
       YOURLS_DB_USER: ${YOURLS_MARIADB_USER:-yourls}
       YOURLS_DB_PASS: ${YOURLS_MARIADB_PASSWORD:-yourls}
@@ -21,6 +22,12 @@ services:
       - 'traefik.enable=true'
       - 'traefik.http.routers.yourls.rule=Host(`${YOURLS_HOST:-yourls.${SITE:-localhost}}`)'
       - 'traefik.http.services.yourls.loadbalancer.server.port=80'
+      - 'homepage.group=Web'
+      - 'homepage.name=Yourls'
+      - 'homepage.icon=nginx.png'
+      - 'homepage.href=https://${NGINX_HOST:-${SITE:-localhost}}'
+      - 'homepage.description=Default webserver for the server.'
+
   yourls-db:
     image: mariadb:${MARIADB_IMAGE_VERSION:-latest}
     restart: always
@@ -36,10 +43,10 @@ services:
     labels:
       - 'traefik.enable=false'
     environment:
-      MYSQL_ROOT_PASSWORD: ${YOURLS_MARIADB_ROOT_PASSWORD:-pass}
-      MYSQL_PASSWORD: ${YOURLS_MARIADB_PASSWORD:-yourls}
-      MYSQL_DATABASE: ${YOURLS_MARIADB_DATABASE:-yourls}
+      MYSQL_RANDOM_ROOT_PASSWORD: 'yes'
       MYSQL_USER: ${YOURLS_MARIADB_USER:-yourls}
+      MYSQL_DATABASE: ${YOURLS_MARIADB_DATABASE:-yourls}
+      MYSQL_PASSWORD: ${YOURLS_MARIADB_PASSWORD:-yourls}
 
 networks:
   yourls-internal:

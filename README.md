@@ -68,6 +68,7 @@ List of files or folders to configure the system
 5. Edit the environment file (`.env`) as requiered.
    * `HOMEPAGE_TRAEFIK_PASSWORD` and `HOMEPAGE_TRAEFIK_USERNAME` should match the password and user generated previously.
    * Set `YOURLS_USER` and `YOURLS_PASS`.
+   * Set `YOURLS_MARIADB_PASSWORD`.
    * `HOMEPAGE_PORTAINER_KEY` can be ignored for the moment.
 6. Gen homepage config files `sudo sh -c 'source /srv/server/server.sh && gen_homepage_config'`.
 7. Copy the SystemD service `sudo cp server.service /usr/lib/systemd/system/server.service` and enable it `sudo systemctl enable --now server.service`.
