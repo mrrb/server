@@ -32,7 +32,7 @@ services:
     image: mariadb:${MARIADB_IMAGE_VERSION:-latest}
     restart: always
     healthcheck:
-      test: ['CMD', 'mysqlcheck', '--all-databases', '-ppass']
+      test: ['CMD', 'mysqladmin', 'ping', '-h', 'localhost']
       interval: 10s
       timeout: 10s
       retries: 5
