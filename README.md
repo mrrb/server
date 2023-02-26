@@ -65,19 +65,22 @@ List of files or folders to configure the system
    * Root permissions required.
 1. Go to `/srv/` directory.
 2. Download repo (`sudo git clone https://github.com/mrrb/server.git`). CD into it `cd /srv/server/`.
-3. JIC `git submodule update --init --recursive`.
+3. JIC `sudo git submodule update --init --recursive`.
 4. Checkout to VPS1 branch `sudo git checkout vps1`.
-5. Create the `.shadow` file `touch .shadow` and add into it all the required users.
+5. Create the `.shadow` file `sudo touch .shadow` and add into it all the required users.
    * Gen hased user:password strings with `htpasswd -nb USER PASSWORD`.
    * It should include the user `homepage` to integrate traefik into homepage.
-6. Edit the environment file (`.env`) as requiered.
+6. Create the custom environment JSON file `sudo touch env.extra.json` and add the following fields.
    * `HOMEPAGE_TRAEFIK_PASSWORD` and `HOMEPAGE_TRAEFIK_USERNAME` should match the password and user generated previously.
+   * `HOMEPAGE_PORTAINER_KEY` can be defined but ignored for the moment.
    * Set `SHLINK_MARIADB_PASSWORD`.
    * Set `SHLINK_GEOLITE_LICENSE_KEY` (from [maxmind.com](https://maxmind.com)).
-   * `HOMEPAGE_PORTAINER_KEY` can be ignored for the moment.
-7. Gen homepage config files `sudo sh -c 'source /srv/server/server.sh && gen_homepage_config'`.
-8. Copy the SystemD service `sudo cp server.service /usr/lib/systemd/system/server.service` and enable it `sudo systemctl enable --now server.service`.
-9. Check that everything works.
-10. Go to the portainer page and set it up.
-    * Gen a KEY and save it into the environment file (`HOMEPAGE_PORTAINER_KEY`).
-11. Enjoy 😉.
+7. Gen the environtment file `sudo sh -c 'source /srv/server/server.sh && gen_server_env'`
+8. Gen homepage config files `sudo sh -c 'source /srv/server/server.sh && gen_homepage_config'`.
+9. Copy the SystemD service `sudo cp server.service /usr/lib/systemd/system/server.service` and enable it `sudo systemctl enable --now server.service`.
+10. Check that everything works.
+11. Go to the portainer page and set it up.
+    * Gen a KEY and save it into the `env.extra.json` file (`HOMEPAGE_PORTAINER_KEY`).
+    * Regenerate the environment file `sudo sh -c 'source /srv/server/server.sh && gen_server_env'`.
+    * Restart service `sudo systemctl restart server.service`.
+12. Enjoy 😉.
