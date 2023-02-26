@@ -51,7 +51,7 @@ List of files or folders to configure the system
   * [vps1.infra.mrrb.xyz](https://vps1.infra.mrrb.xyz)
 * [Nginx (mrrb.eu)](nginx_mrrb_eu)
   * [mrrb.eu](https://mrrb.eu) 
-* [YOURLS](yourls)
+* [Shlink](shlink)
   * [go.mrrb.eu](https://go.mrrb.eu) 
 
 ## First start steps
@@ -68,8 +68,8 @@ List of files or folders to configure the system
    * It should include the user `homepage` to integrate traefik into homepage.
 6. Edit the environment file (`.env`) as requiered.
    * `HOMEPAGE_TRAEFIK_PASSWORD` and `HOMEPAGE_TRAEFIK_USERNAME` should match the password and user generated previously.
-   * Set `YOURLS_USER` and `YOURLS_PASS`.
-   * Set `YOURLS_MARIADB_PASSWORD`.
+   * Set `SHLINK_MARIADB_PASSWORD`.
+   * Set `SHLINK_GEOLITE_LICENSE_KEY` (from [maxmind.com](https://maxmind.com)).
    * `HOMEPAGE_PORTAINER_KEY` can be ignored for the moment.
 7. Gen homepage config files `sudo sh -c 'source /srv/server/server.sh && gen_homepage_config'`.
 8. Copy the SystemD service `sudo cp server.service /usr/lib/systemd/system/server.service` and enable it `sudo systemctl enable --now server.service`.
