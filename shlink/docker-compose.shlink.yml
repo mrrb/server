@@ -4,6 +4,7 @@ services:
   shlink:
     image: shlinkio/shlink:${SHLINK_IMAGE_VERSION:-stable}
     restart: always
+    container_name: shlink-backend
     networks:
       - 'srv'
       - 'shlink-internal'
@@ -45,6 +46,7 @@ services:
   shlink-db:
     image: mariadb:${MARIADB_IMAGE_VERSION:-latest}
     restart: always
+    container_name: shlink-db
     healthcheck:
       test: ['CMD', 'mysqladmin', 'ping', '-h', 'localhost']
       interval: 10s

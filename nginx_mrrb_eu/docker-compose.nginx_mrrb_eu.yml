@@ -10,6 +10,7 @@ services:
     networks:
       - 'srv'
     restart: always
+    container_name: nginx_mrrb_eu
     healthcheck:
       test: ['CMD', 'curl', '0.0.0.0:80']
       interval: 10s
