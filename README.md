@@ -2,10 +2,16 @@
 
 Base server configuration for all the VPSs/servers
 
-## Get all the enviroment variables
+## Gen the default enviroment file (`.env.default`)
 
 ```
 source server.sh && gen_server_default_env
+```
+
+## Gen the enviroment file (`.env`)
+
+```
+source server.sh && gen_server_env
 ```
 
 ## Gen the homepage configuration
