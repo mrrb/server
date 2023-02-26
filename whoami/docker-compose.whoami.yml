@@ -3,6 +3,7 @@ version: "3.3"
 services:
   whoami:
     image: containous/whoami:${WHOAMI_IMAGE_VERSION:-latest}
+    container_name: whoami
     restart: always
     networks:
       - 'srv'

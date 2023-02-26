@@ -3,6 +3,7 @@ version: '3.3'
 services:
   portainer:
     image: portainer/portainer-ce:${PORTAINER_IMAGE_VERSION:-latest}
+    container_name: portainer
     networks:
       - 'srv'
     command: -H unix:///var/run/docker.sock

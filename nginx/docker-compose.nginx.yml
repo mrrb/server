@@ -3,6 +3,7 @@ version: '3'
 services:
   nginx:
     image: nginx:${NGINX_IMAGE_VERSION:-stable-alpine}
+    container_name: nginx
     volumes:
       - './nginx/conf:/etc/nginx/conf.d'
       - './refs/server-private/page_default/:/srv/www/default'
