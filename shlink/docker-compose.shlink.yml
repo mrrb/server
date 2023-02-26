@@ -35,7 +35,7 @@ services:
       SKIP_INITIAL_GEOLITE_DOWNLOAD: true
     labels:
       - 'traefik.enable=true'
-      - 'traefik.http.routers.shlink-backend.rule=Host(`${SHLINK_HOST:-shlink.${SITE:-localhost}}`) && PathPrefix(`/`)'
+      - "traefik.http.routers.shlink-backend.rule=Host(`${SHLINK_HOST:-shlink.${SITE:-localhost}}`) && PathPrefix(`/`) && !PathPrefix(`/admin`)"
       - 'traefik.http.services.shlink-backend.loadbalancer.server.port=8080'
       - 'traefik.http.middlewares.shlink-strip-admin.stripprefix.prefixes=/admin'
       - 'traefik.http.routers.shlink-backend.middlewares=shlink-strip-admin'
@@ -51,13 +51,12 @@ services:
       - shlink
     labels:
       - 'traefik.enable=true'
-      - 'traefik.http.routers.shlink-gui.rule=Host(`${SHLINK_HOST:-shlink.${SITE:-localhost}}`) && Path(`/admin`)'
-      - 'traefik.http.middlewares.shlink-strip-admin.stripprefix.prefixes=/admin'
-      - 'traefik.http.routers.shlink-gui.middlewares=strip-admin'
+      - 'traefik.http.routers.shlink-gui.rule=Host(`${SHLINK_HOST:-shlink.${SITE:-localhost}}`) && PathPrefix(`/admin`)'
       - 'traefik.http.services.shlink-gui.loadbalancer.server.port=80'
-      - 'traefik.http.middlewares.shlink-redirect-stripped-admin.redirectregex.regex=^https?://${SHLINK_HOST:-shlink.${SITE:-localhost}}/admin/(.*)'
-      - "traefik.http.middlewares.shlink-redirect-stripped-admin.redirectregex.replacement=https://${SHLINK_HOST:-shlink.${SITE:-localhost}}/$${1}"
-      - 'traefik.http.routers.shlink-gui.middlewares=shlink-redirect-stripped-admin@docker,shadow_auth@docker'
+      # - 'traefik.http.middlewares.shlink-gui-rewrite.replacepathregex.regex=/admin/(.*)'
+      # - 'traefik.http.middlewares.shlink-gui-rewrite.replacepathregex.replacement=/$$1'
+      - 'traefik.http.middlewares.shlink-gui-rewrite.stripprefix.prefixes=/admin'
+      - 'traefik.http.routers.shlink-gui.middlewares=shlink-gui-rewrite,shadow_auth@docker'
       - 'homepage.group=Web'
       - 'homepage.name=Shlink admin panel'
       - 'homepage.icon=shlink.png'
