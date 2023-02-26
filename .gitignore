@@ -1,3 +1,10 @@
+# Logs
 *.log
-.env
+
+# Secrets
 .shadow
+
+# Environment
+.env
+env*.json
+!env.json

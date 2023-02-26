@@ -15,6 +15,11 @@ if __name__ == "__main__":
                       help='JSON file with the default variable values',
                       type=str
                       )
+  parser.add_argument('-e', '--extra-values-file',
+                      dest='extra_values_file',
+                      help='JSON file with extra variable values',
+                      type=str
+                      )
   parser.add_argument('files',
                       nargs='+',
                       help='YAML files',
@@ -46,14 +51,22 @@ if __name__ == "__main__":
 
   env_data = {}
   if args.set_value:
-    import json
+    try:
+      import json
 
-    values_file = args.values_file
-    if not values_file:
-      values_file = './env.json'
+      values_file = args.values_file
+      if not values_file:
+        values_file = './env.json'
 
-    with open(values_file) as data:
-        env_data = json.load(data)
+      with open(values_file) as data:
+          env_data = json.load(data)
+
+      extra_values_file = args.extra_values_file
+      if extra_values_file:
+        with open(extra_values_file) as data:
+          env_data = env_data | json.load(data)
+    except:
+      pass
 
   for m in matches:
     print(f"{m}={env_data.get(m) if env_data.get(m) else ''}")
