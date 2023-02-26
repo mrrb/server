@@ -39,6 +39,8 @@ if __name__ == "__main__":
 
           if m < 0:
             break
+          elif m > 0 and line[m-1] == '$':
+            break
           else:
             file_matches.append(line[m:])
             line = line[m+1:]
