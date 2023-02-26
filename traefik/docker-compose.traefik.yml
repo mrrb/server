@@ -3,6 +3,7 @@ version: '3'
 services:
   traefik:
     image: traefik:${TRAEFIK_IMAGE_VERSION:-v2.9}
+    container_name: traefik
     command:
       # Providers
       - '--providers.docker'
@@ -78,6 +79,7 @@ services:
 
   traefik-init:
     image: traefik:${TRAEFIK_IMAGE_VERSION:-v2.9}
+    container_name: traefik-init
     command: |
       chmod 600 /acme.json
     volumes:
