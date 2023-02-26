@@ -59,7 +59,7 @@ if __name__ == "__main__":
         values_file = './env.json'
 
       with open(values_file) as data:
-          env_data = json.load(data)
+        env_data = json.load(data)
 
       extra_values_file = args.extra_values_file
       if extra_values_file:

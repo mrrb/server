@@ -21,8 +21,16 @@ set +a
 
 
 ## Environment functions
+function _gen_server_env () {
+  "$_SCRIPTPATH/env.py" $(find $_SCRIPTPATH -type f ! -path "*/refs/*" -name 'docker-compose.*.yml') $(find $_SCRIPTPATH/homepage/config -type f ! -path "*/refs/*" -name '*.yaml.in') -s -v "$_SCRIPTPATH/env.json" -e "$_SCRIPTPATH/env.extra.json"
+}
+
 function gen_server_default_env () {
-  "$_SCRIPTPATH/env.py" $(find $_SCRIPTPATH -type f ! -path "*/refs/*" -name 'docker-compose.*.yml') $(find $_SCRIPTPATH/homepage/config -type f ! -path "*/refs/*" -name '*.yaml.in') -s -v "$_SCRIPTPATH/env.json" -e "$_SCRIPTPATH/env.extra.json" > "$_SCRIPTPATH/.env.default"
+  _gen_server_env > "$_SCRIPTPATH/.env.default"
+}
+
+function gen_server_env () {
+  _gen_server_env > "$_SCRIPTPATH/.env"
 }
 
 function gen_homepage_config () {
