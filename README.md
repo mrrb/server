@@ -71,7 +71,7 @@ List of files or folders to configure the system
    * Root permissions required.
 1. Go to `/srv/` directory.
 2. Download repo (`sudo git clone https://github.com/mrrb/server.git`). CD into it `cd /srv/server/`.
-3. JIC `sudo git submodule update --init --recursive`.
+3. JIC `sudo git submodule update --init --recursive` and `cd refs/server-private && sudo git lfs install && sudo git lfs fetch && sudo git lfs checkout && cd ../..`.
 4. Checkout to VPS1 branch `sudo git checkout vps1`.
 5. Create the `.shadow` file `sudo touch .shadow` and add into it all the required users.
    * Gen hased user:password strings with `htpasswd -nb USER PASSWORD`.
@@ -86,7 +86,10 @@ List of files or folders to configure the system
 9. Copy the SystemD service `sudo cp server.service /usr/lib/systemd/system/server.service` and enable it `sudo systemctl enable --now server.service`.
 10. Check that everything works.
 11. Go to the portainer page and set it up.
-    * Gen a KEY and save it into the `env.extra.json` file (`HOMEPAGE_PORTAINER_KEY`).
-    * Regenerate the environment file `sudo sh -c 'source /srv/server/server.sh && gen_server_env'`.
-    * Restart service `sudo systemctl restart server.service`.
-12. Enjoy 😉.
+  * Gen a KEY and save it into the `env.extra.json` file (`HOMEPAGE_PORTAINER_KEY`).
+12.  Gen a new shlink API key.
+  * `docker exec -it  shlink-backend shlink api-key:generate`
+  * Add generated key and save it into the `env.extra.json` file (`TBD`).
+13.  Regenerate the environment file `sudo sh -c 'source /srv/server/server.sh && gen_server_env'`.
+14.  Restart service `sudo systemctl restart server.service`.
+15.   Enjoy 😉.
