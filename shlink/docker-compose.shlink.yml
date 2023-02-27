@@ -40,10 +40,10 @@ services:
       - 'traefik.http.services.shlink-backend.loadbalancer.server.port=8080'
       # Homepage
       - 'homepage.group=Web'
-      - 'homepage.name=Shlink admin panel'
+      - 'homepage.name=Shlink [mrrb.eu backend]'
       - 'homepage.icon=shlink.png'
-      - 'homepage.href=https://${SHLINK_GUI_HOST:-admin.shlink.${SITE:-localhost}}'
-      - 'homepage.description=The definitive self-hosted URL shortener.'
+      - 'homepage.href=https://${SHLINK_HOST:-shlink.${SITE:-localhost}}'
+      - 'homepage.description=The definitive self-hosted URL shortener [mrrb.eu backend].'
 
   shlink-web-client:
     image: shlinkio/shlink-web-client:${SHLINK_IMAGE_VERSION:-stable}
@@ -60,7 +60,7 @@ services:
       - 'traefik.http.routers.shlink-gui.middlewares=shadow_auth@docker'
       # Homepage
       - 'homepage.group=Web'
-      - 'homepage.name=Shlink admin panel'
+      - 'homepage.name=Shlink [admin panel]'
       - 'homepage.icon=shlink.png'
       - 'homepage.href=https://${SHLINK_GUI_HOST:-admin.shlink.${SITE:-localhost}}'
       - 'homepage.description=The definitive self-hosted URL shortener.'
