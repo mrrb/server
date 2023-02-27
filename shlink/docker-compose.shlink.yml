@@ -36,7 +36,7 @@ services:
     labels:
       # Traefik
       - 'traefik.enable=true'
-      - "traefik.http.routers.shlink-backend.rule=Host(`${SHLINK_HOST:-shlink.${SITE:-localhost}}`)"
+      - 'traefik.http.routers.shlink-backend.rule=Host(`${SHLINK_HOST:-shlink.${SITE:-localhost}}`)'
       - 'traefik.http.services.shlink-backend.loadbalancer.server.port=8080'
       # Homepage
       - 'homepage.group=Web'
@@ -46,7 +46,7 @@ services:
       - 'homepage.description=The definitive self-hosted URL shortener [mrrb.eu backend].'
 
   shlink-web-client:
-    image: shlinkio/shlink-web-client:${SHLINK_IMAGE_VERSION:-stable}
+    image: shlinkio/shlink-web-client:${SHLINK_WEB_IMAGE_VERSION:-stable}
     restart: always
     container_name: shlink-gui
     networks:
