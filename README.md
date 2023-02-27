@@ -61,9 +61,8 @@ List of files or folders to configure the system
   * [vps1.infra.mrrb.xyz](https://vps1.infra.mrrb.xyz)
 * [Nginx (mrrb.eu)](nginx_mrrb_eu)
   * [mrrb.eu](https://mrrb.eu) 
-* [Shlink](shlink)
+* [simply-shorten](simply-shorten)
   * [go.mrrb.eu](https://go.mrrb.eu) 
-  * [admin.go.mrrb.eu](https://admin.go.mrrb.eu) 
 
 ## First start steps
 
@@ -80,17 +79,13 @@ List of files or folders to configure the system
 6. Create the custom environment JSON file `sudo touch env.extra.json` and add the following fields.
    * `HOMEPAGE_TRAEFIK_PASSWORD` and `HOMEPAGE_TRAEFIK_USERNAME` should match the password and user generated previously.
    * `HOMEPAGE_PORTAINER_KEY` can be defined but ignored for the moment.
-   * Set `SHLINK_MARIADB_PASSWORD`.
-   * Set `SHLINK_GEOLITE_LICENSE_KEY` (from [maxmind.com](https://maxmind.com)).
+   * Set `SIMPLYSHORTEN_USER` and `SIMPLYSHORTEN_PASS`.
 7. Gen the environtment file `sudo sh -c 'source /srv/server/server.sh && gen_server_env'`
 8. Gen homepage config files `sudo sh -c 'source /srv/server/server.sh && gen_homepage_config'`.
 9. Copy the SystemD service `sudo cp server.service /usr/lib/systemd/system/server.service` and enable it `sudo systemctl enable --now server.service`.
 10. Check that everything works.
 11. Go to the portainer page and set it up.
   * Gen a KEY and save it into the `env.extra.json` file (`HOMEPAGE_PORTAINER_KEY`).
-12.  Gen a new shlink API key.
-  * `docker exec -it  shlink-backend shlink api-key:generate`
-  * Create a new server in `admin.go.mrrb.eu` adding the generated key.
-13.  Regenerate the environment file `sudo sh -c 'source /srv/server/server.sh && gen_server_env'`.
-14.  Restart service `sudo systemctl restart server.service`.
-15.   Enjoy 😉.
+12.  Regenerate the environment file `sudo sh -c 'source /srv/server/server.sh && gen_server_env'`.
+13.  Restart service `sudo systemctl restart server.service`.
+14.   Enjoy 😉.
