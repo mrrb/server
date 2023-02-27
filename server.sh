@@ -68,6 +68,7 @@ function _srv_docker_compose () {
 function server_up () {
   _check_create $_SCRIPTPATH/.shadow
   _check_create $_SCRIPTPATH/traefik/acme.json
+  _check_create $_SCRIPTPATH/shlink/servers.json
   _srv_docker_compose up -d
 }
 

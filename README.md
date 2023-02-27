@@ -63,6 +63,7 @@ List of files or folders to configure the system
   * [mrrb.eu](https://mrrb.eu) 
 * [Shlink](shlink)
   * [go.mrrb.eu](https://go.mrrb.eu) 
+  * [admin.go.mrrb.eu](https://admin.go.mrrb.eu) 
 
 ## First start steps
 
@@ -89,7 +90,7 @@ List of files or folders to configure the system
   * Gen a KEY and save it into the `env.extra.json` file (`HOMEPAGE_PORTAINER_KEY`).
 12.  Gen a new shlink API key.
   * `docker exec -it  shlink-backend shlink api-key:generate`
-  * Add generated key and save it into the `env.extra.json` file (`TBD`).
+  * Create a new server in `admin.go.mrrb.eu` adding the generated key.
 13.  Regenerate the environment file `sudo sh -c 'source /srv/server/server.sh && gen_server_env'`.
 14.  Restart service `sudo systemctl restart server.service`.
 15.   Enjoy 😉.
