@@ -35,10 +35,10 @@ services:
       SKIP_INITIAL_GEOLITE_DOWNLOAD: true
     labels:
       - 'traefik.enable=true'
-      - "traefik.http.routers.shlink-backend.rule=Host(`${SHLINK_HOST:-shlink.${SITE:-localhost}}`) && !PathPrefix(`/admin`) && !PathPrefix(`/assets`) && !PathPrefix(`/servers.json`)"
+      - "traefik.http.routers.shlink-backend.rule=Host(`${SHLINK_HOST:-shlink.${SITE:-localhost}}`) && PathPrefix(`/`) && !PathPrefix(`/admin`)"
       - 'traefik.http.services.shlink-backend.loadbalancer.server.port=8080'
-      # - 'traefik.http.middlewares.shlink-strip-admin.stripprefix.prefixes=/admin'
-      # - 'traefik.http.routers.shlink-backend.middlewares=shlink-strip-admin'
+      - 'traefik.http.middlewares.shlink-strip-admin.stripprefix.prefixes=/admin'
+      - 'traefik.http.routers.shlink-backend.middlewares=shlink-strip-admin'
 
   shlink-web-client:
     image: shlinkio/shlink-web-client:${SHLINK_IMAGE_VERSION:-stable}
@@ -51,7 +51,7 @@ services:
       - shlink
     labels:
       - 'traefik.enable=true'
-      - 'traefik.http.routers.shlink-gui.rule=Host(`${SHLINK_HOST:-shlink.${SITE:-localhost}}`) && (PathPrefix(`/admin`) || PathPrefix(`/assets`) || PathPrefix(`/servers.json`))'
+      - 'traefik.http.routers.shlink-gui.rule=Host(`${SHLINK_HOST:-shlink.${SITE:-localhost}}`) && PathPrefix(`/admin`)'
       - 'traefik.http.services.shlink-gui.loadbalancer.server.port=80'
       # - 'traefik.http.middlewares.shlink-gui-rewrite.replacepathregex.regex=/admin/(.*)'
       # - 'traefik.http.middlewares.shlink-gui-rewrite.replacepathregex.replacement=/$$1'
