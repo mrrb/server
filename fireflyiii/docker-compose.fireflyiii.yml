@@ -58,6 +58,9 @@ services:
       - 'homepage.icon=firefly.png'
       - 'homepage.href=https://${FIREFLYIII_HOST:-firefly.${SITE:-localhost}}'
       - 'homepage.description=A free and open source personal finance manager.'
+    depends_on:
+      fireflyiii-db:
+        condition: service_started
 
   fireflyiii-db:
     image: mariadb:${MARIADB_IMAGE_VERSION:-latest}
@@ -89,6 +92,9 @@ services:
     command: sh -c "echo \"0 3 * * * wget -qO- http://fireflyiii:8080/api/v1/cron/${FIREFLYIII_STATIC_CRON_TOKEN:-somerandomstringof32charsEXACTLY}\" | crontab - && crond -f -L /dev/stdout"
     labels:
       - 'traefik.enable=false'
+    depends_on:
+      fireflyiii:
+        condition: service_started
 
 networks:
   fireflyiii-internal:
