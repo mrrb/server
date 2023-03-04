@@ -5,7 +5,7 @@ services:
     image: draganczukp/simply-shorten:${SIMPLYSHORTEN_IMAGE_VERSION:-latest}
     container_name: simply-shorten
     networks:
-      - 'srv'
+      - 'server'
     restart: always
     environment:
       - username=${SIMPLYSHORTEN_USER:-username}

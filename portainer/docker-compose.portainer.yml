@@ -5,7 +5,7 @@ services:
     image: portainer/portainer-ce:${PORTAINER_IMAGE_VERSION:-latest}
     container_name: portainer
     networks:
-      - 'srv'
+      - 'server'
     command: -H unix:///var/run/docker.sock
     volumes:
       - '/var/run/docker.sock:/var/run/docker.sock'

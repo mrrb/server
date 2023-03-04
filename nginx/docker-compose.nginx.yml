@@ -9,7 +9,7 @@ services:
       - './refs/server-private/page_default/:/srv/www/default'
       - './nginx/logs:/var/log/nginx/'
     networks:
-      - 'srv'
+      - 'server'
     restart: always
     healthcheck:
       test: ['CMD', 'curl', '0.0.0.0:80']

@@ -6,9 +6,10 @@ services:
     container_name: fireflyiii
     volumes:
       - './fireflyiii/files/upload/:/var/www/html/storage/upload'
+      - './fireflyiii/files/export/:/var/www/html/storage/export'
       - './fireflyiii/db.sqlite:/var/www/html/storage/database/database.sqlite'
     networks:
-      - 'srv'
+      - 'server'
       - 'fireflyiii-internal'
     restart: always
     healthcheck:
@@ -86,3 +87,5 @@ services:
 
 networks:
   fireflyiii-internal:
+    name: fireflyiii-internal
+    external: false

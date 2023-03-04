@@ -6,7 +6,7 @@ services:
     container_name: whoami
     restart: always
     networks:
-      - 'srv'
+      - 'server'
     labels:
       - 'traefik.enable=true'
       - 'traefik.http.routers.whoami.rule=Host(`${WHOAMI_HOST:-whoami.${SITE:-localhost}}`)'

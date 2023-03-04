@@ -4,7 +4,7 @@ services:
   watchtower:
     image: containrrr/watchtower:${WATCHTOWER_IMAGE_VERSION:-latest}
     networks:
-      - 'srv-metrics'
+      - 'server-metrics'
     container_name: watchtower
     environment:
       WATCHTOWER_CLEANUP: ${WATCHTOWER_CLEANUP:-true}

@@ -1,5 +1,7 @@
 version: '3'
 
 networks:
-  srv:
-  srv-metrics:
+  server:
+    name: server
+  server-metrics:
+    name: server-metrics
