@@ -5,8 +5,8 @@ services:
     image: fireflyiii/core:${FIREFLYIII_IMAGE_VERSION:-latest}
     container_name: fireflyiii
     volumes:
-      - ./fireflyiii/files/upload/:/var/www/html/storage/upload
-      - ./fireflyiii/db.sqlite:/storage/database/database.sqlite
+      - './fireflyiii/files/upload/:/var/www/html/storage/upload'
+      - './fireflyiii/db.sqlite:/storage/database/database.sqlite'
     networks:
       - 'srv'
       - 'fireflyiii-internal'
@@ -55,6 +55,18 @@ services:
       - 'homepage.icon=firefly.png'
       - 'homepage.href=https://${FIREFLYIII_HOST:-firefly.${SITE:-localhost}}'
       - 'homepage.description=A free and open source personal finance manager.'
+    depends_on:
+      fireflyiii-init:
+        condition: service_started
+
+  fireflyiii-init:
+    extends: fireflyiii
+    image: fireflyiii/core:${FIREFLYIII_IMAGE_VERSION:-latest}
+    container_name: fireflyiii-init
+    command: 'cd /var/www/html && php artisan migrate --seed && php artisan firefly-iii:upgrade-database'
+    volumes:
+      - './fireflyiii/db.sqlite:/storage/database/database.sqlite'
+    network_mode: none
 
   fireflyiii-cron:
     image: alpine:${ALPINE_IMAGE_VERSION:-latest}
