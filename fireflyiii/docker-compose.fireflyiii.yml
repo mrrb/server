@@ -1,0 +1,91 @@
+version: '3'
+
+services:
+  fireflyiii:
+    image: fireflyiii/core:${FIREFLYIII_IMAGE_VERSION:-latest}
+    container_name: fireflyiii
+    volumes:
+      - ./fireflyiii/files/upload/:/var/www/html/storage/upload
+    networks:
+      - 'srv'
+      - 'fireflyiii-internal'
+    restart: always
+    healthcheck:
+      test: ['CMD', 'curl', '0.0.0.0:8080']
+      interval: 10s
+      timeout: 10s
+      retries: 5
+    environment:
+      - APP_URL: https://${FIREFLYIII_HOST:-firefly.${SITE:-localhost}}
+      - APP_KEY: ${FIREFLYIII_APP_KEY:-SomeRandomStringOf32CharsEXACTLY}
+      - STATIC_CRON_TOKEN: ${FIREFLYIII_STATIC_CRON_TOKEN:-somerandomstringof32charsEXACTLY}
+      - APP_ENV: local
+      - APP_DEBUG: false
+      - SITE_OWNER: ${ROOT_EMAIL:-changeme@changeme.org}
+      - TRUSTED_PROXIES: '**'
+      - DEFAULT_LANGUAGE: ${FIREFLYIII_DEFAULT_LANGUAGE:-en_US}
+      - DEFAULT_LOCALE: ${FIREFLYIII_DEFAULT_LOCALE:-es_ES}
+      - TZ: ${TIMEZONE:-Europe/Madrid}
+
+      - DB_CONNECTION: mysql
+      - DB_HOST: fireflyiii-db
+      - DB_DATABASE: ${FIREFLYIII_MARIADB_DATABASE:-firefly}
+      - DB_USERNAME: ${FIREFLYIII_MARIADB_USER:-firefly}
+      - DB_PASSWORD: ${FIREFLYIII_MARIADB_PASSWORD:-fireflyiii}
+
+      - MAIL_MAILER: ${FIREFLYIII_MAIL_MAILER:-smtp}
+      - MAIL_HOST: ${MAIL_HOST:-mail.localhost}
+      - MAIL_PORT: ${MAIL_PORT:-587}
+      - MAIL_FROM: ${MAIL_FROM:-me@mail.localhost}
+      - MAIL_USERNAME: ${MAIL_USERNAME:-me@mail.localhost}
+      - MAIL_PASSWORD: ${MAIL_PASSWORD:-mail_password}
+      - MAIL_ENCRYPTION: ${MAIL_ENCRYPTION:-tls}
+
+      - ENABLE_EXTERNAL_MAP: ${FIREFLYIII_ENABLE_EXTERNAL_MAP:-true}
+      - ENABLE_EXTERNAL_RATES: ${FIREFLYIII_ENABLE_EXTERNAL_RATES:-true}
+
+      - MAP_DEFAULT_LAT: ${FIREFLYIII_MAP_DEFAULT_LAT:-40.41663}
+      - MAP_DEFAULT_LONG: ${FIREFLYIII_MAP_DEFAULT_LONG:--3.7038}
+    labels:
+      - 'traefik.enable=true'
+      - 'traefik.http.routers.fireflyiii.rule=Host(`${FIREFLYIII_HOST:-firefly.${SITE:-localhost}}`)'
+      - 'traefik.http.services.fireflyiii.loadbalancer.server.port=8080'
+      - 'homepage.group=Web'
+      - 'homepage.name=Firefly III'
+      - 'homepage.icon=firefly.png'
+      - 'homepage.href=https://${FIREFLYIII_HOST:-firefly.${SITE:-localhost}}'
+      - 'homepage.description=A free and open source personal finance manager.'
+
+  fireflyiii-db:
+    image: mariadb:${MARIADB_IMAGE_VERSION:-latest}
+    restart: always
+    container_name: fireflyiii-db
+    healthcheck:
+      test: ['CMD', 'mysqladmin', 'ping', '-h', 'localhost']
+      interval: 10s
+      timeout: 10s
+      retries: 5
+    networks:
+      - 'fireflyiii-internal'
+    volumes:
+      - './fireflyiii/db:/var/lib/mysql'
+    labels:
+      - 'traefik.enable=false'
+    environment:
+      MYSQL_RANDOM_ROOT_PASSWORD: 'yes'
+      MYSQL_USER: ${FIREFLYIII_MARIADB_USER:-fireflyiii}
+      MYSQL_DATABASE: ${FIREFLYIII_MARIADB_DATABASE:-fireflyiii}
+      MYSQL_PASSWORD: ${FIREFLYIII_MARIADB_PASSWORD:-fireflyiii}
+
+
+  fireflyiii-cron:
+    image: alpine:${ALPINE_IMAGE_VERSION:-latest}
+    container_name: fireflyiii-cron
+    networks:
+      - 'fireflyiii-internal'
+    command: sh -c "echo \"0 3 * * * wget -qO- http://fireflyiii:8080/api/v1/cron/${FIREFLYIII_STATIC_CRON_TOKEN:-somerandomstringof32charsEXACTLY}\" | crontab - && crond -f -L /dev/stdout"
+    labels:
+      - 'traefik.enable=false'
+
+networks:
+  fireflyiii-internal:
