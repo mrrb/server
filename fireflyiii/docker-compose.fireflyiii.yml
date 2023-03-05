@@ -14,39 +14,45 @@ services:
     restart: always
     healthcheck:
       test: ['CMD', 'curl', '0.0.0.0:8080']
-      interval: 10s
-      timeout: 10s
+      start_period: 60s
+      interval: 30s
+      timeout: 60s
       retries: 5
     environment:
       # App config
       APP_URL: 'https://${FIREFLYIII_HOST:-firefly.${SITE:-localhost}}'
-      APP_KEY: '${FIREFLYIII_APP_KEY:-SomeRandomStringOf32CharsEXACTLY}'
-      STATIC_CRON_TOKEN: '${FIREFLYIII_STATIC_CRON_TOKEN:-somerandomstringof32charsEXACTLY}'
-      APP_ENV: 'local'
-      APP_DEBUG: 'false'
+      APP_KEY: ${FIREFLYIII_APP_KEY:-SomeRandomStringOf32CharsEXACTLY}
+      STATIC_CRON_TOKEN: ${FIREFLYIII_STATIC_CRON_TOKEN:-somerandomstringof32charsEXACTLY}
+      APP_ENV: local
+      APP_DEBUG: false
       SITE_OWNER: '${ROOT_EMAIL:-changeme@changeme.org}'
-      TRUSTED_PROXIES: '**'
+      TRUSTED_PROXIES: **
       DEFAULT_LANGUAGE: '${FIREFLYIII_DEFAULT_LANGUAGE:-en_US}'
       DEFAULT_LOCALE: '${FIREFLYIII_DEFAULT_LOCALE:-es_ES}'
       TZ: '${TIMEZONE:-Europe/Madrid}'
 
       # DB config
-      DB_CONNECTION: 'sqlite'
+      DB_CONNECTION: 'pgsql'
+      DB_HOST: 'fireflyiii-db'
+      DB_PORT: 5432
+      DB_DATABASE: '${FIREFLYIII_PGSQL_DATABASE:-firefly}'
+      DB_USERNAME: '${FIREFLYIII_PGSQL_USER:-firefly}'
+      DB_PASSWORD: '${FIREFLYIII_PGSQL_PASSWORD:-fireflyiii}'
 
       # Mail config
       MAIL_MAILER: '${FIREFLYIII_MAIL_MAILER:-smtp}'
       MAIL_HOST: '${MAIL_HOST:-mail.localhost}'
-      MAIL_PORT: '${MAIL_PORT:-587}'
+      MAIL_PORT: ${MAIL_PORT:-587}
       MAIL_FROM: '${MAIL_FROM:-me@mail.localhost}'
       MAIL_USERNAME: '${MAIL_USERNAME:-me@mail.localhost}'
       MAIL_PASSWORD: '${MAIL_PASSWORD:-mail_password}'
-      MAIL_ENCRYPTION: '${MAIL_ENCRYPTION:-tls}'
+      MAIL_ENCRYPTION: ${MAIL_ENCRYPTION:-tls}
 
       # Other config
-      ENABLE_EXTERNAL_MAP: '${FIREFLYIII_ENABLE_EXTERNAL_MAP:-true}'
-      ENABLE_EXTERNAL_RATES: '${FIREFLYIII_ENABLE_EXTERNAL_RATES:-true}'
-      MAP_DEFAULT_LAT: '${FIREFLYIII_MAP_DEFAULT_LAT:-40.41663}'
-      MAP_DEFAULT_LONG: '${FIREFLYIII_MAP_DEFAULT_LONG:--3.7038}'
+      ENABLE_EXTERNAL_MAP: ${FIREFLYIII_ENABLE_EXTERNAL_MAP:-true}
+      ENABLE_EXTERNAL_RATES: ${FIREFLYIII_ENABLE_EXTERNAL_RATES:-true}
+      MAP_DEFAULT_LAT: ${FIREFLYIII_MAP_DEFAULT_LAT:-40.41663}
+      MAP_DEFAULT_LONG: ${FIREFLYIII_MAP_DEFAULT_LONG:--3.7038}
     labels:
       - 'traefik.enable=true'
       - 'traefik.http.routers.fireflyiii.rule=Host(`${FIREFLYIII_HOST:-firefly.${SITE:-localhost}}`)'
@@ -56,22 +62,25 @@ services:
       - 'homepage.icon=firefly.png'
       - 'homepage.href=https://${FIREFLYIII_HOST:-firefly.${SITE:-localhost}}'
       - 'homepage.description=A free and open source personal finance manager.'
-  #   depends_on:
-  #     fireflyiii-init:
-  #       condition: service_started
 
-  # fireflyiii-init:
-  #   image: fireflyiii/core:${FIREFLYIII_IMAGE_VERSION:-latest}
-  #   container_name: fireflyiii-init
-  #   command: 'cd /var/www/html && php artisan migrate --seed && php artisan firefly-iii:upgrade-database'
-  #   volumes:
-  #     - './fireflyiii/db.sqlite:/var/www/html/storage/database/database.sqlite'
-  #   environment:
-  #     APP_URL: 'https://${FIREFLYIII_HOST:-firefly.${SITE:-localhost}}'
-  #     APP_KEY: '${FIREFLYIII_APP_KEY:-SomeRandomStringOf32CharsEXACTLY}'
-  #     SITE_OWNER: '${ROOT_EMAIL:-changeme@changeme.org}'
-  #     DB_CONNECTION: 'sqlite'
-  #   network_mode: none
+  fireflyiii-db:
+    image: postgres:${POSTGRES_IMAGE_VERSION:-alpine}
+    restart: always
+    container_name: fireflyiii-db
+    healthcheck:
+      test: ['CMD', 'pg_isready', '-d', '${FIREFLYIII_PGSQL_DATABASE:-firefly}']
+      start_period: 60s
+      interval: 30s
+      timeout: 60s
+      retries: 5
+    networks:
+      - 'fireflyiii-internal'
+    volumes:
+      - './fireflyiii/db:/var/lib/postgresql/data'
+    environment:
+      POSTGRES_USER: '${FIREFLYIII_PGSQL_USER:-firefly}'
+      POSTGRES_DB: '${FIREFLYIII_PGSQL_DATABASE:-firefly}'
+      POSTGRES_PASSWORD: '${FIREFLYIII_PGSQL_PASSWORD:-fireflyiii}'
 
   fireflyiii-cron:
     image: alpine:${ALPINE_IMAGE_VERSION:-latest}
