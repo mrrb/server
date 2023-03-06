@@ -83,7 +83,7 @@ List of files or folders to configure the system
    * `HOMEPAGE_PORTAINER_KEY` can be defined but ignored for the moment.
    * Set `SIMPLYSHORTEN_USER` and `SIMPLYSHORTEN_PASS`.
    * Set API keys `FIREFLYIII_APP_KEY` and `FIREFLYIII_STATIC_CRON_TOKEN` (32 long strings).
-   * Set `FIREFLYIII_PGSQL_PASSWORD`.
+   * Set `FIREFLYIII_MARIADB_PASSWORD`.
    * Set mail vars `MAIL_ENCRYPTION`, `MAIL_FROM`, `MAIL_HOST`, `MAIL_PASSWORD`, `MAIL_PORT` and `MAIL_USERNAME`.
 7. Gen the environtment file `sudo sh -c 'source /srv/server/server.sh && gen_server_env'`
 8. Gen homepage config files `sudo sh -c 'source /srv/server/server.sh && gen_homepage_config'`.
