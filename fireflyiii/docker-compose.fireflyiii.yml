@@ -26,7 +26,7 @@ services:
       APP_ENV: local
       APP_DEBUG: false
       SITE_OWNER: '${ROOT_EMAIL:-changeme@changeme.org}'
-      TRUSTED_PROXIES: **
+      TRUSTED_PROXIES: '**'
       DEFAULT_LANGUAGE: '${FIREFLYIII_DEFAULT_LANGUAGE:-en_US}'
       DEFAULT_LOCALE: '${FIREFLYIII_DEFAULT_LOCALE:-es_ES}'
       TZ: '${TIMEZONE:-Europe/Madrid}'
@@ -67,6 +67,7 @@ services:
     image: postgres:${POSTGRES_IMAGE_VERSION:-alpine}
     restart: always
     container_name: fireflyiii-db
+    user: 1000:1000
     healthcheck:
       test: ['CMD', 'pg_isready', '-d', '${FIREFLYIII_PGSQL_DATABASE:-firefly}']
       start_period: 60s
@@ -81,6 +82,8 @@ services:
       POSTGRES_USER: '${FIREFLYIII_PGSQL_USER:-firefly}'
       POSTGRES_DB: '${FIREFLYIII_PGSQL_DATABASE:-firefly}'
       POSTGRES_PASSWORD: '${FIREFLYIII_PGSQL_PASSWORD:-fireflyiii}'
+    labels:
+      - 'traefik.enable=false'
 
   fireflyiii-cron:
     image: alpine:${ALPINE_IMAGE_VERSION:-latest}
