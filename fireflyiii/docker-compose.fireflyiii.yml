@@ -7,7 +7,6 @@ services:
     volumes:
       - './fireflyiii/files/upload/:/var/www/html/storage/upload'
       - './fireflyiii/files/export/:/var/www/html/storage/export'
-      - './fireflyiii/db.sqlite:/var/www/html/storage/database/database.sqlite'
     networks:
       - 'server'
       - 'fireflyiii-internal'
@@ -26,13 +25,14 @@ services:
       APP_ENV: local
       APP_DEBUG: false
       SITE_OWNER: '${ROOT_EMAIL:-changeme@changeme.org}'
-      TRUSTED_PROXIES: '**'
+      TRUSTED_PROXIES: '*'
       DEFAULT_LANGUAGE: '${FIREFLYIII_DEFAULT_LANGUAGE:-en_US}'
       DEFAULT_LOCALE: '${FIREFLYIII_DEFAULT_LOCALE:-es_ES}'
       TZ: '${TIMEZONE:-Europe/Madrid}'
 
       # DB config
       DB_CONNECTION: 'mysql'
+      DB_HOST: 'fireflyiii-db'
       DB_PORT: 3306
       DB_DATABASE: '${FIREFLYIII_MARIADB_DATABASE:-firefly}'
       DB_USERNAME: '${FIREFLYIII_MARIADB_USER:-firefly}'
@@ -100,4 +100,5 @@ services:
 networks:
   fireflyiii-internal:
     name: fireflyiii-internal
+    driver: bridge
     external: false
