@@ -42,7 +42,7 @@ services:
       - '${TRAEFIK_WEB_ENTRYPOINT:-80}:${TRAEFIK_WEB_ENTRYPOINT:-80}'
       - '${TRAEFIK_WEBSECURE_ENTRYPOINT:-443}:${TRAEFIK_WEBSECURE_ENTRYPOINT:-443}'
     networks:
-      - 'srv'
+      - 'server'
     restart: always
     healthcheck:
       test: ['CMD', 'traefik', 'healthcheck', '--ping']

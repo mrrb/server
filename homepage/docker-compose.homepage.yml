@@ -5,8 +5,8 @@ services:
     image: ghcr.io/benphelps/homepage:${HOMEPAGE_IMAGE_VERSION:-latest}
     container_name: homepage
     networks:
-      - 'srv'
-      - 'srv-metrics'
+      - 'server'
+      - 'server-metrics'
     restart: always
     labels:
       - 'traefik.enable=true'
