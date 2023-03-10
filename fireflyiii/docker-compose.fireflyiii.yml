@@ -57,8 +57,6 @@ services:
     labels:
       - 'traefik.enable=true'
       - 'traefik.http.routers.fireflyiii.rule=Host(`${FIREFLYIII_HOST:-firefly.${SITE:-localhost}}`)'
-      # - 'traefik.http.routers.fireflyiii.tls=true'
-      # - 'traefik.http.routers.fireflyiii.entrypoints=https'
       - 'traefik.http.services.fireflyiii.loadbalancer.server.port=8080'
       - 'homepage.group=Web'
       - 'homepage.name=Firefly III'
@@ -91,18 +89,6 @@ services:
       TZ: '${TIMEZONE:-Europe/Madrid}'
     labels:
       - 'traefik.enable=false'
-
-  fireflyiii-cron:
-    image: alpine:${ALPINE_IMAGE_VERSION:-latest}
-    container_name: fireflyiii-cron
-    networks:
-      - 'fireflyiii-internal'
-    command: sh -c "echo \"0 3 * * * wget -qO- http://fireflyiii:8080/api/v1/cron/${FIREFLYIII_STATIC_CRON_TOKEN:-somerandomstringof32charsEXACTLY}\" | crontab - && crond -f -L /dev/stdout"
-    labels:
-      - 'traefik.enable=false'
-    depends_on:
-      fireflyiii:
-        condition: service_started
 
 networks:
   fireflyiii-internal:
