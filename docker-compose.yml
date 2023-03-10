@@ -3,7 +3,5 @@ version: '3'
 networks:
   server:
     name: server
-    driver: bridge
   server-metrics:
     name: server-metrics
-    driver: bridge

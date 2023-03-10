@@ -17,8 +17,3 @@ services:
       - 'homepage.icon=go.png'
       - 'homepage.href=https://${WHOAMI_HOST:-whoami.${SITE:-localhost}}'
       - 'homepage.description=Tiny Go webserver that prints os information and HTTP request to output.'
-
-networks:
-  server:
-    name: server
-    external: true
