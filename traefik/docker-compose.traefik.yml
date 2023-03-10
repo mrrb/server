@@ -85,3 +85,8 @@ services:
     volumes:
       - './traefik/acme.json:/acme.json'
     network_mode: none
+
+networks:
+  server:
+    name: server
+    external: true

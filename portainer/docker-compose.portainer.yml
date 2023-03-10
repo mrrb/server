@@ -34,3 +34,8 @@ services:
       - 'homepage.widget.url=https://${PORTAINER_HOST:-portainer.${SITE:-localhost}}'
       - 'homepage.widget.env=${HOMEPAGE_PORTAINER_ENV:-1}'
       - 'homepage.widget.key=${HOMEPAGE_PORTAINER_KEY}'
+
+networks:
+  server:
+    name: server
+    external: true
