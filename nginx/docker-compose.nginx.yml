@@ -25,3 +25,8 @@ services:
       - 'homepage.icon=nginx.png'
       - 'homepage.href=https://${NGINX_HOST:-${SITE:-localhost}}'
       - 'homepage.description=Default webserver for the server.'
+
+networks:
+  server:
+    name: server
+    external: true

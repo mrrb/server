@@ -16,3 +16,11 @@ services:
     volumes:
       - './homepage/config:/app/config'
       - '/var/run/docker.sock:/var/run/docker.sock:ro'
+
+networks:
+  server:
+    name: server
+    external: true
+  server-metrics:
+    name: server-metrics
+    external: true

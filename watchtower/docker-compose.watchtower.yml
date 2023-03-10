@@ -25,3 +25,8 @@ services:
     #   - 'homepage.widget.type=watchtower'
     #   - 'homepage.widget.url=localhost:8080'
     #   - 'homepage.widget.key=${WATCHTOWER_HTTP_API_TOKEN:-super_fancy_watchtower_token}'
+
+networks:
+  server-metrics:
+    name: server-metrics
+    external: true
