@@ -69,6 +69,7 @@ function server_up () {
   _check_create $_SCRIPTPATH/.shadow
   _check_create $_SCRIPTPATH/traefik/acme.json
   _check_create $_SCRIPTPATH/simply-shorten/urls.sqlite
+  _check_create $_SCRIPTPATH/fireflyiii/db.sqlite
   _srv_docker_compose up -d
 }
 

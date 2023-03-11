@@ -7,9 +7,9 @@ services:
     volumes:
       - './fireflyiii/files/upload/:/var/www/html/storage/upload'
       - './fireflyiii/files/export/:/var/www/html/storage/export'
+      - './fireflyiii/db.sqlite:/var/www/html/storage/database/database.sqlite'
     networks:
       - 'server'
-      - 'fireflyiii-internal'
     restart: always
     healthcheck:
       test: ['CMD', 'curl', '0.0.0.0:8080']
@@ -31,12 +31,7 @@ services:
       TZ: '${TIMEZONE:-Europe/Madrid}'
 
       # DB config
-      DB_CONNECTION: 'mysql'
-      DB_HOST: 'fireflyiii-db'
-      DB_PORT: 3306
-      DB_DATABASE: '${FIREFLYIII_MARIADB_DATABASE:-firefly}'
-      DB_USERNAME: '${FIREFLYIII_MARIADB_USER:-firefly}'
-      DB_PASSWORD: '${FIREFLYIII_MARIADB_PASSWORD:-fireflyiii}'
+      DB_CONNECTION: 'sqlite'
 
       # Mail config
       MAIL_MAILER: '${FIREFLYIII_MAIL_MAILER:-smtp}'
@@ -61,35 +56,3 @@ services:
       - 'homepage.icon=firefly.png'
       - 'homepage.href=https://${FIREFLYIII_HOST:-firefly.${SITE:-localhost}}'
       - 'homepage.description=A free and open source personal finance manager.'
-    depends_on:
-      fireflyiii-db:
-        condition: service_started
-
-  fireflyiii-db:
-    image: mariadb:${MARIADB_IMAGE_VERSION:-latest}
-    restart: always
-    container_name: fireflyiii-db
-    healthcheck:
-      test: ['CMD', 'mysqladmin', 'ping', '-h', 'localhost']
-      start_period: 60s
-      interval: 30s
-      timeout: 60s
-      retries: 5
-    networks:
-      - 'fireflyiii-internal'
-    volumes:
-      - './fireflyiii/db:/var/lib/mysql'
-    environment:
-      MYSQL_RANDOM_ROOT_PASSWORD: 'yes'
-      MYSQL_USER: ${FIREFLYIII_MARIADB_USER:-firefly}
-      MYSQL_DATABASE: ${FIREFLYIII_MARIADB_DATABASE:-firefly}
-      MYSQL_PASSWORD: ${FIREFLYIII_MARIADB_PASSWORD:-fireflyiii}
-      TZ: '${TIMEZONE:-Europe/Madrid}'
-    labels:
-      - 'traefik.enable=false'
-
-networks:
-  fireflyiii-internal:
-    name: fireflyiii-internal
-    driver: bridge
-    external: false
