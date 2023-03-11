@@ -9,7 +9,7 @@ services:
       - './kanboard/plugins/:/var/www/app/plugins'
     networks:
       - 'server'
-    restart: always
+    restart: unless-stopped
     healthcheck:
       test: ['CMD', 'curl', '0.0.0.0:80']
       start_period: 60s

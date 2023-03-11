@@ -6,7 +6,7 @@ services:
     container_name: simply-shorten
     networks:
       - 'server'
-    restart: always
+    restart: unless-stopped
     environment:
       - username=${SIMPLYSHORTEN_USER:-username}
       - password=${SIMPLYSHORTEN_PASS:-p1kKjazX54u27}

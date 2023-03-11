@@ -10,7 +10,7 @@ services:
       - './fireflyiii/db.sqlite:/var/www/html/storage/database/database.sqlite'
     networks:
       - 'server'
-    restart: always
+    restart: unless-stopped
     healthcheck:
       test: ['CMD', 'curl', '0.0.0.0:8080']
       start_period: 60s
