@@ -43,7 +43,7 @@ services:
       - '${TRAEFIK_WEBSECURE_ENTRYPOINT:-443}:${TRAEFIK_WEBSECURE_ENTRYPOINT:-443}'
     networks:
       - 'server'
-    restart: always
+    restart: unless-stopped
     healthcheck:
       test: ['CMD', 'traefik', 'healthcheck', '--ping']
       interval: 10s

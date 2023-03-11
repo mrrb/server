@@ -12,7 +12,7 @@ services:
       WATCHTOWER_SCHEDULE: ${WATCHTOWER_SCHEDULE:-'0 0 2 * * *'} # run at 2am everyday
       WATCHTOWER_HTTP_API_METRICS: ${WATCHTOWER_HTTP_API_METRICS:-true}
       WATCHTOWER_HTTP_API_TOKEN: ${WATCHTOWER_HTTP_API_TOKEN:-super_fancy_watchtower_token}
-    restart: always
+    restart: unless-stopped
     labels:
       traefik.enable: false
     volumes:
