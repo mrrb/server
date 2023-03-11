@@ -7,7 +7,7 @@ services:
     networks:
       - 'server'
       - 'server-metrics'
-    restart: always
+    restart: unless-stopped
     labels:
       - 'traefik.enable=true'
       - 'traefik.http.routers.homepage.rule=Host(`${HOMEPAGE_HOST:-dashboard.${SITE:-localhost}}`)'
