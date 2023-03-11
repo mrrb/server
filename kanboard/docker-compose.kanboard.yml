@@ -1,0 +1,50 @@
+version: '3'
+
+services:
+  kanboard:
+    image: kanboard/kanboard:${KANBOARD_IMAGE_VERSION:-latest}
+    container_name: kanboard
+    volumes:
+      - './kanboard/data/:/var/www/app/data'
+      - './kanboard/plugins/:/var/www/app/plugins'
+    networks:
+      - 'server'
+    restart: always
+    healthcheck:
+      test: ['CMD', 'curl', '0.0.0.0:80']
+      start_period: 60s
+      interval: 30s
+      timeout: 60s
+      retries: 5
+    environment:
+      # App config
+      DEBUG: false
+      LOG_DRIVER: 'file'
+      REMEMBER_ME_AUTH: true
+      ENABLE_HSTS: ${KANBOARD_ENABLE_HSTS:-true}
+      ENABLE_XFRAME: ${KANBOARD_ENABLE_XFRAME:-true}
+      ENABLE_URL_REWRITE: ${KANBOARD_ENABLE_URL_REWRITE:-true}
+
+      # Mail config
+      MAIL_FROM: '${MAIL_FROM:-me@mail.localhost}'
+      MAIL_TRANSPORT: '${KANBOARD_MAIL_MAILER:-smtp}'
+      MAIL_SMTP_HOSTNAME: '${MAIL_HOST:-mail.localhost}'
+      MAIL_SMTP_PORT: ${MAIL_PORT:-587}
+      MAIL_SMTP_USERNAME: '${MAIL_USERNAME:-me@mail.localhost}'
+      MAIL_SMTP_PASSWORD: '${MAIL_PASSWORD:-mail_password}'
+      MAIL_SMTP_ENCRYPTION: ${MAIL_ENCRYPTION:-tls}
+
+      # DB config
+      DB_DRIVER: 'sqlite'
+
+      # Plugins config
+      PLUGIN_INSTALLER: true
+    labels:
+      - 'traefik.enable=true'
+      - 'traefik.http.routers.kanboard.rule=Host(`${KANBOARD_HOST:-kanboard.${SITE:-localhost}}`)'
+      - 'traefik.http.services.kanboard.loadbalancer.server.port=80'
+      - 'homepage.group=Web'
+      - 'homepage.name=Kanboard'
+      - 'homepage.icon=kanboard.png'
+      - 'homepage.href=https://${KANBOARD_HOST:-kanboard.${SITE:-localhost}}'
+      - 'homepage.description=Kanboard is a free and open source Kanban project management software.'
