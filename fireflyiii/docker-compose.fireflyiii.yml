@@ -52,8 +52,6 @@ services:
       ENABLE_EXTERNAL_RATES: ${FIREFLYIII_ENABLE_EXTERNAL_RATES:-true}
       MAP_DEFAULT_LAT: ${FIREFLYIII_MAP_DEFAULT_LAT:-40.41663}
       MAP_DEFAULT_LONG: ${FIREFLYIII_MAP_DEFAULT_LONG:--3.7038}
-    ports:
-      - 8080:8080
     labels:
       - 'traefik.enable=true'
       - 'traefik.http.routers.fireflyiii.rule=Host(`${FIREFLYIII_HOST:-firefly.${SITE:-localhost}}`)'
