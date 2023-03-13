@@ -21,6 +21,7 @@ services:
     ports:
       - "${AUTHENTIK_PORT_HTTP:-9000}:9000"
       - "${AUTHENTIK_PORT_HTTPS:-9443}:9443"
+    user: 1000:1000
     labels:
       - 'traefik.enable=true'
       - 'traefik.http.routers.authentik.rule=Host(`${AUTHENTIK_HOST:-authentik.${SITE:-localhost}}`) || Host(`*`) && PathPrefix(`/outpost.goauthentik.io/`)'
@@ -45,13 +46,7 @@ services:
       AUTHENTIK_POSTGRESQL__USER: ${AUTHENTIK_POSTGRES_USER:-authentik}
       AUTHENTIK_POSTGRESQL__NAME: ${AUTHENTIK_POSTGRES_DB:-authentik}
       AUTHENTIK_POSTGRESQL__PASSWORD: ${AUTHENTIK_POSTGRES_PASSWORD:-kitnehtua}
-    # `user: root` and the docker socket volume are optional.
-    # See more for the docker socket integration here:
-    # https://goauthentik.io/docs/outposts/integrations/docker
-    # Removing `user: root` also prevents the worker from fixing the permissions
-    # on the mounted folders, so when removing this make sure the folders have the correct UID/GID
-    # (1000:1000 by default)
-    user: root
+    user: 1000:1000
     labels:
       - 'traefik.enable=false'
     volumes:
@@ -72,6 +67,7 @@ services:
     networks:
       - 'server'
       - 'authentik-internal'
+    user: 1000:1000
     healthcheck:
       test: ['CMD', 'pg_isready', '-d', '${AUTHENTIK_POSTGRES_DB:-authentik}']
       start_period: 60s
@@ -95,6 +91,7 @@ services:
     networks:
       - 'server'
       - 'authentik-internal'
+    user: 1000:1000
     healthcheck:
       test: ["CMD-SHELL", "redis-cli ping | grep PONG"]
       start_period: 60s
