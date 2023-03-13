@@ -15,6 +15,7 @@ services:
       AUTHENTIK_POSTGRESQL__USER: ${AUTHENTIK_POSTGRES_USER:-authentik}
       AUTHENTIK_POSTGRESQL__NAME: ${AUTHENTIK_POSTGRES_DB:-authentik}
       AUTHENTIK_POSTGRESQL__PASSWORD: ${AUTHENTIK_POSTGRES_PASSWORD:-kitnehtua}
+      AUTHENTIK_SECRET_KEY: ${AUTHENTIK_SECRET_KEY:-kitnehtua}
     volumes:
       - './authentik/data/media:/media'
       - './authentik/data/custom-templates:/templates'
@@ -24,8 +25,8 @@ services:
     user: 1000:1000
     labels:
       - 'traefik.enable=true'
-      - 'traefik.http.routers.authentik.rule=Host(`${AUTHENTIK_HOST:-authentik.${SITE:-localhost}}`) || Host(`*`) && PathPrefix(`/outpost.goauthentik.io/`)'
-      - "traefik.http.routers.authentik.service=authentik"
+      - 'traefik.http.routers.authentik.rule=Host(`${AUTHENTIK_HOST:-authentik.${SITE:-localhost}}`) || PathPrefix(`/outpost.goauthentik.io/`)'
+      - 'traefik.http.services.authentik.loadbalancer.server.port=9000'
     depends_on:
       authentik-db:
         condition: service_started

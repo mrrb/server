@@ -67,8 +67,8 @@ List of files or folders to configure the system
   * [finance.mrrb.eu](https://finance.mrrb.eu) 
 * [Kanboard](kanboard)
   * [kanban.mrrb.eu](https://kanban.mrrb.eu) 
-* [Authentik](authentik)
-  * [auth.mrrb.eu](https://auth.mrrb.eu) 
+<!-- * [Authentik](authentik)
+  * [auth.mrrb.eu](https://auth.mrrb.eu)  -->
 
 ## First start steps
 
@@ -86,7 +86,7 @@ List of files or folders to configure the system
    * `HOMEPAGE_TRAEFIK_PASSWORD` and `HOMEPAGE_TRAEFIK_USERNAME` should match the password and user generated previously.
    * `HOMEPAGE_PORTAINER_KEY` can be defined but ignored for the moment.
    * Set `SIMPLYSHORTEN_USER` and `SIMPLYSHORTEN_PASS`.
-   * Set `AUTHENTIK_POSTGRES_PASSWORD`.
+   <!-- * Set `AUTHENTIK_POSTGRES_PASSWORD`. -->
    * Set API keys `FIREFLYIII_APP_KEY` and `FIREFLYIII_STATIC_CRON_TOKEN` (32 long strings).
    * Set mail vars `MAIL_ENCRYPTION`, `MAIL_FROM`, `MAIL_HOST`, `MAIL_PASSWORD`, `MAIL_PORT` and `MAIL_USERNAME`.
 7. Gen the environtment file `sudo sh -c 'source /srv/server/server.sh && gen_server_env'`
