@@ -92,7 +92,7 @@ List of files or folders to configure the system
    * Set mail vars `MAIL_ENCRYPTION`, `MAIL_FROM`, `MAIL_HOST`, `MAIL_PASSWORD`, `MAIL_PORT` and `MAIL_USERNAME`.
 7. Gen the environtment file `sudo sh -c 'source /srv/server/server.sh && gen_server_env'`
 8. Gen homepage config files `sudo sh -c 'source /srv/server/server.sh && gen_homepage_config'`.
-9. Copy the SystemD service `sudo cp server.service /usr/lib/systemd/system/server.service` and enable it `sudo systemctl enable --now server.service`.
+9. Copy the SystemD service `sudo cp systemd/server.service /usr/lib/systemd/system/server.service` and enable it `sudo systemctl enable --now server.service`.
 10. Check that everything works.
 11. Go to the portainer page and set it up.
   * Gen a KEY and save it into the `env.extra.json` file (`HOMEPAGE_PORTAINER_KEY`).
