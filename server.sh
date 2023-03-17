@@ -22,7 +22,7 @@ set +a
 
 ## Environment functions
 function _gen_server_env () {
-  "$_SCRIPTPATH/env.py" $(find $_SCRIPTPATH -type f ! -path "*/refs/*" -name 'docker-compose.*.yml') $(find $_SCRIPTPATH/homepage/config -type f ! -path "*/refs/*" -name '*.yaml.in') -s -v "$_SCRIPTPATH/env.json" -e "$_SCRIPTPATH/env.extra.json"
+  "$_SCRIPTPATH/env.py" $(find $_SCRIPTPATH -type f ! -path "*/refs/*" -name 'docker-compose.*.yml' -o -name '*.yaml.in') $(find $_SCRIPTPATH/systemd -type f -name '*.in') -s -v "$_SCRIPTPATH/env.json" -e "$_SCRIPTPATH/env.extra.json" -E "SERVER_PATH=$_SCRIPTPATH"
 }
 
 function gen_server_default_env () {
@@ -40,6 +40,15 @@ function gen_homepage_config () {
     eval "echo \"$(cat ${i::-3})\"" > ${i::-3}
   done
 }
+
+function gen_server_services () {
+  for i in $(find "$_SCRIPTPATH/systemd" -type f -name '*.in')
+  do
+    envsubst < $i > ${i::-3}
+    eval "echo \"$(cat ${i::-3})\"" > ${i::-3}
+  done
+}
+
 
 ## Crypt functions
 function sha256_passwd () {
@@ -75,4 +84,16 @@ function server_up () {
 
 function server_down () {
   _srv_docker_compose down
+}
+
+function server_install_services () {
+  cp $(find "$_SCRIPTPATH/systemd" -type f -name '*.mount' -o -name '*.timer' -o -name '*.service') /usr/lib/systemd/system/
+}
+
+function server_init () {
+  gen_server_env
+  gen_homepage_config
+  gen_server_services
+
+  # server_install_services
 }

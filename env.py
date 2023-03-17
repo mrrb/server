@@ -20,6 +20,12 @@ if __name__ == "__main__":
                       help='JSON file with extra variable values',
                       type=str
                       )
+  parser.add_argument('-E', '--extra-env-pair',
+                      nargs='+',
+                      dest='extra_env_pair',
+                      help='Extra environment pair KEY=VALUE',
+                      type=str
+                      )
   parser.add_argument('files',
                       nargs='+',
                       help='YAML files',
@@ -48,9 +54,6 @@ if __name__ == "__main__":
       matches += [m.lstrip('${').split(':')[0].split('}')[0]
                   for m in file_matches]
 
-  matches = list(set(matches))
-  matches.sort()
-
   env_data = {}
   if args.set_value:
     try:
@@ -69,6 +72,21 @@ if __name__ == "__main__":
           env_data = env_data | json.load(data)
     except:
       pass
+
+  extra_env_data = {}
+  if args.extra_env_pair:
+    for eep in args.extra_env_pair:
+      try:
+        key, value = eep.split('=')
+        extra_env_data[key] = value
+      except:
+        pass
+
+  env_data = {**extra_env_data, **env_data}
+
+  matches += list(extra_env_data.keys())
+  matches = list(set(matches))
+  matches.sort()
 
   for m in matches:
     print(f"{m}={env_data.get(m) if env_data.get(m) else ''}")
