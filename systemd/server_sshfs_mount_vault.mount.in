@@ -1,0 +1,12 @@
+[Unit]
+Description=Mount Hetzner 'vault' directory with sshfs
+
+[Install]
+WantedBy=multi-user.target
+
+[Mount]
+What=${STORAGE_SSH_USER_VAULT:-vault}@${STORAGE_SSH_HOST:-localhost}:/
+Where=${STORAGE_SSH_MOUNT_VAULT:-${SERVER_PATH}/storage/mount/sshfs_vault}
+Type=fuse.sshfs
+Options=_netdev,reconnect,allow_other,default_permissions,IdentityFile=${SERVER_PATH}/storage/.ssh/id_ed25519,dir_cache=yes,ServerAliveInterval=30,ServerAliveCountMax=5,x-systemd.automount,uid=${STORAGE_SSH_UID:-0},gid=${STORAGE_SSH_GID:-0}
+TimeoutSec=60
