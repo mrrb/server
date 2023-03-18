@@ -1,0 +1,25 @@
+[Unit]
+Description=Mount 'vault - generic' directory with gocryptfs
+After=server_sshfs_mount_vault.mount
+BindsTo=server_sshfs_mount_vault.mount
+ConditionPathIsDirectory=${STORAGE_SSH_MOUNT_VAULT:-${SERVER_PATH}/storage/mount/sshfs_vault}/gocryptfs/generic.crypt
+ConditionPathIsDirectory=${STORAGE_GOCRYPTFS_MOUNT_GENERIC:-${SERVER_PATH}/storage/mount/generic}
+ConditionPathExists=${STORAGE_GOCRYPTFS_KEYS_PATH:-${SERVER_PATH}/storage/.keys/generic}
+
+[Service]
+Type=forking
+NotifyAccess=all
+
+user=${STORAGE_GOCRYPTFS_USER:-root}
+group=${STORAGE_GOCRYPTFS_GROUP:-root}
+
+ExecStartPre=-/usr/bin/fusermount -u -q ${STORAGE_GOCRYPTFS_MOUNT_GENERIC:-${SERVER_PATH}/storage/mount/generic}
+ExecStart=/usr/bin/gocryptfs -allow_other -nodev -exec -passfile ${STORAGE_GOCRYPTFS_KEYS_PATH:-${SERVER_PATH}/storage/.keys/generic} /${STORAGE_SSH_MOUNT_VAULT:-${SERVER_PATH}/storage/mount/sshfs_vault}/gocryptfs/generic.crypt ${STORAGE_GOCRYPTFS_MOUNT_GENERIC:-${SERVER_PATH}/storage/mount/generic}
+
+ExecStop=/usr/bin/fusermount -u ${STORAGE_GOCRYPTFS_MOUNT_GENERIC:-${SERVER_PATH}/storage/mount/generic}
+
+TimeoutStopSec=5min
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target

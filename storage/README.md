@@ -7,15 +7,21 @@
 ├── internal -> Internal stuff
 │   ├── .ssh
 │   └── ...
-├── other    -> Folder intended to be directly mounted
-│   ├── .ssh
-│   └── ...
 ├── vault    -> Main folders to be used on the server
 │   ├── gocryptfs
-│   │   ├── generic.crypt
-│   │   ├── pc_sync.crypt 
-│   │   └── private.crypt
+│   │   ├── generic.crypt -> Sync, media, shares, etc...
+│   │   │   ├── sync
+│   │   │   │   ├── PC
+│   │   │   │   ├── Phone
+│   │   │   │   └── ...
+│   │   │   ├── media
+│   │   │   ├── share
+│   │   │   └── ...
+│   │   └── private.crypt -> Personal files (mine and others)
 │   └── .ssh
+├── other    -> Folder intended to be directly mounted and used as-is
+│   ├── .ssh
+│   └── ...
 └── .ssh     -> SSH files, primarily the 'authorized_keys' one
 ```
 
