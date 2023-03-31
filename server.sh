@@ -88,12 +88,20 @@ function server_down () {
 
 function server_install_services () {
   cp $(find "$_SCRIPTPATH/systemd" -type f -name '*.mount' -o -name '*.timer' -o -name '*.service') /usr/lib/systemd/system/
+  systemctl daemon-reload
+}
+
+function server_init_config () {
+  _check_create $_SCRIPTPATH/.shadow
+  _check_create $_SCRIPTPATH/env.extra.json
 }
 
 function server_init () {
+  server_init_config
+
   gen_server_env
   gen_homepage_config
   gen_server_services
 
-  # server_install_services
+  server_install_services
 }
