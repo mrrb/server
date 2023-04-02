@@ -11,9 +11,9 @@ WantedBy=multi-user.target
 [Service]
 Type=exec
 
-ExecStart=/usr/bin/sshfs -f -p ${STORAGE_SSH_PORT:-22} ${STORAGE_SSH_USER_OTHER:-other}@${STORAGE_SSH_HOST:-localhost}:/ ${STORAGE_SSH_MOUNT_OTHER:-${SERVER_PATH}/storage/mount/sshfs_other} -o default_permissions,rw,allow_other,idmap=user,uid=${STORAGE_SSH_UID:-0},gid=${STORAGE_SSH_GID:-0},ServerAliveInterval=20,reconnect,ServerAliveCountMax=5,_netdev,dir_cache=yes,StrictHostKeyChecking=no,IdentityFile=${SERVER_PATH}/storage/.ssh/id_ed25519
+ExecStart=/usr/bin/sshfs -f -p ${STORAGE_SSH_PORT:-22} ${STORAGE_SSH_USER_OTHER:-other}@${STORAGE_SSH_HOST:-localhost}:/ ${STORAGE_SSH_MOUNT_OTHER:-${SERVER_PATH}/storage/mount/sshfs.other} -o default_permissions,rw,allow_other,idmap=user,uid=${STORAGE_SSH_UID:-0},gid=${STORAGE_SSH_GID:-0},ServerAliveInterval=20,reconnect,ServerAliveCountMax=5,_netdev,dir_cache=yes,StrictHostKeyChecking=no,IdentityFile=${SERVER_PATH}/storage/.ssh/id_ed25519
 
-ExecStop=/usr/bin/umount ${STORAGE_SSH_MOUNT_OTHER:-${SERVER_PATH}/storage/mount/sshfs_other}
+ExecStop=/usr/bin/umount ${STORAGE_SSH_MOUNT_OTHER:-${SERVER_PATH}/storage/mount/sshfs.other}
 
 Restart=on-failure
 RestartSec=30

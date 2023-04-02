@@ -67,6 +67,12 @@ function _check_create () {
   fi
 }
 
+function _check_create_dir () {
+  if [ ! -e "$1" ] ; then
+    mkdir -p "$1"
+  fi
+}
+
 function _srv_docker_compose () {
   _curr_pwd=$(pwd)
   cd $_SCRIPTPATH
@@ -96,6 +102,14 @@ function server_init_config () {
   _check_create $_SCRIPTPATH/env.extra.json
 }
 
+function server_storage_dir () {
+  declare -a _storage_dirs=("sshfs.vault" "sshfs.other" "gocryptfs.private" "gocryptfs.generic")
+  for i in "${_storage_dirs[@]}"
+  do
+    _check_create_dir "$_SCRIPTPATH/storage/mount/$i"
+  done
+}
+
 function server_init () {
   server_init_config
 
@@ -104,4 +118,6 @@ function server_init () {
   gen_server_services
 
   server_install_services
+
+  server_storage_dir
 }
