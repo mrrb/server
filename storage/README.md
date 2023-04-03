@@ -44,7 +44,11 @@ All the remote `.ssh` folders need to have the previous public key on theirs `au
 3. Create all the `authorized_keys` files.
     * `for dot_ssh_dir in $(find . -name '.ssh' -type d); do touch $dot_ssh_dir/authorized_keys; done`
 4. [Optional] Add personal public key(s) to `authorized_keys` files.
-    * `for ak_file in $(find . -wholename '*/.ssh/authorized_keys' -type f); do cat ~/.ssh/id_ed25519.pub >> $ak_file; done`
+    * Convert public key to RFC4716 format: `ssh-keygen -e -f ~/.ssh/id_ed25519.pub > ~/.ssh/id_ed25519_rfc.pub`
+    * `for ak_file in $(find . -wholename '*/.ssh/authorized_keys' -type f); do cat ~/.ssh/id_ed25519_rfc.pub >> $ak_file; done`
+5. Set correct permissions.
+    * `for dot_ssh_dir in $(find . -name '.ssh' -type d); do chmod 700 $dot_ssh_dir; done`
+    * `for dot_ssh_dir in $(find . -name '.ssh' -type d); do chmod 600 $dot_ssh_dir/authorized_keys; done`
 
 ## Basic box config and subaccounts
 
