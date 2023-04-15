@@ -14,7 +14,7 @@ User=${STORAGE_GOCRYPTFS_USER:-root}
 Group=${STORAGE_GOCRYPTFS_GROUP:-root}
 
 ExecStartPre=-/usr/bin/fusermount -u -q ${STORAGE_GOCRYPTFS_MOUNT_PRIVATE:-${SERVER_PATH}/storage/mount/gocryptfs.private}
-ExecStart=/usr/bin/gocryptfs -allow_other -rw -nodev -exec -passfile ${STORAGE_GOCRYPTFS_KEYS_PATH:-${SERVER_PATH}/storage/.keys}/private.key ${STORAGE_SSH_MOUNT_VAULT:-${SERVER_PATH}/storage/mount/sshfs.vault}/gocryptfs/private.crypt ${STORAGE_GOCRYPTFS_MOUNT_PRIVATE:-${SERVER_PATH}/storage/mount/gocryptfs.private} -fg
+ExecStart=/usr/bin/gocryptfs -allow_other -rw -nodev -exec -passfile ${STORAGE_GOCRYPTFS_KEYS_PATH:-${SERVER_PATH}/storage/.keys}/private.key ${STORAGE_SSH_MOUNT_VAULT:-${SERVER_PATH}/storage/mount/sshfs.vault}/gocryptfs/private.crypt ${STORAGE_GOCRYPTFS_MOUNT_PRIVATE:-${SERVER_PATH}/storage/mount/gocryptfs.private}
 
 ExecStop=/usr/bin/fusermount -u ${STORAGE_GOCRYPTFS_MOUNT_PRIVATE:-${SERVER_PATH}/storage/mount/gocryptfs.private}
 
