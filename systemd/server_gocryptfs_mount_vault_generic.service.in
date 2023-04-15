@@ -4,14 +4,14 @@ After=server_sshfs_mount_vault.mount
 BindsTo=server_sshfs_mount_vault.mount
 ConditionPathIsDirectory=${STORAGE_SSH_MOUNT_VAULT:-${SERVER_PATH}/storage/mount/sshfs.vault}/gocryptfs/generic.crypt
 ConditionPathIsDirectory=${STORAGE_GOCRYPTFS_MOUNT_GENERIC:-${SERVER_PATH}/storage/mount/gocryptfs.generic}
-ConditionPathExists=${STORAGE_GOCRYPTFS_KEYS_PATH:-${SERVER_PATH}/storage/.keys/generic}
+ConditionPathExists=${STORAGE_GOCRYPTFS_KEYS_PATH:-${SERVER_PATH}/storage/.keys}/generic.key
 
 [Service]
 Type=forking
 NotifyAccess=all
 
-user=${STORAGE_GOCRYPTFS_USER:-root}
-group=${STORAGE_GOCRYPTFS_GROUP:-root}
+User=${STORAGE_GOCRYPTFS_USER:-root}
+Group=${STORAGE_GOCRYPTFS_GROUP:-root}
 
 ExecStartPre=-/usr/bin/fusermount -u -q ${STORAGE_GOCRYPTFS_MOUNT_GENERIC:-${SERVER_PATH}/storage/mount/gocryptfs.generic}
 ExecStart=/usr/bin/gocryptfs -allow_other -rw -nodev -exec -passfile ${STORAGE_GOCRYPTFS_KEYS_PATH:-${SERVER_PATH}/storage/.keys}/generic.key ${STORAGE_SSH_MOUNT_VAULT:-${SERVER_PATH}/storage/mount/sshfs.vault}/gocryptfs/generic.crypt ${STORAGE_GOCRYPTFS_MOUNT_GENERIC:-${SERVER_PATH}/storage/mount/gocryptfs.generic} -fg
