@@ -60,6 +60,16 @@ function sha256_passwd () {
   fi
 }
 
+function store_gocrypt_password () {
+  echo -n "$1 password: "
+  read -s _password
+  echo
+
+  echo -n $_password > $_SCRIPTPATH/storage/.keys/$1.key
+
+  chmod 600 $_SCRIPTPATH/storage/.keys/$1.key
+}
+
 ## Control functions
 function _check_create () {
   if [ ! -e "$1" ] ; then
