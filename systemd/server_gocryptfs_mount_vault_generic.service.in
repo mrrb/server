@@ -1,6 +1,6 @@
 [Unit]
 Description=Mount 'vault - generic' directory with gocryptfs
-After=server_sshfs_mount_vault.mount
+After=server_sshfs_mount_vault.service
 BindsTo=server_sshfs_mount_vault.mount
 ConditionPathIsDirectory=${STORAGE_SSH_MOUNT_VAULT:-${SERVER_PATH}/storage/mount/sshfs.vault}/gocryptfs/generic.crypt
 ConditionPathIsDirectory=${STORAGE_GOCRYPTFS_MOUNT_GENERIC:-${SERVER_PATH}/storage/mount/gocryptfs.generic}
