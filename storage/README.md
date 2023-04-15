@@ -86,3 +86,10 @@ All the remote `.ssh` folders need to have the previous public key on theirs `au
 ## Extra security
 
 After the set-up, on the "Storage Box data" tab, disable the *External reachability* option.
+
+## Gocryptfs init
+
+1. Mount the box on a local system and cd into it. See the [commands](#commands) section for more info.
+2. Create the gocryptfs data for the `generic` and `vault` volumes. For each one, use a unique and complex key.
+   * `sudo gocryptfs -init ./vault/gocryptfs/private.crypt/`
+   * `sudo gocryptfs -init ./vault/gocryptfs/generic.crypt/`

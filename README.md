@@ -132,15 +132,19 @@ If using Hetzner storage, the required box structure must be already created. Ch
 8. Create a new SSH key pair for the storage box.
     * `sudo ssh-keygen -t ed25519 -C "VPS1-HetznerStorageBox" -f /srv/server/storage/.ssh/id_ed25519 -q -N ""`.
     * Convert public key to RFC4716 format: `sudo sh -c 'ssh-keygen -e -f /srv/server/storage/.ssh/id_ed25519.pub > /srv/server/storage/.ssh/id_ed25519_rfc.pub'`
-9.  Add generated public key (`/srv/server/storage/.ssh/id_ed25519_rfc.pub`) to the Hetzner storage box `.ssh/authorized_keys` for the *vault* and *other* subaccounts, optionally, disable the *External reachability* function for the primary account. Check [storage/README.md](storage/README.md) for more info.
-10. Init server files `sudo sh -c 'source /srv/server/server.sh && server_init'`. This will generate the environment file, fill some config files and generate and install all the services, timers and mounts.
-11. Enable the required server service(s), timer(s) and mount(s).
+9. Add generated public key (`/srv/server/storage/.ssh/id_ed25519_rfc.pub`) to the Hetzner storage box `.ssh/authorized_keys` for the *vault* and *other* subaccounts, optionally, disable the *External reachability* function for the primary account. Check [storage/README.md](storage/README.md) for more info.
+10. Init gocryptfs directories. Check [storage/README.md](storage/README.md) for more info.
+11. Store gocryptfs keys.
+    * `sudo sh -c 'source /srv/server/server.sh && store_gocrypt_password private'` and insert `private` key.
+    * `sudo sh -c 'source /srv/server/server.sh && store_gocrypt_password generic'` and insert `generic` key.
+12. Init server files `sudo sh -c 'source /srv/server/server.sh && server_init'`. This will generate the environment file, fill some config files and generate and install all the services, timers and mounts.
+13. Enable the required server service(s), timer(s) and mount(s).
     * `sudo systemctl enable server.service`.
     * `sudo systemctl enable server_sshfs_mount_other.service`.
     * `sudo systemctl enable server_sshfs_mount_vault.service`.
-12. Reboot system and check that everything works.
-13. Go to the portainer page and set it up.
+14. Reboot system and check that everything works.
+15. Go to the portainer page and set it up.
     * Gen a KEY and save it into the `env.extra.json` file (`HOMEPAGE_PORTAINER_KEY`).
-14.   Regenerate the environment file `sudo sh -c 'source /srv/server/server.sh && gen_server_env'`.
-15.   Restart service `sudo systemctl restart server.service`.
-16.   Enjoy 😉.
+16.   Regenerate the environment file `sudo sh -c 'source /srv/server/server.sh && gen_server_env'`.
+17.   Restart service `sudo systemctl restart server.service`.
+18.   Enjoy 😉.
