@@ -2,7 +2,6 @@
 Description=Mount 'vault - private' directory with gocryptfs
 After=server_sshfs_mount_vault.service
 BindsTo=server_sshfs_mount_vault.service
-ConditionPathIsDirectory=${STORAGE_SSH_MOUNT_VAULT:-${SERVER_PATH}/storage/mount/sshfs.vault}/gocryptfs/private.crypt
 ConditionPathIsDirectory=${STORAGE_GOCRYPTFS_MOUNT_PRIVATE:-${SERVER_PATH}/storage/mount/gocryptfs.private}
 ConditionPathExists=${STORAGE_GOCRYPTFS_KEYS_PATH:-${SERVER_PATH}/storage/.keys}/private.key
 
