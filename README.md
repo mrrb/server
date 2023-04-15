@@ -142,6 +142,8 @@ If using Hetzner storage, the required box structure must be already created. Ch
     * `sudo systemctl enable server.service`.
     * `sudo systemctl enable server_sshfs_mount_other.service`.
     * `sudo systemctl enable server_sshfs_mount_vault.service`.
+    * `sudo systemctl enable server_gocryptfs_mount_vault_generic.service`.
+    * `sudo systemctl enable server_gocryptfs_mount_vault_private.service`.
 14. Reboot system and check that everything works.
 15. Go to the portainer page and set it up.
     * Gen a KEY and save it into the `env.extra.json` file (`HOMEPAGE_PORTAINER_KEY`).
