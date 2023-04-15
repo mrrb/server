@@ -44,13 +44,6 @@ source server.sh && server_init_config
 
 ## Init the server
 
-* [server_init_config](#create-the-initial-config-files)
-* [gen_server_env](#gen-the-enviroment-file)
-* [gen_homepage_config](#gen-the-homepage-configuration)
-* [gen_server_services](#gen-the-server-systemd-service-timers-and-mounts)
-* [server_install_services]()
-<!-- * [server_install_services](#install-all-the-systemd-files) -->
-
 ```
 source server.sh && server_init
 ```
