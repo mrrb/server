@@ -104,17 +104,18 @@ List of files or folders to configure the system
 If using Hetzner storage, the required box structure must be already created. Check [storage/README.md](storage/README.md) for more info.
 
 1. Prerequisites
-    * Docker should be installed and running on the host machine.
-    * `sshfs` and `gocryptfs` should be installed on the machine.
+    * Docker (with docker compose) should be installed and running on the host machine.
+    * `git`, `git-lfs` and `sudo` should be installed on the machine.
+    * `sshfs`, `gocryptfs` and `syncthing` should be installed on the machine.
     * Root permissions required.
 2. Go to `/srv/` directory.
-3. Download repo (`sudo git clone https://github.com/mrrb/server.git`). CD into it `cd /srv/server/`.
+3. Download repo (`sudo git clone git@github.com:mrrb/server.git --recursive`). CD into it `cd /srv/server/`.
 4. JIC `sudo git submodule update --init --recursive` and `cd refs/server-private && sudo git lfs install && sudo git lfs fetch && sudo git lfs checkout && cd ../..`.
 5. Checkout to VPS1 branch `sudo git checkout vps1`.
-6. Create the `.shadow` file `sudo touch .shadow` (or `sudo sh -c 'source /srv/server/server.sh && server_init_config'`) and add into it all the required users.
+6. Create the `.shadow` file `sudo touch .shadow` (or `sudo bash -c 'source /srv/server/server.sh && server_init_config'`) and add into it all the required users.
     * Gen hased user:password strings with `htpasswd -nb USER PASSWORD`.
     * It should include the user `homepage` to integrate traefik into homepage.
-7. Create the custom environment JSON file `sudo touch env.extra.json` (or `sudo sh -c 'source /srv/server/server.sh && server_init_config'`) and add the following fields.
+7. Create the custom environment JSON file `sudo touch env.extra.json` (or `sudo bash -c 'source /srv/server/server.sh && server_init_config'`) and add the following fields.
     * `HOMEPAGE_TRAEFIK_PASSWORD` and `HOMEPAGE_TRAEFIK_USERNAME` should match the password and user generated previously.
     * `HOMEPAGE_PORTAINER_KEY` can be defined but ignored for the moment.
     * Set `SIMPLYSHORTEN_USER` and `SIMPLYSHORTEN_PASS`.
@@ -124,13 +125,13 @@ If using Hetzner storage, the required box structure must be already created. Ch
     * Set `STORAGE_SSH_HOST`, `STORAGE_SSH_USER_OTHER` and `STORAGE_SSH_USER_VAULT`.
 8. Create a new SSH key pair for the storage box.
     * `sudo ssh-keygen -t ed25519 -C "VPS1-HetznerStorageBox" -f /srv/server/storage/.ssh/id_ed25519 -q -N ""`.
-    * Convert public key to RFC4716 format: `sudo sh -c 'ssh-keygen -e -f /srv/server/storage/.ssh/id_ed25519.pub > /srv/server/storage/.ssh/id_ed25519_rfc.pub'`
+    * Convert public key to RFC4716 format: `sudo bash -c 'ssh-keygen -e -f /srv/server/storage/.ssh/id_ed25519.pub > /srv/server/storage/.ssh/id_ed25519_rfc.pub'`
 9. Add generated public key (`/srv/server/storage/.ssh/id_ed25519_rfc.pub`) to the Hetzner storage box `.ssh/authorized_keys` for the *vault* and *other* subaccounts, optionally, disable the *External reachability* function for the primary account. Check [storage/README.md](storage/README.md) for more info.
 10. Init gocryptfs directories. Check [storage/README.md](storage/README.md) for more info.
 11. Store gocryptfs keys.
-    * `sudo sh -c 'source /srv/server/server.sh && store_gocrypt_password private'` and insert `private` key.
-    * `sudo sh -c 'source /srv/server/server.sh && store_gocrypt_password generic'` and insert `generic` key.
-12. Init server files `sudo sh -c 'source /srv/server/server.sh && server_init'`. This will generate the environment file, fill some config files and generate and install all the services, timers and mounts.
+    * `sudo bash -c 'source /srv/server/server.sh && store_gocrypt_password private'` and insert `private` key.
+    * `sudo bash -c 'source /srv/server/server.sh && store_gocrypt_password generic'` and insert `generic` key.
+12. Init server files `sudo bash -c 'source /srv/server/server.sh && server_init'`. This will generate the environment file, fill some config files and generate and install all the services, timers and mounts.
 13. Enable the required server service(s), timer(s) and mount(s).
     * `sudo systemctl enable server.service`.
     * `sudo systemctl enable server_sshfs_mount_other.service`.
@@ -140,6 +141,6 @@ If using Hetzner storage, the required box structure must be already created. Ch
 14. Reboot system and check that everything works.
 15. Go to the portainer page and set it up.
     * Gen a KEY and save it into the `env.extra.json` file (`HOMEPAGE_PORTAINER_KEY`).
-16. Regenerate the environment file `sudo sh -c 'source /srv/server/server.sh && gen_server_env'`.
+16. Regenerate the environment file `sudo bash -c 'source /srv/server/server.sh && gen_server_env'`.
 17. Restart service `sudo systemctl restart server.service`.
 18. Enjoy 😉.
