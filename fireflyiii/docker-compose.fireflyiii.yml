@@ -3,6 +3,7 @@ version: '3.8'
 services:
   fireflyiii:
     image: fireflyiii/core:${FIREFLYIII_IMAGE_VERSION:-latest}
+    platform: '${PLATFORM_ARCH}'
     container_name: fireflyiii
     volumes:
       - './fireflyiii/files/upload/:/var/www/html/storage/upload'

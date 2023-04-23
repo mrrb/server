@@ -3,6 +3,7 @@ version: '3.8'
 services:
   kanboard:
     image: kanboard/kanboard:${KANBOARD_IMAGE_VERSION:-latest}
+    platform: '${PLATFORM_ARCH}'
     container_name: kanboard
     volumes:
       - './kanboard/data/:/var/www/app/data'

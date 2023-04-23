@@ -3,6 +3,7 @@ version: '3.8'
 services:
   portainer:
     image: portainer/portainer-ce:${PORTAINER_IMAGE_VERSION:-latest}
+    platform: '${PLATFORM_ARCH}'
     container_name: portainer
     networks:
       - 'server'

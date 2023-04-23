@@ -3,6 +3,7 @@ version: '3.8'
 services:
   homepage:
     image: ghcr.io/benphelps/homepage:${HOMEPAGE_IMAGE_VERSION:-latest}
+    platform: '${PLATFORM_ARCH}'
     container_name: homepage
     networks:
       - 'server'

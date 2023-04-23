@@ -3,6 +3,7 @@ version: '3.8'
 services:
   trilium:
     image: zadam/trilium:${TRILIUM_IMAGE_VERSION:-latest}
+    platform: '${PLATFORM_ARCH}'
     restart: unless-stopped
     container_name: trilium
     networks:

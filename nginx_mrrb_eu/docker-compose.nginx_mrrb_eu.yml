@@ -3,6 +3,7 @@ version: '3.8'
 services:
   nginx_mrrb_eu:
     image: nginx:${NGINX_IMAGE_VERSION:-stable-alpine}
+    platform: '${PLATFORM_ARCH}'
     volumes:
       - './nginx/conf:/etc/nginx/conf.d'
       - './refs/server-private/page_mrrb.eu/:/srv/www/default'

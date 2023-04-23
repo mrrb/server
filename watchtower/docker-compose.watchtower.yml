@@ -3,6 +3,7 @@ version: '3.8'
 services:
   watchtower:
     image: containrrr/watchtower:${WATCHTOWER_IMAGE_VERSION:-latest}
+    platform: '${PLATFORM_ARCH}'
     networks:
       - 'server-metrics'
     container_name: watchtower

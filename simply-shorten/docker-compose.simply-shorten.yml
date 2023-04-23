@@ -3,6 +3,7 @@ version: '3.8'
 services:
   simply-shorten:
     image: draganczukp/simply-shorten:${SIMPLYSHORTEN_IMAGE_VERSION:-latest}
+    platform: '${PLATFORM_ARCH}'
     container_name: simply-shorten
     networks:
       - 'server'

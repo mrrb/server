@@ -3,6 +3,7 @@ version: '3.8'
 services:
   nginx:
     image: nginx:${NGINX_IMAGE_VERSION:-stable-alpine}
+    platform: '${PLATFORM_ARCH}'
     container_name: nginx
     volumes:
       - './nginx/conf:/etc/nginx/conf.d'
