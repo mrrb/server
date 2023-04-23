@@ -1,6 +1,6 @@
 # server
 
-Configuration for VPS1
+Configuration for VPS1 (Ampere Altra ARM64)
 
 ## Gen the default enviroment file
 
@@ -110,8 +110,8 @@ If using Hetzner storage, the required box structure must be already created. Ch
     * Root permissions required.
 2. Go to `/srv/` directory.
 3. Download repo (`sudo git clone git@github.com:mrrb/server.git --recursive`). CD into it `cd /srv/server/`.
-4. JIC `sudo git submodule update --init --recursive` and `cd refs/server-private && sudo git lfs install && sudo git lfs fetch && sudo git lfs checkout && cd ../..`.
-5. Checkout to VPS1 branch `sudo git checkout vps1`.
+4. Checkout to VPS1 branch `sudo git checkout vps1`.
+5. JIC `sudo git submodule update --init --recursive` and `cd refs/server-private && sudo git lfs install && sudo git lfs fetch && sudo git lfs checkout && cd ../..`.
 6. Create the `.shadow` file `sudo touch .shadow` (or `sudo bash -c 'source /srv/server/server.sh && server_init_config'`) and add into it all the required users.
     * Gen hased user:password strings with `htpasswd -nb USER PASSWORD`.
     * It should include the user `homepage` to integrate traefik into homepage.

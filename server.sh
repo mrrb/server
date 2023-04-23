@@ -86,7 +86,7 @@ function _check_create_dir () {
 function _srv_docker_compose () {
   _curr_pwd=$(pwd)
   cd $_SCRIPTPATH
-	/usr/bin/docker-compose $(find -name 'docker-compose*.yml' -type f -printf '%p\t%d\n'  2>/dev/null | grep -v 'refs' | sort -n -k2 | cut -f 1 | awk '{print "-f "$0}') $@
+	/usr/bin/docker compose $(find -name 'docker-compose*.yml' -type f -printf '%p\t%d\n'  2>/dev/null | grep -v 'refs' | sort -n -k2 | cut -f 1 | awk '{print "-f "$0}') $@
   cd $_curr_pwd
 }
 
