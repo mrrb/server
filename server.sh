@@ -1,8 +1,11 @@
 #!/bin/bash
 
 ## Get location
-_SCRIPT=$(realpath -s "$0")
-_SCRIPTPATH=$(dirname "$_SCRIPT")
+# _SCRIPT=$(realpath -s "$0")
+# _SCRIPTPATH=$(dirname "$_SCRIPT")
+
+# https://stackoverflow.com/questions/59895/how-do-i-get-the-directory-where-a-bash-script-is-located-from-within-the-script
+_SCRIPTPATH=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 
 ## Load env file(s)
 set -a
