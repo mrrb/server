@@ -42,7 +42,7 @@ services:
       MYSQL_PASSWORD: ${NEXTCLOUD_MARIADB_PASSWORD:-duolctxen}
       MYSQL_HOST: nextcloud-db
     volumes:
-      - data:/var/www/html
+      - './nextcloud/data/:/var/www/html'
     labels:
       traefik.enable: true
       traefik.http.routers.nextcloud.rule: Host(`${NEXTCLOUD_HOST:-nextcloud.s${SITE:-localhost}}`)
