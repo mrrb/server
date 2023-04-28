@@ -98,6 +98,9 @@ function server_up () {
   _check_create $_SCRIPTPATH/traefik/acme.json
   _check_create $_SCRIPTPATH/simply-shorten/urls.sqlite
   _check_create $_SCRIPTPATH/fireflyiii/db.sqlite
+
+  _check_create_dir $_SCRIPTPATH/nextcloud/data
+
   _srv_docker_compose up -d
 }
 

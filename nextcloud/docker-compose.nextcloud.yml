@@ -7,7 +7,7 @@ services:
     restart: unless-stopped
     container_name: nextcloud-db
     healthcheck:
-      test: ['CMD', 'mysqladmin', 'ping', '-h', 'localhost']
+      test: ['CMD', 'mysqlcheck', '--all-databases', '-ppass']
       start_period: 60s
       interval: 30s
       timeout: 60s
