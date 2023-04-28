@@ -45,7 +45,7 @@ services:
       - './nextcloud/data/:/var/www/html'
     labels:
       traefik.enable: true
-      traefik.http.routers.nextcloud.rule: Host(`${NEXTCLOUD_HOST:-nextcloud.s${SITE:-localhost}}`)
+      traefik.http.routers.nextcloud.rule: Host(`${NEXTCLOUD_HOST:-nextcloud.${SITE:-localhost}}`)
       traefik.http.services.nextcloud.loadbalancer.server.port: 80
 
       # https://docs.nextcloud.com/server/22/admin_manual/installation/harden_server.html
@@ -62,15 +62,15 @@ services:
       # https://docs.nextcloud.com/server/23/admin_manual/configuration_server/reverse_proxy_configuration.html#traefik-2
       # https://doc.traefik.io/traefik/v2.6/middlewares/http/redirectregex/
       traefik.http.middlewares.nextcloud-redirect-dav.redirectRegex.permanent: true
-      traefik.http.middlewares.nextcloud-redirect-dav.redirectRegex.regex: https://${NEXTCLOUD_HOST:-nextcloud.s${SITE:-localhost}}/.well-known/(card|cal)'dav
-      traefik.http.middlewares.nextcloud-redirect-dav.redirectRegex.replacement: https://${NEXTCLOUD_HOST:-nextcloud.s${SITE:-localhost}}/remote.php/dav/'
+      traefik.http.middlewares.nextcloud-redirect-dav.redirectRegex.regex: https://${NEXTCLOUD_HOST:-nextcloud.${SITE:-localhost}}/.well-known/(card|cal)'dav
+      traefik.http.middlewares.nextcloud-redirect-dav.redirectRegex.replacement: https://${NEXTCLOUD_HOST:-nextcloud.${SITE:-localhost}}/remote.php/dav/'
 
       traefik.http.routers.nextcloud.middlewares: nextcloud-header,nextcloud-redirect-dav'
 
       homepage.group: Web
       homepage.name: Nextcloud
       homepage.icon: nextcloud.png
-      homepage.href: https://${NEXTCLOUD_HOST:-nextcloud.s${SITE:-localhost}}
+      homepage.href: https://${NEXTCLOUD_HOST:-nextcloud.${SITE:-localhost}}
       homepage.description: Online collaboration platform.
 
 networks:
