@@ -26,14 +26,29 @@ services:
     labels:
       traefik.enable: false
 
+  nextcloud-redis:
+    image: redis:${REDIS_IMAGE_VERSION:-latest}
+    platform: '${PLATFORM_ARCH}'
+    restart: unless-stopped
+    container_name: nextcloud-redis
+    command: redis-server
+    networks:
+      - 'nextcloud-internal'
+    volumes:
+      - './nextcloud/redis:/var/lib/redis'
+    labels:
+      traefik.enable: false
+
   nextcloud-app:
-    image: nextcloud:${NEXTCLOUD_IMAGE_VERSION:-stable-apache}
+    image: nextcloud:${NEXTCLOUD_IMAGE_VERSION:-stable-fpm}
     platform: '${PLATFORM_ARCH}'
     restart: unless-stopped
     container_name: nextcloud-app
     depends_on:
       nextcloud-db:
         condition: service_healthy
+      nextcloud-redis:
+        condition: service_started
     networks:
       - 'nextcloud-internal'
     environment:
@@ -41,8 +56,25 @@ services:
       MYSQL_DATABASE: ${NEXTCLOUD_MARIADB_DATABASE:-nextcloud}
       MYSQL_PASSWORD: ${NEXTCLOUD_MARIADB_PASSWORD:-duolctxen}
       MYSQL_HOST: nextcloud-db
+      REDIS_HOST: nextcloud-redis
     volumes:
       - './nextcloud/data/:/var/www/html'
+    labels:
+      traefik.enable: false
+
+  nextcloud-web:
+    image: nginx:${NGINX_IMAGE_VERSION:-stable-alpine}
+    platform: '${PLATFORM_ARCH}'
+    restart: unless-stopped
+    container_name: nextcloud-web
+    depends_on:
+      nextcloud-app:
+        condition: service_started
+    networks:
+      - 'nextcloud-internal'
+      - 'server'
+    volumes:
+      - './nextcloud/nginx.conf:/etc/nginx/nginx.conf:ro'
     labels:
       traefik.enable: true
       traefik.http.routers.nextcloud.rule: Host(`${NEXTCLOUD_HOST:-nextcloud.${SITE:-localhost}}`)
