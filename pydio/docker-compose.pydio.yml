@@ -48,7 +48,7 @@ services:
       TZ: '${TIMEZONE:-Europe/Madrid}'
       EXTERNALURL: ${PYDIO_HOST:-pydio.${SITE:-localhost}}
     volumes:
-      - './pydio/config:/config'
+      - './pydio/data:/config'
     ports:
       - '${PYDIO_GRPC_PORT:-33060}:33060'
     labels:
