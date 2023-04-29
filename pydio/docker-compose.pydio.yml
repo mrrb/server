@@ -1,13 +1,41 @@
 version: '3.8'
 
 services:
+  pydio-db:
+    image: linuxserver/mariadb:${MARIADB_IMAGE_VERSION:-latest}
+    platform: '${PLATFORM_ARCH}'
+    container_name: pydio-db
+    healthcheck:
+      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+      start_period: 60s
+      interval: 30s
+      timeout: 60s
+      retries: 5
+    networks:
+      - 'pydio-internal'
+    restart: unless-stopped
+    environment:
+      PUID: ${PYDIO_UID:-0}
+      PGID: ${PYDIO_GID:-0}
+      TZ: '${TIMEZONE:-Europe/Madrid}'
+      MYSQL_ROOT_PASSWORD: ${MARIADB_ROOT_PASSWORD:-bXJyYmV1}pydio
+      MYSQL_DATABASE: ${PYDIO_DB_DATABASE:-pydio}
+      MYSQL_USER: ${PYDIO_DB_USER:-pydio}
+      MYSQL_PASSWORD: ${PYDIO_DB_PASSWORD:-oidyp}
+    volumes:
+      - './pydio/db:/config'
+
   pydio-cells:
     image: linuxserver/pydio-cells:${PYDIO_IMAGE_VERSION:-latest}
     platform: '${PLATFORM_ARCH}'
     container_name: pydio-cells
     networks:
       - 'server'
+      - 'pydio-internal'
     restart: unless-stopped
+    depends_on:
+      pydio-db:
+        condition: service_healthy
     healthcheck:
       test: ['CMD', 'curl', '0.0.0.0:8080']
       start_period: 60s
@@ -15,8 +43,8 @@ services:
       timeout: 60s
       retries: 5
     environment:
-      PUID: ${STORAGE_PYDIO_UID:-0}
-      PGID: ${STORAGE_PYDIO_GID:-0}
+      PUID: ${PYDIO_UID:-0}
+      PGID: ${PYDIO_GID:-0}
       TZ: '${TIMEZONE:-Europe/Madrid}'
       EXTERNALURL: ${PYDIO_HOST:-pydio.${SITE:-localhost}}
     volumes:
@@ -37,3 +65,6 @@ services:
       homepage.icon: pydio.png
       homepage.href: https://${PYDIO_HOST:-pydio.${SITE:-localhost}}
       homepage.description: File Sharing & Sync Platform.
+
+networks:
+  pydio-internal:
