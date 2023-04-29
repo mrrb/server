@@ -1,0 +1,39 @@
+version: '3.8'
+
+services:
+  pydio-cells:
+    image: linuxserver/pydio-cells:${PYDIO_IMAGE_VERSION:-latest}
+    platform: '${PLATFORM_ARCH}'
+    container_name: pydio-cells
+    networks:
+      - 'server'
+    restart: unless-stopped
+    healthcheck:
+      test: ['CMD', 'curl', '0.0.0.0:8080']
+      start_period: 60s
+      interval: 30s
+      timeout: 60s
+      retries: 5
+    environment:
+      PUID: ${STORAGE_PYDIO_UID:-0}
+      PGID: ${STORAGE_PYDIO_GID:-0}
+      TZ: '${TIMEZONE:-Europe/Madrid}'
+      EXTERNALURL: ${PYDIO_HOST:-pydio.${SITE:-localhost}}
+    volumes:
+      - './pydio/config:/config'
+    ports:
+      - '${PYDIO_GRPC_PORT:-33060}:33060'
+    labels:
+      # Traefik
+      traefik.enable: true
+      traefik.http.routers.pydio.rule: Host(`${PYDIO_HOST:-pydio.${SITE:-localhost}}`)
+      traefik.http.services.pydio.loadbalancer.server.port: 8080
+      traefik.http.services.pydio.loadbalancer.serverstransport: ignorecert
+      traefik.http.services.pydio.loadbalancer.server.scheme: https
+
+      # Homepage
+      homepage.group: Web
+      homepage.name: Pydio Cells
+      homepage.icon: pydio.png
+      homepage.href: https://${PYDIO_HOST:-pydio.${SITE:-localhost}}
+      homepage.description: File Sharing & Sync Platform.
