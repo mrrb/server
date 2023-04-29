@@ -20,7 +20,7 @@ services:
       TZ: '${TIMEZONE:-Europe/Madrid}'
       MYSQL_ROOT_PASSWORD: ${MARIADB_ROOT_PASSWORD:-bXJyYmV1}pydio
       MYSQL_DATABASE: ${PYDIO_DB_DATABASE:-pydio}
-      MYSQL_USER: ${PYDIO_DB_USER:-pydio}
+      MYSQL_USER: ${PYDIO_DB_USER:-cells}
       MYSQL_PASSWORD: ${PYDIO_DB_PASSWORD:-oidyp}
     volumes:
       - './pydio/db:/config'
@@ -37,7 +37,7 @@ services:
       pydio-db:
         condition: service_healthy
     healthcheck:
-      test: ['CMD', 'curl', '0.0.0.0:8080']
+      test: ['CMD', 'curl', 'https://0.0.0.0:8080', '-k']
       start_period: 60s
       interval: 30s
       timeout: 60s
@@ -52,14 +52,14 @@ services:
     ports:
       - '${PYDIO_GRPC_PORT:-33060}:33060'
     labels:
-      # Traefik
+      ## Traefik
       traefik.enable: true
       traefik.http.routers.pydio.rule: Host(`${PYDIO_HOST:-pydio.${SITE:-localhost}}`)
       traefik.http.services.pydio.loadbalancer.server.port: 8080
-      traefik.http.services.pydio.loadbalancer.serverstransport: ignorecert
+      traefik.http.services.pydio.loadbalancer.serverstransport: ignorecert@file
       traefik.http.services.pydio.loadbalancer.server.scheme: https
 
-      # Homepage
+      ## Homepage
       homepage.group: Web
       homepage.name: Pydio Cells
       homepage.icon: pydio.png
