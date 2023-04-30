@@ -46,7 +46,7 @@ services:
       PUID: ${CONTAINERS_UID:-0}
       PGID: ${CONTAINERS_GID:-0}
       TZ: '${TIMEZONE:-Europe/Madrid}'
-      EXTERNALURL: ${NEXTCLOUD_HOST:-nextcloud.${SITE:-localhost}}
+      EXTERNALURL: 'https://${NEXTCLOUD_HOST:-nextcloud.${SITE:-localhost}}'
     volumes:
       - './nextcloud/data:/config'
     labels:
