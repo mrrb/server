@@ -75,8 +75,7 @@ services:
       - './traefik/dynamic:/dynamic'
       - './traefik/acme.json:/acme.json'
     depends_on:
-      traefik-init:
-        condition: service_started
+      - traefik-init
 
   traefik-init:
     image: traefik:${TRAEFIK_IMAGE_VERSION:-v2.9}

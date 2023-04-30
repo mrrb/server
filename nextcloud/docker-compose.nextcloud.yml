@@ -2,67 +2,98 @@ version: '3.8'
 
 services:
   nextcloud-db:
-    image: linuxserver/mariadb:${MARIADB_IMAGE_VERSION:-latest}
+    image: mariadb:${MARIADB_IMAGE_VERSION:-latest}
     platform: '${PLATFORM_ARCH}'
     container_name: nextcloud-db
     healthcheck:
-      test: mysqladmin ping -h 127.0.0.1 -u $$NEXTCLOUD_DB_USER --password=$$NEXTCLOUD_DB_PASSWORD
-      start_period: 60s
-      interval: 30s
-      timeout: 60s
-      retries: 5
+      test: mysqladmin ping -h 127.0.0.1 -u $$MYSQL_USER --password=$$MYSQL_PASSWORD
+      start_period: 30s
+      interval: 15s
+      timeout: 30s
+      retries: 10
     networks:
       - 'nextcloud-internal'
     restart: unless-stopped
     environment:
-      PUID: ${CONTAINERS_UID:-0}
-      PGID: ${CONTAINERS_GID:-0}
-      TZ: '${TIMEZONE:-Europe/Madrid}'
       MYSQL_ROOT_PASSWORD: ${MARIADB_ROOT_PASSWORD:-bXJyYmV1}nextcloud
       MYSQL_DATABASE: ${NEXTCLOUD_DB_DATABASE:-nextcloud}
       MYSQL_USER: ${NEXTCLOUD_DB_USER:-nextcloud}
       MYSQL_PASSWORD: ${NEXTCLOUD_DB_PASSWORD:-duolctxen}
     volumes:
-      - './nextcloud/db:/config'
+      - './nextcloud/db:/var/lib/mysql'
+      - '/etc/localtime:/etc/localtime:ro'
+    labels:
+      traefik.enable: false
 
-  nextcloud:
-    image: linuxserver/nextcloud:${NEXTCLOUD_IMAGE_VERSION:-latest}
+  nextcloud-cache:
+    image: redis:${REDIS_IMAGE_VERSION:-latest}
     platform: '${PLATFORM_ARCH}'
-    container_name: nextcloud
+    container_name: nextcloud-cache
+    restart: unless-stopped
+    mem_limit: 2048m
+    mem_reservation: 512m
     networks:
-      - 'server'
+      - 'nextcloud-internal'
+    command: redis-server --requirepass ${NEXTCLOUD_REDIS_PASSWORD:-TGVzc0lzTW9yZQ==}
+    labels:
+      traefik.enable: false
+
+  nextcloud-app:
+    image: nextcloud:${NEXTCLOUD_IMAGE_VERSION:-stable-fpm}
+    platform: '${PLATFORM_ARCH}'
+    container_name: nextcloud-app
+    networks:
       - 'nextcloud-internal'
     restart: unless-stopped
     depends_on:
-      nextcloud-db:
-        condition: service_healthy
-    healthcheck:
-      test: ['CMD', 'curl', 'https://0.0.0.0:443', '-k']
-      start_period: 60s
-      interval: 30s
-      timeout: 60s
-      retries: 5
+      - nextcloud-db
+      - nextcloud-cache
+    mem_limit: 2048m
+    mem_reservation: 512m
     environment:
-      PUID: ${CONTAINERS_UID:-0}
-      PGID: ${CONTAINERS_GID:-0}
-      TZ: '${TIMEZONE:-Europe/Madrid}'
-      EXTERNALURL: 'https://${NEXTCLOUD_HOST:-nextcloud.${SITE:-localhost}}'
-    volumes:
-      - './nextcloud/data:/config'
-    labels:
-      ## Traefik
-      traefik.enable: true
-      traefik.http.routers.nextcloud.rule: Host(`${NEXTCLOUD_HOST:-nextcloud.${SITE:-localhost}}`)
-      traefik.http.services.nextcloud.loadbalancer.server.port: 443
-      traefik.http.services.nextcloud.loadbalancer.serverstransport: ignorecert@file
-      traefik.http.services.nextcloud.loadbalancer.server.scheme: https
+      # Domains
+      NEXTCLOUD_TRUSTED_DOMAINS: ${NEXTCLOUD_HOST:-nextcloud.${SITE:-localhost}},www.${NEXTCLOUD_HOST:-nextcloud.${SITE:-localhost}}
 
-      ## Homepage
-      homepage.group: Web
-      homepage.name: Nextcloud
-      homepage.icon: nextcloud.png
-      homepage.href: https://${NEXTCLOUD_HOST:-nextcloud.${SITE:-localhost}}
-      homepage.description: Suite of client-server software for creating and using file hosting services.
+      # MariaDB
+      MYSQL_DATABASE: ${NEXTCLOUD_DB_DATABASE:-nextcloud}
+      MYSQL_USER: ${NEXTCLOUD_DB_USER:-nextcloud}
+      MYSQL_PASSWORD: ${NEXTCLOUD_DB_PASSWORD:-duolctxen}
+      MYSQL_HOST: nextcloud-db
+
+      # Redis
+      REDIS_HOST: nextcloud-cache
+      REDIS_HOST_PASSWORD: ${NEXTCLOUD_REDIS_PASSWORD:-TGVzc0lzTW9yZQ==}
+
+      # Mail config
+      SMTP_HOST: '${MAIL_HOST:-mail.localhost}'
+      SMTP_PORT: ${MAIL_PORT:-587}
+      MAIL_FROM_ADDRESS: '${MAIL_FROM:-me@mail.localhost}'
+      SMTP_NAME: '${MAIL_USERNAME:-me@mail.localhost}'
+      SMTP_PASSWORD: '${MAIL_PASSWORD:-mail_password}'
+      SMTP_SECURE: ${MAIL_ENCRYPTION:-tls}
+    volumes:
+      - './nextcloud/data:/var/www/html/data'
+    labels:
+      traefik.enable: false
+
+  # nextcloud:
+      # networks:
+      # - 'server'
+      # - 'nextcloud-internal'
+  #   labels:
+  #     ## Traefik
+  #     traefik.enable: true
+  #     traefik.http.routers.nextcloud.rule: Host(`${NEXTCLOUD_HOST:-nextcloud.${SITE:-localhost}}`)
+  #     traefik.http.services.nextcloud.loadbalancer.server.port: 443
+  #     traefik.http.services.nextcloud.loadbalancer.serverstransport: ignorecert@file
+  #     traefik.http.services.nextcloud.loadbalancer.server.scheme: https
+
+  #     ## Homepage
+  #     homepage.group: Web
+  #     homepage.name: Nextcloud
+  #     homepage.icon: nextcloud.png
+  #     homepage.href: https://${NEXTCLOUD_HOST:-nextcloud.${SITE:-localhost}}
+  #     homepage.description: Suite of client-server software for creating and using file hosting services.
 
 networks:
   nextcloud-internal:

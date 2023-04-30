@@ -29,10 +29,8 @@ services:
       - 'traefik.http.routers.authentik.rule=Host(`${AUTHENTIK_HOST:-authentik.${SITE:-localhost}}`) || PathPrefix(`/outpost.goauthentik.io/`)'
       - 'traefik.http.services.authentik.loadbalancer.server.port=9000'
     depends_on:
-      authentik-db:
-        condition: service_started
-      authentik-redis:
-        condition: service_started
+      - authentik-db
+      - authentik-redis
 
   authentik-worker:
     image: ${AUTHENTIK_IMAGE:-ghcr.io/goauthentik/server}:${AUTHENTIK_IMAGE_VERSION:-2023.2}
