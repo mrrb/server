@@ -1,0 +1,68 @@
+version: '3.8'
+
+services:
+  nextcloud-db:
+    image: linuxserver/mariadb:${MARIADB_IMAGE_VERSION:-latest}
+    platform: '${PLATFORM_ARCH}'
+    container_name: nextcloud-db
+    healthcheck:
+      test: mysqladmin ping -h 127.0.0.1 -u $$NEXTCLOUD_DB_USER --password=$$NEXTCLOUD_DB_PASSWORD
+      start_period: 60s
+      interval: 30s
+      timeout: 60s
+      retries: 5
+    networks:
+      - 'nextcloud-internal'
+    restart: unless-stopped
+    environment:
+      PUID: ${CONTAINERS_UID:-0}
+      PGID: ${CONTAINERS_GID:-0}
+      TZ: '${TIMEZONE:-Europe/Madrid}'
+      MYSQL_ROOT_PASSWORD: ${MARIADB_ROOT_PASSWORD:-bXJyYmV1}nextcloud
+      MYSQL_DATABASE: ${NEXTCLOUD_DB_DATABASE:-nextcloud}
+      MYSQL_USER: ${NEXTCLOUD_DB_USER:-nextcloud}
+      MYSQL_PASSWORD: ${NEXTCLOUD_DB_PASSWORD:-duolctxen}
+    volumes:
+      - './nextcloud/db:/config'
+
+  nextcloud:
+    image: linuxserver/nextcloud:${NEXTCLOUD_IMAGE_VERSION:-latest}
+    platform: '${PLATFORM_ARCH}'
+    container_name: nextcloud
+    networks:
+      - 'server'
+      - 'nextcloud-internal'
+    restart: unless-stopped
+    depends_on:
+      nextcloud-db:
+        condition: service_healthy
+    healthcheck:
+      test: ['CMD', 'curl', 'https://0.0.0.0:443', '-k']
+      start_period: 60s
+      interval: 30s
+      timeout: 60s
+      retries: 5
+    environment:
+      PUID: ${CONTAINERS_UID:-0}
+      PGID: ${CONTAINERS_GID:-0}
+      TZ: '${TIMEZONE:-Europe/Madrid}'
+      EXTERNALURL: ${NEXTCLOUD_HOST:-nextcloud.${SITE:-localhost}}
+    volumes:
+      - './nextcloud/data:/config'
+    labels:
+      ## Traefik
+      traefik.enable: true
+      traefik.http.routers.nextcloud.rule: Host(`${NEXTCLOUD_HOST:-nextcloud.${SITE:-localhost}}`)
+      traefik.http.services.nextcloud.loadbalancer.server.port: 443
+      traefik.http.services.nextcloud.loadbalancer.serverstransport: ignorecert@file
+      traefik.http.services.nextcloud.loadbalancer.server.scheme: https
+
+      ## Homepage
+      homepage.group: Web
+      homepage.name: Nextcloud
+      homepage.icon: nextcloud.png
+      homepage.href: https://${NEXTCLOUD_HOST:-nextcloud.${SITE:-localhost}}
+      homepage.description: Suite of client-server software for creating and using file hosting services.
+
+networks:
+  nextcloud-internal:
