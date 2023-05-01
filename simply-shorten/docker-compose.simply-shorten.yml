@@ -4,21 +4,28 @@ services:
   simply-shorten:
     image: mrrbeu/simply-shorten:${SIMPLYSHORTEN_IMAGE_VERSION:-latest} # linux/amd64 and linux/arm64/v8 build
     # image: draganczukp/simply-shorten:${SIMPLYSHORTEN_IMAGE_VERSION:-latest}
-    platform: '${PLATFORM_ARCH}'
-    container_name: simply-shorten
-    networks:
-      - 'server'
     restart: unless-stopped
+    platform: ${PLATFORM_ARCH}
+    container_name: simply-shorten
+
     environment:
-      - username=${SIMPLYSHORTEN_USER:-username}
-      - password=${SIMPLYSHORTEN_PASS:-p1kKjazX54u27}
+      username: ${SIMPLYSHORTEN_USER:-username}
+      password: ${SIMPLYSHORTEN_PASS:-p1kKjazX54u27}
+
+    networks:
+      - server
+
     volumes:
-      - ./simply-shorten/urls.sqlite:/urls.sqlite
+      - './simply-shorten/urls.sqlite:/urls.sqlite'
+
     labels:
-      - 'traefik.enable=true'
-      - 'traefik.http.routers.simply-shorten.rule=Host(`${SIMPLYSHORTEN_HOST:-simply-shorten.${SITE:-localhost}}`)'
-      - 'traefik.http.services.simply-shorten.loadbalancer.server.port=4567'
-      - 'homepage.group=Web'
-      - 'homepage.name=Simply Shorten'
-      - 'homepage.href=https://${SIMPLYSHORTEN_HOST:-simply-shorten.${SITE:-localhost}}'
-      - 'homepage.description=A simple selfhosted URL shortener with no unnecessary features.'
+      ## Traefik
+      traefik.enable: true
+      traefik.http.routers.simply-shorten.rule: Host(`${SIMPLYSHORTEN_HOST:-simply-shorten.${SITE:-localhost}}`)
+      traefik.http.services.simply-shorten.loadbalancer.server.port: 4567
+
+      ## Homepage
+      homepage.group: Web
+      homepage.name: Simply Shorten
+      homepage.href: https://${SIMPLYSHORTEN_HOST:-simply-shorten.${SITE:-localhost}}
+      homepage.description: A simple selfhosted URL shortener with no unnecessary features.

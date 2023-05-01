@@ -3,17 +3,21 @@ version: '3.8'
 services:
   homepage:
     image: ghcr.io/benphelps/homepage:${HOMEPAGE_IMAGE_VERSION:-latest}
-    platform: '${PLATFORM_ARCH}'
-    container_name: homepage
-    networks:
-      - 'server'
-      - 'server-metrics'
     restart: unless-stopped
-    labels:
-      - 'traefik.enable=true'
-      - 'traefik.http.routers.homepage.rule=Host(`${HOMEPAGE_HOST:-dashboard.${SITE:-localhost}}`)'
-      - 'traefik.http.services.homepage.loadbalancer.server.port=3000'
-      - 'traefik.http.routers.homepage.middlewares=shadow_auth@docker'
+    platform: ${PLATFORM_ARCH}
+    container_name: homepage
+
+    networks:
+      - server
+      - server-metrics
+
     volumes:
       - './homepage/config:/app/config'
       - '/var/run/docker.sock:/var/run/docker.sock:ro'
+
+    labels:
+      ## Traefik
+      traefik.enable: true
+      traefik.http.routers.homepage.rule: Host(`${HOMEPAGE_HOST:-dashboard.${SITE:-localhost}}`)
+      traefik.http.services.homepage.loadbalancer.server.port: 3000
+      traefik.http.routers.homepage.middlewares: shadow_auth@docker

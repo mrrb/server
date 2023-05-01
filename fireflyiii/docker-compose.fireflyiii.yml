@@ -3,23 +3,19 @@ version: '3.8'
 services:
   fireflyiii:
     image: fireflyiii/core:${FIREFLYIII_IMAGE_VERSION:-latest}
-    platform: '${PLATFORM_ARCH}'
-    container_name: fireflyiii
-    volumes:
-      - './fireflyiii/files/upload/:/var/www/html/storage/upload'
-      - './fireflyiii/files/export/:/var/www/html/storage/export'
-      - './fireflyiii/db.sqlite:/var/www/html/storage/database/database.sqlite'
-    networks:
-      - 'server'
     restart: unless-stopped
+    platform: ${PLATFORM_ARCH}
+    container_name: fireflyiii
+
     healthcheck:
       test: ['CMD', 'curl', '0.0.0.0:8080']
       start_period: 60s
       interval: 30s
       timeout: 60s
       retries: 5
+
     environment:
-      # App config
+      ## App config
       APP_URL: 'https://${FIREFLYIII_HOST:-firefly.${SITE:-localhost}}'
       APP_KEY: ${FIREFLYIII_APP_KEY:-SomeRandomStringOf32CharsEXACTLY}
       STATIC_CRON_TOKEN: ${FIREFLYIII_STATIC_CRON_TOKEN:-somerandomstringof32charsEXACTLY}
@@ -31,10 +27,10 @@ services:
       DEFAULT_LOCALE: '${FIREFLYIII_DEFAULT_LOCALE:-es_ES}'
       TZ: '${TIMEZONE:-Europe/Madrid}'
 
-      # DB config
+      ## DB config
       DB_CONNECTION: 'sqlite'
 
-      # Mail config
+      ## Mail config
       MAIL_MAILER: '${FIREFLYIII_MAIL_MAILER:-smtp}'
       MAIL_HOST: '${MAIL_HOST:-mail.localhost}'
       MAIL_PORT: ${MAIL_PORT:-587}
@@ -43,17 +39,29 @@ services:
       MAIL_PASSWORD: '${MAIL_PASSWORD:-mail_password}'
       MAIL_ENCRYPTION: ${MAIL_ENCRYPTION:-tls}
 
-      # Other config
+      ## Other config
       ENABLE_EXTERNAL_MAP: ${FIREFLYIII_ENABLE_EXTERNAL_MAP:-true}
       ENABLE_EXTERNAL_RATES: ${FIREFLYIII_ENABLE_EXTERNAL_RATES:-true}
       MAP_DEFAULT_LAT: ${FIREFLYIII_MAP_DEFAULT_LAT:-40.41663}
       MAP_DEFAULT_LONG: ${FIREFLYIII_MAP_DEFAULT_LONG:--3.7038}
+
+    networks:
+      - server
+
+    volumes:
+      - './fireflyiii/files/upload/:/var/www/html/storage/upload'
+      - './fireflyiii/files/export/:/var/www/html/storage/export'
+      - './fireflyiii/db.sqlite:/var/www/html/storage/database/database.sqlite'
+
     labels:
-      - 'traefik.enable=true'
-      - 'traefik.http.routers.fireflyiii.rule=Host(`${FIREFLYIII_HOST:-firefly.${SITE:-localhost}}`)'
-      - 'traefik.http.services.fireflyiii.loadbalancer.server.port=8080'
-      - 'homepage.group=Web'
-      - 'homepage.name=Firefly III'
-      - 'homepage.icon=firefly.png'
-      - 'homepage.href=https://${FIREFLYIII_HOST:-firefly.${SITE:-localhost}}'
-      - 'homepage.description=A free and open source personal finance manager.'
+      ## Traefik
+      traefik.enable: true
+      traefik.http.routers.fireflyiii.rule: Host(`${FIREFLYIII_HOST:-firefly.${SITE:-localhost}}`)
+      traefik.http.services.fireflyiii.loadbalancer.server.port: 8080
+
+      ## Homepage
+      homepage.group: Web
+      homepage.name: Firefly III
+      homepage.icon: firefly.png
+      homepage.href: https://${FIREFLYIII_HOST:-firefly.${SITE:-localhost}}
+      homepage.description: A free and open source personal finance manager.

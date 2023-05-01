@@ -3,26 +3,33 @@ version: '3.8'
 services:
   nginx:
     image: nginx:${NGINX_IMAGE_VERSION:-stable-alpine}
-    platform: '${PLATFORM_ARCH}'
-    container_name: nginx
-    volumes:
-      - './nginx/conf:/etc/nginx/conf.d'
-      - './refs/server-private/page_default/:/srv/www/default'
-      - './nginx/logs:/var/log/nginx/'
-    networks:
-      - 'server'
     restart: unless-stopped
+    platform: ${PLATFORM_ARCH}
+    container_name: nginx
+
     healthcheck:
       test: ['CMD', 'curl', '0.0.0.0:80']
       interval: 10s
       timeout: 10s
       retries: 5
+
+    networks:
+      - server
+
+    volumes:
+      - './nginx/conf:/etc/nginx/conf.d'
+      - './refs/server-private/page_default/:/srv/www/default'
+      - './nginx/logs:/var/log/nginx/'
+
     labels:
-      - 'traefik.enable=true'
-      - 'traefik.http.routers.nginx.rule=Host(`${NGINX_HOST:-${SITE:-localhost}}`)'
-      - 'traefik.http.services.nginx.loadbalancer.server.port=80'
-      - 'homepage.group=Web'
-      - 'homepage.name=NginX [default]'
-      - 'homepage.icon=nginx.png'
-      - 'homepage.href=https://${NGINX_HOST:-${SITE:-localhost}}'
-      - 'homepage.description=Default webserver for the server.'
+      ## Traefik
+      traefik.enable: true
+      traefik.http.routers.nginx.rule: Host(`${NGINX_HOST:-${SITE:-localhost}}`)
+      traefik.http.services.nginx.loadbalancer.server.port: 80
+
+      ## Homepage
+      homepage.group: Web
+      homepage.name: NginX [default]
+      homepage.icon: nginx.png
+      homepage.href: https://${NGINX_HOST:-${SITE:-localhost}}
+      homepage.description: Default webserver for the server.

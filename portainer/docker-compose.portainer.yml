@@ -3,35 +3,42 @@ version: '3.8'
 services:
   portainer:
     image: portainer/portainer-ce:${PORTAINER_IMAGE_VERSION:-latest}
-    platform: '${PLATFORM_ARCH}'
+    restart: unless-stopped
+    platform: ${PLATFORM_ARCH}
     container_name: portainer
+
     networks:
-      - 'server'
-    command: -H unix:///var/run/docker.sock
+      - server
+
+    command: |
+      -H unix:///var/run/docker.sock
+    
     volumes:
       - '/var/run/docker.sock:/var/run/docker.sock'
       - './portainer/data:/data'
-    restart: unless-stopped
+
     labels:
-      - 'traefik.enable=true'
+      ## Traefik
+      traefik.enable: true
 
-      # Frontend
-      - 'traefik.http.routers.portainer.rule=Host(`${PORTAINER_HOST:-portainer.${SITE:-localhost}}`)'
-      - 'traefik.http.services.portainer.loadbalancer.server.port=9000'
-      - "traefik.http.routers.portainer.service=portainer"
+      ## Frontend
+      traefik.http.routers.portainer.rule: Host(`${PORTAINER_HOST:-portainer.${SITE:-localhost}}`)
+      traefik.http.services.portainer.loadbalancer.server.port: 9000
+      traefik.http.routers.portainer.service: portainer
 
-      # Edge
-      - 'traefik.http.routers.edge.rule=Host(`${PORTAINER_EDGE_HOST:-edge.${SITE:-localhost}}`)'
-      - "traefik.http.services.edge.loadbalancer.server.port=8000"
-      - "traefik.http.routers.edge.service=edge"
+      ## Edge
+      traefik.http.routers.edge.rule: Host(`${PORTAINER_EDGE_HOST:-edge.${SITE:-localhost}}`)
+      traefik.http.services.edge.loadbalancer.server.port: 8000
+      traefik.http.routers.edge.service: edge
 
-      # Homepage
-      - 'homepage.group=Docker'
-      - 'homepage.name=Portainer'
-      - 'homepage.icon=portainer.png'
-      - 'homepage.href=https://${PORTAINER_HOST:-portainer.${SITE:-localhost}}'
-      - 'homepage.description=Traefik is an open-source Edge Router that makes publishing your services a fun and easy experience.'
-      - 'homepage.widget.type=portainer'
-      - 'homepage.widget.url=https://${PORTAINER_HOST:-portainer.${SITE:-localhost}}'
-      - 'homepage.widget.env=${HOMEPAGE_PORTAINER_ENV:-1}'
-      - 'homepage.widget.key=${HOMEPAGE_PORTAINER_KEY}'
+      ## Homepage
+      homepage.group: Docker
+      homepage.name: Portainer
+      homepage.icon: portainer.png
+      homepage.href: https://${PORTAINER_HOST:-portainer.${SITE:-localhost}}
+      homepage.description: Traefik is an open-source Edge Router that makes publishing your services a fun and easy experience.
+
+      homepage.widget.type: portainer
+      homepage.widget.url: https://${PORTAINER_HOST:-portainer.${SITE:-localhost}}
+      homepage.widget.env: ${HOMEPAGE_PORTAINER_ENV:-1}
+      homepage.widget.key: ${HOMEPAGE_PORTAINER_KEY}

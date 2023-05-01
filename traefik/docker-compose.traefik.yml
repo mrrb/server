@@ -3,8 +3,22 @@ version: '3.8'
 services:
   traefik:
     image: traefik:${TRAEFIK_IMAGE_VERSION:-v2.9}
-    platform: '${PLATFORM_ARCH}'
+    restart: unless-stopped
+    platform: ${PLATFORM_ARCH}
     container_name: traefik
+
+    healthcheck:
+      test: ['CMD', 'traefik', 'healthcheck', '--ping']
+      interval: 10s
+      timeout: 10s
+      retries: 5
+
+    depends_on:
+      - traefik-init
+
+    networks:
+      - server
+
     command:
       ## Providers
       - '--providers.docker'
@@ -45,51 +59,50 @@ services:
       - '--global.checknewversion=${TRAEFIK_CHECK_NEW_VERSION:-false}'
       - '--global.sendanonymoususage=${TRAEFIK_SEND_ANONYMOUS_USAGE:-false}'
       - '--ping'
-    ports:
-      - '${TRAEFIK_WEB_ENTRYPOINT:-80}:${TRAEFIK_WEB_ENTRYPOINT:-80}'
-      - '${TRAEFIK_WEBSECURE_ENTRYPOINT:-443}:${TRAEFIK_WEBSECURE_ENTRYPOINT:-443}'
-      - '${TRAEFIK_GRPC_ENTRYPOINT:-33060}:${TRAEFIK_GRPC_ENTRYPOINT:-33060}'
-    networks:
-      - 'server'
-    restart: unless-stopped
-    healthcheck:
-      test: ['CMD', 'traefik', 'healthcheck', '--ping']
-      interval: 10s
-      timeout: 10s
-      retries: 5
-    labels:
-      - 'traefik.enable=true'
-      - 'traefik.http.routers.traefik.rule=Host(`${TRAEFIK_HOST:-traefik.${SITE:-localhost}}`)'
-      - 'traefik.http.routers.traefik.service=api@internal'
-      - 'traefik.http.routers.traefik.middlewares=shadow_auth@docker'
-      # Middleware definitions
-      - "traefik.http.middlewares.shadow_auth.basicauth.usersfile=/.shadow"
-      - 'traefik.http.middlewares.shadow_auth.basicauth.removeHeader=true'
-      # Homepage
-      - 'homepage.group=System'
-      - 'homepage.name=Traefik'
-      - 'homepage.icon=traefik.png'
-      - 'homepage.href=https://${TRAEFIK_HOST:-traefik.${SITE:-localhost}}'
-      - 'homepage.description=Traefik is an open-source Edge Router that makes publishing your services a fun and easy experience.'
-      - 'homepage.widget.type=traefik'
-      - 'homepage.widget.url=https://${TRAEFIK_HOST:-traefik.${SITE:-localhost}}'
-      - 'homepage.widget.username=${HOMEPAGE_TRAEFIK_USERNAME}'
-      - 'homepage.widget.password=${HOMEPAGE_TRAEFIK_PASSWORD}'
+
     volumes:
       - '/var/run/docker.sock:/var/run/docker.sock'
       - '${USERS_FILE:-./.shadow}:/.shadow:ro'
       - './traefik/logs:/logs'
       - './traefik/dynamic:/dynamic'
       - './traefik/acme.json:/acme.json'
-    depends_on:
-      - traefik-init
+
+    labels:
+      ## Traefik
+      traefik.enable: true
+      traefik.http.routers.traefik.rule: Host(`${TRAEFIK_HOST:-traefik.${SITE:-localhost}}`)
+      traefik.http.routers.traefik.service: api@internal
+      traefik.http.routers.traefik.middlewares: shadow_auth@docker
+
+      ## Middleware definitions
+      traefik.http.middlewares.shadow_auth.basicauth.usersfile: /.shadow
+      traefik.http.middlewares.shadow_auth.basicauth.removeHeader: true
+
+      ## Homepage
+      homepage.group: System
+      homepage.name: Traefik
+      homepage.icon: traefik.png
+      homepage.href: https://${TRAEFIK_HOST:-traefik.${SITE:-localhost}}
+      homepage.description: Traefik is an open-source Edge Router that makes publishing your services a fun and easy experience.
+
+      homepage.widget.type: traefik
+      homepage.widget.url: https://${TRAEFIK_HOST:-traefik.${SITE:-localhost}}
+      homepage.widget.username: ${HOMEPAGE_TRAEFIK_USERNAME}
+      homepage.widget.password: ${HOMEPAGE_TRAEFIK_PASSWORD}
+
+    ports:
+      - '${TRAEFIK_WEB_ENTRYPOINT:-80}:${TRAEFIK_WEB_ENTRYPOINT:-80}'
+      - '${TRAEFIK_WEBSECURE_ENTRYPOINT:-443}:${TRAEFIK_WEBSECURE_ENTRYPOINT:-443}'
+      - '${TRAEFIK_GRPC_ENTRYPOINT:-33060}:${TRAEFIK_GRPC_ENTRYPOINT:-33060}'
 
   traefik-init:
     image: traefik:${TRAEFIK_IMAGE_VERSION:-v2.9}
-    platform: '${PLATFORM_ARCH}'
+    platform: ${PLATFORM_ARCH}
+    network_mode: none
     container_name: traefik-init
+
     command: |
       chmod 600 /acme.json
+
     volumes:
       - './traefik/acme.json:/acme.json'
-    network_mode: none

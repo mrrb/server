@@ -3,7 +3,7 @@ version: '3.8'
 services:
   nextcloud-db:
     image: mariadb:${MARIADB_IMAGE_VERSION:-latest}
-    platform: '${PLATFORM_ARCH}'
+    platform: ${PLATFORM_ARCH}
     container_name: nextcloud-db
     healthcheck:
       test: mysqladmin ping -h 127.0.0.1 -u $$MYSQL_USER --password=$$MYSQL_PASSWORD
@@ -28,7 +28,7 @@ services:
 
   nextcloud-cache:
     image: redis:${REDIS_IMAGE_VERSION:-latest}
-    platform: '${PLATFORM_ARCH}'
+    platform: ${PLATFORM_ARCH}
     container_name: nextcloud-cache
     restart: unless-stopped
     # mem_limit: 2048m
@@ -41,7 +41,7 @@ services:
 
   nextcloud:
     image: nextcloud:${NEXTCLOUD_IMAGE_VERSION:-stable}
-    platform: '${PLATFORM_ARCH}'
+    platform: ${PLATFORM_ARCH}
     container_name: nextcloud
     networks:
       - 'server'

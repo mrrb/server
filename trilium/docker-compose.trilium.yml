@@ -3,31 +3,36 @@ version: '3.8'
 services:
   trilium:
     image: zadam/trilium:${TRILIUM_IMAGE_VERSION:-latest}
-    platform: '${PLATFORM_ARCH}'
     restart: unless-stopped
+    platform: ${PLATFORM_ARCH}
     container_name: trilium
-    networks:
-      - 'server'
+
     healthcheck:
       test: ['CMD', 'wget', '--no-verbose', '--tries=1', '--spider', 'http://localhost:8080/robots.txt']
       start_period: 60s
       interval: 30s
       timeout: 60s
       retries: 5
+
     environment:
-      - TRILIUM_DATA_DIR=/home/node/trilium-data
+      TRILIUM_DATA_DIR: /home/node/trilium-data
+
+    networks:
+      - server
+
     volumes:
       - './trilium/data/:/home/node/trilium-data'
-    labels:
-      # Traefik
-      - 'traefik.enable=true'
-      - 'traefik.http.routers.trilium.rule=Host(`${TRILIUM_HOST:-trilium.${SITE:-localhost}}`)'
-      - 'traefik.http.services.trilium.loadbalancer.server.port=8080'
-      - "traefik.http.routers.trilium.service=trilium"
 
-      # Homepage
-      - 'homepage.group=Web'
-      - 'homepage.name=Trilium'
-      - 'homepage.icon=trilium.png'
-      - 'homepage.href=https://${TRILIUM_HOST:-trilium.${SITE:-localhost}}'
-      - 'homepage.description=Hierarchical note taking application with focus on building large personal knowledge bases.'
+    labels:
+      ## Traefik
+      traefik.enable: true
+      traefik.http.routers.trilium.rule: Host(`${TRILIUM_HOST:-trilium.${SITE:-localhost}}`)
+      traefik.http.services.trilium.loadbalancer.server.port: 8080
+      traefik.http.routers.trilium.service: trilium
+
+      ## Homepage
+      homepage.group: Web
+      homepage.name: Trilium
+      homepage.icon: trilium.png
+      homepage.href: https://${TRILIUM_HOST:-trilium.${SITE:-localhost}}
+      homepage.description: Hierarchical note taking application with focus on building large personal knowledge bases.

@@ -3,18 +3,23 @@ version: '3.8'
 services:
   whoami:
     image: containous/whoami:${WHOAMI_IMAGE_VERSION:-latest}
-    platform: '${PLATFORM_ARCH}'
-    container_name: whoami
     restart: unless-stopped
+    platform: ${PLATFORM_ARCH}
+    container_name: whoami
+
     networks:
-      - 'server'
+      - server
+
     labels:
-      - 'traefik.enable=true'
-      - 'traefik.http.routers.whoami.rule=Host(`${WHOAMI_HOST:-whoami.${SITE:-localhost}}`)'
-      - 'traefik.http.services.whoami.loadbalancer.server.port=80'
-      - 'traefik.http.routers.whoami.middlewares=shadow_auth@docker'
-      - 'homepage.group=System'
-      - 'homepage.name=Whoami'
-      - 'homepage.icon=go.png'
-      - 'homepage.href=https://${WHOAMI_HOST:-whoami.${SITE:-localhost}}'
-      - 'homepage.description=Tiny Go webserver that prints os information and HTTP request to output.'
+      ## Traefik
+      traefik.enable: true
+      traefik.http.routers.whoami.rule: Host(`${WHOAMI_HOST:-whoami.${SITE:-localhost}}`)
+      traefik.http.services.whoami.loadbalancer.server.port: 80
+      traefik.http.routers.whoami.middlewares: shadow_auth@docker
+
+      ## Homepage
+      homepage.group: System
+      homepage.name: Whoami
+      homepage.icon: go.png
+      homepage.href: https://${WHOAMI_HOST:-whoami.${SITE:-localhost}}
+      homepage.description: Tiny Go webserver that prints OS information and HTTP request to output.
