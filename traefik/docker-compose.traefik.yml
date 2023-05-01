@@ -6,34 +6,40 @@ services:
     platform: '${PLATFORM_ARCH}'
     container_name: traefik
     command:
-      # Providers
+      ## Providers
       - '--providers.docker'
       - '--providers.docker.exposedbydefault=${TRAEFIK_DOCKER_EXPOSED_BY_DEFAULT:-false}'
       - '--providers.docker.network=${TRAEFIK_DOCKER_NETWORK:-traefik}'
       - '--providers.file'
       - '--providers.file.directory=/dynamic/'
       - '--providers.file.watch=true'
-      # Entrypoints
+
+      ## Entrypoints
       - '--entrypoints.web.address=:${TRAEFIK_WEB_ENTRYPOINT:-80}'
       - '--entrypoints.web.http.redirections.entrypoint.to=websecure'
       - '--entrypoints.web.http.redirections.entrypoint.scheme=https'
       - '--entrypoints.websecure.address=:${TRAEFIK_WEBSECURE_ENTRYPOINT:-443}'
-      # Enable HTTP/3
+      - '--entrypoints.grpc.address=:${TRAEFIK_GRPC_ENTRYPOINT:-33060}'
+
+      ## Enable HTTP/3
       - '--experimental.http3=true'
       - '--entrypoints.websecure.http3.advertisedPort=${TRAEFIK_WEBSECURE_ENTRYPOINT:-443}'
-      # Let's Encrypt
+
+      ## Let's Encrypt
       - '--certificatesresolvers.letsEncrypt.acme.email=${ROOT_EMAIL:-changeme@changeme.org}'
       - '--certificatesresolvers.letsEncrypt.acme.tlschallenge=true'
       - '--certificatesresolvers.letsEncrypt.acme.storage=/acme.json'
       - '--entrypoints.websecure.http.tls.certresolver=letsEncrypt'
-      # Logs
+
+      ## Logs
       - '--accesslog.filepath=/logs/access.log'
       - '--accesslog.format=json'
       - '--log.filepath=/logs/traefik.log'
       - '--log.format=json'
       - '--log.level=${TRAEFIK_LOG_LEVEL:-ERROR}'
       - '--metrics.prometheus'
-      # Misc
+
+      ## Misc
       - '--api.dashboard'
       - '--entrypoints.websecure.http.middlewares=compress@file,headers@file${TRAEFIK_PLUGINS:-}'
       - '--global.checknewversion=${TRAEFIK_CHECK_NEW_VERSION:-false}'
@@ -42,6 +48,7 @@ services:
     ports:
       - '${TRAEFIK_WEB_ENTRYPOINT:-80}:${TRAEFIK_WEB_ENTRYPOINT:-80}'
       - '${TRAEFIK_WEBSECURE_ENTRYPOINT:-443}:${TRAEFIK_WEBSECURE_ENTRYPOINT:-443}'
+      - '${TRAEFIK_GRPC_ENTRYPOINT:-33060}:${TRAEFIK_GRPC_ENTRYPOINT:-33060}'
     networks:
       - 'server'
     restart: unless-stopped
