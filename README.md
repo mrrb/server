@@ -110,6 +110,7 @@ If using Hetzner storage, the required box structure must be already created. Ch
     * `git`, `git-lfs` and `sudo` should be installed on the machine.
     * `sshfs`, `gocryptfs` and `syncthing` should be installed on the machine.
     * Root permissions required.
+    * Ports 80 and 443 accessible. UFW example, `sudo ufw allow "WWW full" && sudo ufw enable && sudo ufw status`.
 2. Go to `/srv/` directory.
 3. Download repo (`sudo git clone git@github.com:mrrb/server.git --recursive`). CD into it `cd /srv/server/`.
 4. Checkout to VPS1 branch `sudo git checkout vps1`.
@@ -136,15 +137,16 @@ If using Hetzner storage, the required box structure must be already created. Ch
     * `sudo bash -c 'source /srv/server/server.sh && store_gocrypt_password private'` and insert `private` key.
     * `sudo bash -c 'source /srv/server/server.sh && store_gocrypt_password generic'` and insert `generic` key.
 12. Init server files `sudo bash -c 'source /srv/server/server.sh && server_init'`. This will generate the environment file, fill some config files and generate and install all the services, timers and mounts.
-13. Enable the required server service(s), timer(s) and mount(s).
+13. Allow grpc port in firewall. UFW example, `sudo ufw allow 33060/tcp && sudo ufw enable && sudo ufw status`
+14. Enable the required server service(s), timer(s) and mount(s).
     * `sudo systemctl enable server.service`.
     * `sudo systemctl enable server_sshfs_mount_other.service`.
     * `sudo systemctl enable server_sshfs_mount_vault.service`.
     * `sudo systemctl enable server_gocryptfs_mount_vault_generic.service`.
     * `sudo systemctl enable server_gocryptfs_mount_vault_private.service`.
-14. Reboot system and check that everything works.
-15. Go to the portainer page and set it up.
+15. Reboot system and check that everything works.
+16. Go to the portainer page and set it up.
     * Gen a KEY and save it into the `env.extra.json` file (`HOMEPAGE_PORTAINER_KEY`).
-16. Regenerate the environment file `sudo bash -c 'source /srv/server/server.sh && gen_server_env'`.
-17. Restart service `sudo systemctl restart server.service`.
-18. Enjoy 😉.
+17. Regenerate the environment file `sudo bash -c 'source /srv/server/server.sh && gen_server_env'`.
+18. Restart service `sudo systemctl restart server.service`.
+19. Enjoy 😉.
