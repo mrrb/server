@@ -4,6 +4,3 @@
 [submodule "refs/server-private"]
 	path = refs/server-private
 	url = git@github.com:mrrb/server-private.git
-[submodule "kanboard/plugins/AutoSubtasks"]
-	path = kanboard/plugins/AutoSubtasks
-	url = git@github.com:creecros/AutoSubtasks.git
