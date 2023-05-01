@@ -55,6 +55,6 @@ services:
       ## Homepage
       homepage.group: Web
       homepage.name: Kanboard
-      homepage.icon: kanboard.png
+      homepage.icon: https://${KANBOARD_HOST:-kanboard.${SITE:-localhost}}/assets/img/touch-icon-ipad-retina.png
       homepage.href: https://${KANBOARD_HOST:-kanboard.${SITE:-localhost}}
       homepage.description: Kanboard is a free and open source Kanban project management software.
