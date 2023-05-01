@@ -14,6 +14,7 @@ services:
     networks:
       - 'nextcloud-internal'
     restart: unless-stopped
+    command: --transaction-isolation=READ-COMMITTED --log-bin=binlog --binlog-format=ROW
     environment:
       MYSQL_ROOT_PASSWORD: ${MARIADB_ROOT_PASSWORD:-bXJyYmV1}nextcloud
       MYSQL_DATABASE: ${NEXTCLOUD_DB_DATABASE:-nextcloud}
@@ -30,29 +31,40 @@ services:
     platform: '${PLATFORM_ARCH}'
     container_name: nextcloud-cache
     restart: unless-stopped
-    mem_limit: 2048m
-    mem_reservation: 512m
+    # mem_limit: 2048m
+    # mem_reservation: 512m
     networks:
       - 'nextcloud-internal'
     command: redis-server --requirepass ${NEXTCLOUD_REDIS_PASSWORD:-TGVzc0lzTW9yZQ==}
     labels:
       traefik.enable: false
 
-  nextcloud-app:
-    image: nextcloud:${NEXTCLOUD_IMAGE_VERSION:-stable-fpm}
+  nextcloud:
+    image: nextcloud:${NEXTCLOUD_IMAGE_VERSION:-stable}
     platform: '${PLATFORM_ARCH}'
-    container_name: nextcloud-app
+    container_name: nextcloud
     networks:
+      - 'server'
       - 'nextcloud-internal'
     restart: unless-stopped
     depends_on:
       - nextcloud-db
       - nextcloud-cache
-    mem_limit: 2048m
-    mem_reservation: 512m
+    # mem_limit: 2048m
+    # mem_reservation: 512m
+    healthcheck:
+      test: ['CMD', 'curl', '0.0.0.0:80']
+      start_period: 30s
+      interval: 15s
+      timeout: 30s
+      retries: 10
     environment:
+      # Admin
+      NEXTCLOUD_ADMIN_USER: ${NEXTCLOUD_DB_DATABASE:-admin}
+      NEXTCLOUD_ADMIN_PASSWORD: ${NEXTCLOUD_DB_DATABASE:-MTIzSGVsbG9Ib3dSVQ==}
+
       # Domains
-      NEXTCLOUD_TRUSTED_DOMAINS: ${NEXTCLOUD_HOST:-nextcloud.${SITE:-localhost}},www.${NEXTCLOUD_HOST:-nextcloud.${SITE:-localhost}}
+      NEXTCLOUD_TRUSTED_DOMAINS: https://${NEXTCLOUD_HOST:-nextcloud.${SITE:-localhost}} '*'
 
       # MariaDB
       MYSQL_DATABASE: ${NEXTCLOUD_DB_DATABASE:-nextcloud}
@@ -73,27 +85,38 @@ services:
       SMTP_SECURE: ${MAIL_ENCRYPTION:-tls}
     volumes:
       - './nextcloud/data:/var/www/html/data'
+      - './nextcloud/config:/var/www/html/config'
     labels:
-      traefik.enable: false
+      ## Traefik
+      traefik.enable: true
+      traefik.http.routers.nextcloud.rule: Host(`${NEXTCLOUD_HOST:-nextcloud.${SITE:-localhost}}`)
+      traefik.http.services.nextcloud.loadbalancer.server.port: 80
 
-  # nextcloud:
-      # networks:
-      # - 'server'
-      # - 'nextcloud-internal'
-  #   labels:
-  #     ## Traefik
-  #     traefik.enable: true
-  #     traefik.http.routers.nextcloud.rule: Host(`${NEXTCLOUD_HOST:-nextcloud.${SITE:-localhost}}`)
-  #     traefik.http.services.nextcloud.loadbalancer.server.port: 443
-  #     traefik.http.services.nextcloud.loadbalancer.serverstransport: ignorecert@file
-  #     traefik.http.services.nextcloud.loadbalancer.server.scheme: https
+      # https://docs.nextcloud.com/server/22/admin_manual/installation/harden_server.html
+      # https://doc.traefik.io/traefik/v2.6/middlewares/http/headers/
+      traefik.http.middlewares.nextcloud-header.headers.stsincludesubdomains: true
+      traefik.http.middlewares.nextcloud-header.headers.stspreload: true
+      traefik.http.middlewares.nextcloud-header.headers.stsseconds: 15552000
+      traefik.http.middlewares.nextcloud-header.headers.customFrameOptionsValue: SAMEORIGIN
+      traefik.http.middlewares.nextcloud-header.headers.browserXssFilter: true
+      traefik.http.middlewares.nextcloud-header.headers.contentTypeNosniff: true
+      traefik.http.middlewares.nextcloud-header.headers.referrerPolicy: no-referrer
 
-  #     ## Homepage
-  #     homepage.group: Web
-  #     homepage.name: Nextcloud
-  #     homepage.icon: nextcloud.png
-  #     homepage.href: https://${NEXTCLOUD_HOST:-nextcloud.${SITE:-localhost}}
-  #     homepage.description: Suite of client-server software for creating and using file hosting services.
+      # https://docs.nextcloud.com/server/21/admin_manual/issues/general_troubleshooting.html#service-discovery
+      # https://docs.nextcloud.com/server/23/admin_manual/configuration_server/reverse_proxy_configuration.html#traefik-2
+      # https://doc.traefik.io/traefik/v2.6/middlewares/http/redirectregex/
+      traefik.http.middlewares.nextcloud-redirect-dav.redirectRegex.permanent: true
+      traefik.http.middlewares.nextcloud-redirect-dav.redirectRegex.regex: 'https://${NEXTCLOUD_HOST:-nextcloud.${SITE:-localhost}}/.well-known/(?:card|cal)dav'
+      traefik.http.middlewares.nextcloud-redirect-dav.redirectRegex.replacement: 'https://${NEXTCLOUD_HOST:-nextcloud.${SITE:-localhost}}/remote.php/dav'
+
+      traefik.http.routers.nextcloud.middlewares: nextcloud-header,nextcloud-redirect-dav
+
+      ## Homepage
+      homepage.group: Web
+      homepage.name: Nextcloud
+      homepage.icon: nextcloud.png
+      homepage.href: https://${NEXTCLOUD_HOST:-nextcloud.${SITE:-localhost}}
+      homepage.description: Suite of client-server software for creating and using file hosting services.
 
 networks:
   nextcloud-internal:
