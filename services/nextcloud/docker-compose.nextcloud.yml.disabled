@@ -21,7 +21,7 @@ services:
       MYSQL_USER: ${NEXTCLOUD_DB_USER:-nextcloud}
       MYSQL_PASSWORD: ${NEXTCLOUD_DB_PASSWORD:-duolctxen}
     volumes:
-      - './nextcloud/db:/var/lib/mysql'
+      - './services/nextcloud/db:/var/lib/mysql'
       - '/etc/localtime:/etc/localtime:ro'
     labels:
       traefik.enable: false
@@ -84,8 +84,8 @@ services:
       SMTP_PASSWORD: '${MAIL_PASSWORD:-mail_password}'
       SMTP_SECURE: ${MAIL_ENCRYPTION:-tls}
     volumes:
-      - './nextcloud/data:/var/www/html/data'
-      - './nextcloud/config:/var/www/html/config'
+      - './services/nextcloud/data:/var/www/html/data'
+      - './services/nextcloud/config:/var/www/html/config'
     labels:
       ## Traefik
       traefik.enable: true

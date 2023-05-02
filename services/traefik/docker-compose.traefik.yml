@@ -63,9 +63,9 @@ services:
     volumes:
       - '/var/run/docker.sock:/var/run/docker.sock'
       - '${USERS_FILE:-./.shadow}:/.shadow:ro'
-      - './traefik/logs:/logs'
-      - './traefik/dynamic:/dynamic'
-      - './traefik/acme.json:/acme.json'
+      - './services/traefik/logs:/logs'
+      - './services/traefik/dynamic:/dynamic'
+      - './services/traefik/acme.json:/acme.json'
 
     labels:
       ## Traefik
@@ -105,4 +105,4 @@ services:
       chmod 600 /acme.json
 
     volumes:
-      - './traefik/acme.json:/acme.json'
+      - './services/traefik/acme.json:/acme.json'

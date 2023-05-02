@@ -42,9 +42,9 @@ services:
       - server
 
     volumes:
-      - './kanboard/data/:/var/www/app/data'
-      - './kanboard/plugins/:/var/www/app/plugins'
-      - './kanboard/_ssl/:/etc/nginx/ssl'
+      - './services/kanboard/data/:/var/www/app/data'
+      - './services/kanboard/plugins/:/var/www/app/plugins'
+      - './services/kanboard/_ssl/:/etc/nginx/ssl'
 
     labels:
       ## Traefik

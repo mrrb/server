@@ -21,7 +21,7 @@ services:
       - server
 
     volumes:
-      - './trilium/data/:/home/node/trilium-data'
+      - './services/trilium/data/:/home/node/trilium-data'
 
     labels:
       ## Traefik

@@ -6,114 +6,114 @@
 	path = refs/server-private
 	url = git@github.com:mrrb/server-private.git
 [submodule "kanboard/plugins/Task2pdf"]
-	path = kanboard/plugins/Task2pdf
+	path = services/kanboard/plugins/Task2pdf
 	url = https://github.com/creecros/Task2pdf.git
 	ignore = dirty
 [submodule "kanboard/plugins/MarkdownPlus"]
-	path = kanboard/plugins/MarkdownPlus
+	path = services/kanboard/plugins/MarkdownPlus
 	url = https://github.com/creecros/MarkdownPlus.git
 	ignore = dirty
 [submodule "kanboard/plugins/UpdateNotifier"]
-	path = kanboard/plugins/UpdateNotifier
+	path = services/kanboard/plugins/UpdateNotifier
 	url = https://github.com/kenlog/UpdateNotifier.git
 	ignore = dirty
 [submodule "kanboard/plugins/TimeMachine"]
-	path = kanboard/plugins/TimeMachine
+	path = services/kanboard/plugins/TimeMachine
 	url = https://gitlab.com/yv-kanboard-plugin/time-machine.git
 	ignore = dirty
 [submodule "kanboard/plugins/TaskProgressBar"]
-	path = kanboard/plugins/TaskProgressBar
+	path = services/kanboard/plugins/TaskProgressBar
 	url = https://github.com/kenlog/TaskProgressBar.git
 	ignore = dirty
 [submodule "kanboard/plugins/Subtaskdate"]
-	path = kanboard/plugins/Subtaskdate
+	path = services/kanboard/plugins/Subtaskdate
 	url = https://github.com/eSkiSo/Subtaskdate.git
 	ignore = dirty
 [submodule "kanboard/plugins/SendEmailCreator"]
-	path = kanboard/plugins/SendEmailCreator
+	path = services/kanboard/plugins/SendEmailCreator
 	url = https://github.com/creecros/SendEmailCreator.git
 	ignore = dirty
 [submodule "kanboard/plugins/RCB"]
-	path = kanboard/plugins/RCB
+	path = services/kanboard/plugins/RCB
 	url = https://github.com/Chaosmeister/RCB.git
 	ignore = dirty
 [submodule "kanboard/plugins/PITM"]
-	path = kanboard/plugins/PITM
+	path = services/kanboard/plugins/PITM
 	url = https://github.com/Chaosmeister/PITM.git
 	ignore = dirty
 [submodule "kanboard/plugins/Moon"]
-	path = kanboard/plugins/Moon
+	path = services/kanboard/plugins/Moon
 	url = https://github.com/kenlog/Moon.git
 	ignore = dirty
 [submodule "kanboard/plugins/MinimizeSidebar"]
-	path = kanboard/plugins/MinimizeSidebar
+	path = services/kanboard/plugins/MinimizeSidebar
 	url = https://github.com/kenlog/MinimizeSidebar.git
 	ignore = dirty
 [submodule "kanboard/plugins/MetaMagik"]
-	path = kanboard/plugins/MetaMagik
+	path = services/kanboard/plugins/MetaMagik
 	url = https://github.com/creecros/MetaMagik.git
 	ignore = dirty
 [submodule "kanboard/plugins/mathjaxForKanboard"]
-	path = kanboard/plugins/mathjaxForKanboard
+	path = services/kanboard/plugins/mathjaxForKanboard
 	url = https://github.com/Zaunmich/mathjaxForKanboard.git
 	ignore = dirty
 [submodule "kanboard/plugins/KADIFF"]
-	path = kanboard/plugins/KADIFF
+	path = services/kanboard/plugins/KADIFF
 	url = https://github.com/Chaosmeister/KADIFF.git
 	ignore = dirty
 [submodule "kanboard/plugins/HighlightCodeSyntax"]
-	path = kanboard/plugins/HighlightCodeSyntax
+	path = services/kanboard/plugins/HighlightCodeSyntax
 	url = https://github.com/kenlog/HighlightCodeSyntax.git
 	ignore = dirty
 [submodule "kanboard/plugins/Group_owners"]
-	path = kanboard/plugins/Group_owners
+	path = services/kanboard/plugins/Group_owners
 	url = https://github.com/Cyboulette/Group_owners.git
 	ignore = dirty
 [submodule "kanboard/plugins/Group_assign"]
-	path = kanboard/plugins/Group_assign
+	path = services/kanboard/plugins/Group_assign
 	url = https://github.com/creecros/Group_assign.git
 	ignore = dirty
 [submodule "kanboard/plugins/Gantt"]
-	path = kanboard/plugins/Gantt
+	path = services/kanboard/plugins/Gantt
 	url = https://github.com/kanboard/plugin-gantt.git
 	ignore = dirty
 [submodule "kanboard/plugins/EncryptedContent"]
-	path = kanboard/plugins/EncryptedContent
+	path = services/kanboard/plugins/EncryptedContent
 	url = https://github.com/kenlog/EncryptedContent.git
 	ignore = dirty
 [submodule "kanboard/plugins/EAR"]
-	path = kanboard/plugins/EAR
+	path = services/kanboard/plugins/EAR
 	url = https://github.com/Chaosmeister/EAR.git
 	ignore = dirty
 [submodule "kanboard/plugins/DueDate"]
-	path = kanboard/plugins/DueDate
+	path = services/kanboard/plugins/DueDate
 	url = https://github.com/JustFxDev/kanboard-duedate.git
 	ignore = dirty
 [submodule "kanboard/plugins/Customizer"]
-	path = kanboard/plugins/Customizer
+	path = services/kanboard/plugins/Customizer
 	url = https://github.com/creecros/Customizer.git
 	ignore = dirty
 [submodule "kanboard/plugins/Creecros_Filter_Pack"]
-	path = kanboard/plugins/Creecros_Filter_Pack
+	path = services/kanboard/plugins/Creecros_Filter_Pack
 	url = https://github.com/creecros/Creecros_Filter_Pack.git
 	ignore = dirty
 [submodule "kanboard/plugins/Coverimage"]
-	path = kanboard/plugins/Coverimage
+	path = services/kanboard/plugins/Coverimage
 	url = https://github.com/TimoStahl/kanboard_plugin_coverimage.git
 	ignore = dirty
 [submodule "kanboard/plugins/CCIT"]
-	path = kanboard/plugins/CCIT
+	path = services/kanboard/plugins/CCIT
 	url = https://github.com/Chaosmeister/CCIT.git
 	ignore = dirty
 [submodule "kanboard/plugins/PAM"]
-	path = kanboard/plugins/PAM
+	path = services/kanboard/plugins/PAM
 	url = https://github.com/Chaosmeister/PAM.git
 	ignore = dirty
 [submodule "kanboard/plugins/Bigboard"]
-	path = kanboard/plugins/Bigboard
+	path = services/kanboard/plugins/Bigboard
 	url = https://github.com/TimoStahl/kanboard_plugin_bigboard.git
 	ignore = dirty
 [submodule "kanboard/plugins/URLCleaner"]
-	path = kanboard/plugins/URLCleaner
+	path = services/kanboard/plugins/URLCleaner
 	url = https://github.com/aljawaid/URLCleaner.git
 	ignore = dirty

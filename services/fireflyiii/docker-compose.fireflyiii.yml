@@ -49,9 +49,9 @@ services:
       - server
 
     volumes:
-      - './fireflyiii/files/upload/:/var/www/html/storage/upload'
-      - './fireflyiii/files/export/:/var/www/html/storage/export'
-      - './fireflyiii/db.sqlite:/var/www/html/storage/database/database.sqlite'
+      - './services/fireflyiii/files/upload/:/var/www/html/storage/upload'
+      - './services/fireflyiii/files/export/:/var/www/html/storage/export'
+      - './services/fireflyiii/db.sqlite:/var/www/html/storage/database/database.sqlite'
 
     labels:
       ## Traefik

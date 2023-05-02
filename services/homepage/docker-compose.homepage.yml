@@ -12,7 +12,7 @@ services:
       - server-metrics
 
     volumes:
-      - './homepage/config:/app/config'
+      - './services/homepage/config:/app/config'
       - '/var/run/docker.sock:/var/run/docker.sock:ro'
 
     labels:

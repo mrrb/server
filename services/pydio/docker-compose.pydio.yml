@@ -27,7 +27,7 @@ services:
       MYSQL_PASSWORD: ${PYDIO_DB_PASSWORD:-oidyp}
 
     volumes:
-      - './pydio/db:/var/lib/mysql'
+      - './services/pydio/db:/var/lib/mysql'
       - '/etc/localtime:/etc/localtime:ro'
 
     labels:
@@ -61,7 +61,7 @@ services:
       - pydio-internal
 
     volumes:
-      - './pydio/data:/config'
+      - './services/pydio/data:/config'
 
     labels:
       ## Traefik

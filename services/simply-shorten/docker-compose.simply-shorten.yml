@@ -16,7 +16,7 @@ services:
       - server
 
     volumes:
-      - './simply-shorten/urls.sqlite:/urls.sqlite'
+      - './services/simply-shorten/urls.sqlite:/urls.sqlite'
 
     labels:
       ## Traefik

@@ -17,9 +17,9 @@ services:
       - server
 
     volumes:
-      - './nginx/conf:/etc/nginx/conf.d'
+      - './services/nginx/conf:/etc/nginx/conf.d'
       - './refs/server-private/page_default/:/srv/www/default'
-      - './nginx/logs:/var/log/nginx/'
+      - './services/nginx/logs:/var/log/nginx/'
 
     labels:
       ## Traefik
