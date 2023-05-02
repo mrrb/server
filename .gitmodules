@@ -116,3 +116,4 @@
 [submodule "kanboard/plugins/URLCleaner"]
 	path = kanboard/plugins/URLCleaner
 	url = https://github.com/aljawaid/URLCleaner.git
+	ignore = dirty
