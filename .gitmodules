@@ -113,3 +113,6 @@
 	path = kanboard/plugins/Bigboard
 	url = https://github.com/TimoStahl/kanboard_plugin_bigboard.git
 	ignore = dirty
+[submodule "kanboard/plugins/URLCleaner"]
+	path = kanboard/plugins/URLCleaner
+	url = https://github.com/aljawaid/URLCleaner.git
