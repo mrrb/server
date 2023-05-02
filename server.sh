@@ -6,6 +6,7 @@
 
 # https://stackoverflow.com/questions/59895/how-do-i-get-the-directory-where-a-bash-script-is-located-from-within-the-script
 _SCRIPTPATH=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+_SERVICESPATH="$_SCRIPTPATH/services"
 
 ## Load env file(s)
 set -a
@@ -25,7 +26,7 @@ set +a
 
 ## Environment functions
 function _gen_server_env () {
-  "$_SCRIPTPATH/env.py" $(find $_SCRIPTPATH -type f ! -path "*/refs/*" -name 'docker-compose.*.yml' -o -name '*.yaml.in') $(find $_SCRIPTPATH/systemd -type f -name '*.in') -s -v "$_SCRIPTPATH/env.json" -e "$_SCRIPTPATH/env.extra.json" -E "SERVER_PATH=$_SCRIPTPATH"
+  "$_SCRIPTPATH/env.py" $(find $_SCRIPTPATH -maxdepth 3 -type f ! -path "*/refs/*" -name 'docker-compose.*.yml' -o -name '*.yaml.in') $(find $_SCRIPTPATH/systemd -type f -name '*.in') -s -v "$_SCRIPTPATH/env.json" -e "$_SCRIPTPATH/env.extra.json" -E "SERVER_PATH=$_SCRIPTPATH"
 }
 
 function gen_server_default_env () {
@@ -37,7 +38,7 @@ function gen_server_env () {
 }
 
 function gen_homepage_config () {
-  for i in $(find $_SCRIPTPATH/homepage/config -type f ! -path "*/refs/*" -name '*.yaml.in')
+  for i in $(find $_SERVICESPATH/homepage/config -type f ! -path "*/refs/*" -name '*.yaml.in')
   do
     envsubst < $i > ${i::-3}
     eval "echo \"$(cat ${i::-3})\"" > ${i::-3}
@@ -89,15 +90,16 @@ function _check_create_dir () {
 function _srv_docker_compose () {
   _curr_pwd=$(pwd)
   cd $_SCRIPTPATH
-	/usr/bin/docker compose $(find -maxdepth 2 -name 'docker-compose*.yml' -type f -printf '%p\t%d\n'  2>/dev/null | grep -v 'refs' | sort -n -k2 | cut -f 1 | awk '{print "-f "$0}') $@
+	/usr/bin/docker compose $(find -maxdepth 3 -name 'docker-compose*.yml' -type f -printf '%p\t%d\n'  2>/dev/null | grep -v 'refs' | sort -n -k2 | cut -f 1 | awk '{print "-f "$0}') $@
   cd $_curr_pwd
 }
 
 function server_up () {
   _check_create $_SCRIPTPATH/.shadow
-  _check_create $_SCRIPTPATH/traefik/acme.json
-  _check_create $_SCRIPTPATH/simply-shorten/urls.sqlite
-  _check_create $_SCRIPTPATH/fireflyiii/db.sqlite
+
+  _check_create $_SERVICESPATH/traefik/acme.json
+  _check_create $_SERVICESPATH/simply-shorten/urls.sqlite
+  _check_create $_SERVICESPATH/fireflyiii/db.sqlite
 
   _srv_docker_compose up -d
 }

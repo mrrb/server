@@ -76,30 +76,7 @@ List of files or folders to configure the system
 
 ## Services hosted on VPS1
 
-* [Traefik](traefik)
-  * [traefik.vps1.infra.mrrb.xyz](https://traefik.vps1.infra.mrrb.xyz)
-* [Portainer](portainer)
-  * [portainer.vps1.infra.mrrb.xyz](https://portainer.vps1.infra.mrrb.xyz)
-  * [edge.vps1.infra.mrrb.xyz](https://edge.vps1.infra.mrrb.xyz)
-* [Whoami](whoami)
-  * [whoami.vps1.infra.mrrb.xyz](https://whoami.vps1.infra.mrrb.xyz)
-* [WatchTower](watchtower)
-* [Homepage](homepage)
-  * [dashboard.vps1.infra.mrrb.xyz](https://dashboard.vps1.infra.mrrb.xyz)
-* [Nginx](nginx)
-  * [vps1.infra.mrrb.xyz](https://vps1.infra.mrrb.xyz)
-* [Nginx (mrrb.eu)](nginx_mrrb_eu)
-  * [mrrb.eu](https://mrrb.eu) 
-* [simply-shorten](simply-shorten)
-  * [go.mrrb.eu](https://go.mrrb.eu) 
-* [Firefly III](fireflyiii)
-  * [finance.mrrb.eu](https://finance.mrrb.eu) 
-* [Kanboard](kanboard)
-  * [kanban.mrrb.eu](https://kanban.mrrb.eu) 
-* [Pydio](pydio)
-  * [files.mrrb.eu](https://files.mrrb.eu) 
-<!-- * [Authentik](authentik)
-  * [auth.mrrb.eu](https://auth.mrrb.eu)  -->
+Check [services/README.md](services/README.md) for the complete list.
 
 ## First start steps
 
