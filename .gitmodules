@@ -4,3 +4,84 @@
 [submodule "refs/server-private"]
 	path = refs/server-private
 	url = git@github.com:mrrb/server-private.git
+[submodule "kanboard/plugins/Task2pdf"]
+	path = kanboard/plugins/Task2pdf
+	url = https://github.com/creecros/Task2pdf.git
+[submodule "kanboard/plugins/MarkdownPlus"]
+	path = kanboard/plugins/MarkdownPlus
+	url = https://github.com/creecros/MarkdownPlus.git
+[submodule "kanboard/plugins/UpdateNotifier"]
+	path = kanboard/plugins/UpdateNotifier
+	url = https://github.com/kenlog/UpdateNotifier.git
+[submodule "kanboard/plugins/TimeMachine"]
+	path = kanboard/plugins/TimeMachine
+	url = https://gitlab.com/yv-kanboard-plugin/time-machine.git
+[submodule "kanboard/plugins/TaskProgressBar"]
+	path = kanboard/plugins/TaskProgressBar
+	url = https://github.com/kenlog/TaskProgressBar.git
+[submodule "kanboard/plugins/Subtaskdate"]
+	path = kanboard/plugins/Subtaskdate
+	url = https://github.com/eSkiSo/Subtaskdate.git
+[submodule "kanboard/plugins/SendEmailCreator"]
+	path = kanboard/plugins/SendEmailCreator
+	url = https://github.com/creecros/SendEmailCreator.git
+[submodule "kanboard/plugins/RCB"]
+	path = kanboard/plugins/RCB
+	url = https://github.com/Chaosmeister/RCB.git
+[submodule "kanboard/plugins/PITM"]
+	path = kanboard/plugins/PITM
+	url = https://github.com/Chaosmeister/PITM.git
+[submodule "kanboard/plugins/Moon"]
+	path = kanboard/plugins/Moon
+	url = https://github.com/kenlog/Moon.git
+[submodule "kanboard/plugins/MinimizeSidebar"]
+	path = kanboard/plugins/MinimizeSidebar
+	url = https://github.com/kenlog/MinimizeSidebar.git
+[submodule "kanboard/plugins/MetaMagik"]
+	path = kanboard/plugins/MetaMagik
+	url = https://github.com/creecros/MetaMagik.git
+[submodule "kanboard/plugins/mathjaxForKanboard"]
+	path = kanboard/plugins/mathjaxForKanboard
+	url = https://github.com/Zaunmich/mathjaxForKanboard.git
+[submodule "kanboard/plugins/KADIFF"]
+	path = kanboard/plugins/KADIFF
+	url = https://github.com/Chaosmeister/KADIFF.git
+[submodule "kanboard/plugins/HighlightCodeSyntax"]
+	path = kanboard/plugins/HighlightCodeSyntax
+	url = https://github.com/kenlog/HighlightCodeSyntax.git
+[submodule "kanboard/plugins/Group_owners"]
+	path = kanboard/plugins/Group_owners
+	url = https://github.com/Cyboulette/Group_owners.git
+[submodule "kanboard/plugins/Group_assign"]
+	path = kanboard/plugins/Group_assign
+	url = https://github.com/creecros/Group_assign.git
+[submodule "kanboard/plugins/Gantt"]
+	path = kanboard/plugins/Gantt
+	url = https://github.com/kanboard/plugin-gantt.git
+[submodule "kanboard/plugins/EncryptedContent"]
+	path = kanboard/plugins/EncryptedContent
+	url = https://github.com/kenlog/EncryptedContent.git
+[submodule "kanboard/plugins/EAR"]
+	path = kanboard/plugins/EAR
+	url = https://github.com/Chaosmeister/EAR.git
+[submodule "kanboard/plugins/DueDate"]
+	path = kanboard/plugins/DueDate
+	url = https://github.com/JustFxDev/kanboard-duedate.git
+[submodule "kanboard/plugins/Customizer"]
+	path = kanboard/plugins/Customizer
+	url = https://github.com/creecros/Customizer.git
+[submodule "kanboard/plugins/Creecros_Filter_Pack"]
+	path = kanboard/plugins/Creecros_Filter_Pack
+	url = https://github.com/creecros/Creecros_Filter_Pack.git
+[submodule "kanboard/plugins/Coverimage"]
+	path = kanboard/plugins/Coverimage
+	url = https://github.com/TimoStahl/kanboard_plugin_coverimage.git
+[submodule "kanboard/plugins/CCIT"]
+	path = kanboard/plugins/CCIT
+	url = https://github.com/Chaosmeister/CCIT.git
+[submodule "kanboard/plugins/PAM"]
+	path = kanboard/plugins/PAM
+	url = https://github.com/Chaosmeister/PAM.git
+[submodule "kanboard/plugins/Bigboard"]
+	path = kanboard/plugins/Bigboard
+	url = https://github.com/TimoStahl/kanboard_plugin_bigboard.git
