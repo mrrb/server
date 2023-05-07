@@ -87,6 +87,10 @@ function _check_create_dir () {
   fi
 }
 
+function _chown_storage () {
+  chown ${STORAGE_UID:-0}:${STORAGE_GID:-0} $@
+}
+
 function _srv_docker_compose () {
   _curr_pwd=$(pwd)
   cd $_SCRIPTPATH
@@ -126,6 +130,18 @@ function server_storage_dir () {
   done
 }
 
+function server_set_storage_permissions () {
+  _chown_storage -R ./services/pydio/data || true
+
+  _chown_storage -R ${STORAGE_SSH_MOUNT_OTHER:-${SERVER_PATH}/storage/mount/sshfs.vault} || true
+  _chown_storage -R ${STORAGE_SSH_MOUNT_OTHER:-${SERVER_PATH}/storage/mount/sshfs.other} || true
+
+  # _chown_storage ${STORAGE_SSH_MOUNT_VAULT:-${SERVER_PATH}/storage/mount/sshfs.vault}/gocryptfs/generic.crypt
+  # _chown_storage ${STORAGE_SSH_MOUNT_VAULT:-${SERVER_PATH}/storage/mount/sshfs.vault}/gocryptfs/private.crypt
+  _chown_storage -R ${STORAGE_GOCRYPTFS_MOUNT_GENERIC:-${SERVER_PATH}/storage/mount/gocryptfs.generic} || true
+  _chown_storage -R ${STORAGE_GOCRYPTFS_MOUNT_PRIVATE:-${SERVER_PATH}/storage/mount/gocryptfs.private} || true
+}
+
 function server_init () {
   server_init_config
 
@@ -136,4 +152,5 @@ function server_init () {
   server_install_services
 
   server_storage_dir
+  server_set_storage_permissions
 }
