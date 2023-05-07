@@ -26,7 +26,7 @@ set +a
 
 ## Environment functions
 function _gen_server_env () {
-  "$_SCRIPTPATH/env.py" $(find $_SCRIPTPATH -maxdepth 3 -type f ! -path "*/refs/*" -name 'docker-compose.*.yml' -o -name '*.yaml.in') $(find $_SCRIPTPATH/systemd -type f -name '*.in') -s -v "$_SCRIPTPATH/env.json" -e "$_SCRIPTPATH/env.extra.json" -E "SERVER_PATH=$_SCRIPTPATH"
+  "$_SCRIPTPATH/env.py" $(find $_SCRIPTPATH -maxdepth 4 -type f ! -path "*/refs/*" -name 'docker-compose.*.yml' -o -name '*.yaml.in' -o -name '*.yml.in') $(find $_SCRIPTPATH/systemd -type f -name '*.in') -s -v "$_SCRIPTPATH/env.json" -e "$_SCRIPTPATH/env.extra.json" -E "SERVER_PATH=$_SCRIPTPATH"
 }
 
 function gen_server_default_env () {
@@ -39,6 +39,14 @@ function gen_server_env () {
 
 function gen_homepage_config () {
   for i in $(find $_SERVICESPATH/homepage/config -type f ! -path "*/refs/*" -name '*.yaml.in')
+  do
+    envsubst < $i > ${i::-3}
+    eval "echo \"$(cat ${i::-3})\"" > ${i::-3}
+  done
+}
+
+function gen_traefik_config () {
+  for i in $(find $_SERVICESPATH/traefik/dynamic -type f ! -path "*/refs/*" -name '*.yml.in')
   do
     envsubst < $i > ${i::-3}
     eval "echo \"$(cat ${i::-3})\"" > ${i::-3}
@@ -146,6 +154,7 @@ function server_init () {
   server_init_config
 
   gen_server_env
+  gen_traefik_config
   gen_homepage_config
   gen_server_services
 
