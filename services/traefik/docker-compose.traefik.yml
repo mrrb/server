@@ -4,7 +4,7 @@ services:
   traefik:
     image: traefik:${TRAEFIK_IMAGE_VERSION:-v2.9}
     restart: unless-stopped
-    platform: ${PLATFORM_ARCH}
+    platform: ${PLATFORM_ARCH:-linux/amd64}
     container_name: traefik
 
     healthcheck:
@@ -97,7 +97,7 @@ services:
 
   traefik-init:
     image: traefik:${TRAEFIK_IMAGE_VERSION:-v2.9}
-    platform: ${PLATFORM_ARCH}
+    platform: ${PLATFORM_ARCH:-linux/amd64}
     network_mode: none
     container_name: traefik-init
 

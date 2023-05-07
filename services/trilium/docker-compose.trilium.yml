@@ -4,7 +4,7 @@ services:
   trilium:
     image: zadam/trilium:${TRILIUM_IMAGE_VERSION:-latest}
     restart: unless-stopped
-    platform: ${PLATFORM_ARCH}
+    platform: ${PLATFORM_ARCH:-linux/amd64}
     container_name: trilium
 
     healthcheck:

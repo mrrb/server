@@ -4,7 +4,7 @@ services:
   nginx_mrrb_eu:
     image: nginx:${NGINX_IMAGE_VERSION:-stable-alpine}
     restart: unless-stopped
-    platform: ${PLATFORM_ARCH}
+    platform: ${PLATFORM_ARCH:-linux/amd64}
     container_name: nginx_mrrb_eu
 
     healthcheck:

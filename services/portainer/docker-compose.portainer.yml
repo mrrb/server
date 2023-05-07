@@ -4,7 +4,7 @@ services:
   portainer:
     image: portainer/portainer-ce:${PORTAINER_IMAGE_VERSION:-latest}
     restart: unless-stopped
-    platform: ${PLATFORM_ARCH}
+    platform: ${PLATFORM_ARCH:-linux/amd64}
     container_name: portainer
 
     networks:

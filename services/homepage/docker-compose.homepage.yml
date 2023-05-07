@@ -4,7 +4,7 @@ services:
   homepage:
     image: ghcr.io/benphelps/homepage:${HOMEPAGE_IMAGE_VERSION:-latest}
     restart: unless-stopped
-    platform: ${PLATFORM_ARCH}
+    platform: ${PLATFORM_ARCH:-linux/amd64}
     container_name: homepage
 
     networks:

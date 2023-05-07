@@ -4,7 +4,7 @@ services:
   whoami:
     image: containous/whoami:${WHOAMI_IMAGE_VERSION:-latest}
     restart: unless-stopped
-    platform: ${PLATFORM_ARCH}
+    platform: ${PLATFORM_ARCH:-linux/amd64}
     container_name: whoami
 
     networks:

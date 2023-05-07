@@ -4,7 +4,7 @@ services:
   watchtower:
     image: containrrr/watchtower:${WATCHTOWER_IMAGE_VERSION:-latest}
     restart: unless-stopped
-    platform: ${PLATFORM_ARCH}
+    platform: ${PLATFORM_ARCH:-linux/amd64}
     container_name: watchtower
 
     environment:

@@ -5,7 +5,7 @@ services:
     image: mrrbeu/simply-shorten:${SIMPLYSHORTEN_IMAGE_VERSION:-latest} # linux/amd64 and linux/arm64/v8 build
     # image: draganczukp/simply-shorten:${SIMPLYSHORTEN_IMAGE_VERSION:-latest}
     restart: unless-stopped
-    platform: ${PLATFORM_ARCH}
+    platform: ${PLATFORM_ARCH:-linux/amd64}
     container_name: simply-shorten
 
     environment:
