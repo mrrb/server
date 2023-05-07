@@ -9,19 +9,22 @@ _SCRIPTPATH=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 _SERVICESPATH="$_SCRIPTPATH/services"
 
 ## Load env file(s)
-set -a
-_env_default_found=false
-if [ -f "$_SCRIPTPATH/.env.default" ]; then
-  source $_SCRIPTPATH/.env.default
-  _env_default_found=true
-fi
+function load_env () {
+  set -a
+  _env_default_found=false
+  if [ -f "$_SCRIPTPATH/.env.default" ]; then
+    source $_SCRIPTPATH/.env.default
+    _env_default_found=true
+  fi
 
-_env_found=false
-if [ -f "$_SCRIPTPATH/.env" ]; then
-  source $_SCRIPTPATH/.env
-  _env_found=true
-fi
-set +a
+  _env_found=false
+  if [ -f "$_SCRIPTPATH/.env" ]; then
+    source $_SCRIPTPATH/.env
+    _env_found=true
+  fi
+  set +a
+}
+load_env
 
 
 ## Environment functions
@@ -154,6 +157,8 @@ function server_init () {
   server_init_config
 
   gen_server_env
+  load_env
+
   gen_traefik_config
   gen_homepage_config
   gen_server_services
