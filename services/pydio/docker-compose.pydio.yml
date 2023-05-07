@@ -4,7 +4,7 @@ services:
   pydio-db:
     image: mariadb:${MARIADB_IMAGE_VERSION:-latest}
     restart: unless-stopped
-    platform: ${PLATFORM_ARCH}
+    platform: ${PLATFORM_ARCH:-linux/amd64}
     container_name: pydio-db
 
     healthcheck:
@@ -17,8 +17,9 @@ services:
     networks:
       - pydio-internal
 
-    command: |
+    command: >
       --transaction-isolation=READ-COMMITTED --log-bin=binlog --binlog-format=ROW
+      --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
 
     environment:
       MYSQL_ROOT_PASSWORD: ${MARIADB_ROOT_PASSWORD:-bXJyYmV1}pydio
@@ -37,7 +38,7 @@ services:
   pydio-cells:
     image: linuxserver/pydio-cells:${PYDIO_IMAGE_VERSION:-latest}
     restart: unless-stopped
-    platform: ${PLATFORM_ARCH}
+    platform: ${PLATFORM_ARCH:-linux/amd64}
     container_name: pydio-cells
 
     healthcheck:
@@ -48,8 +49,8 @@ services:
       retries: 5
 
     environment:
-      PUID: ${PYDIO_UID:-0}
-      PGID: ${PYDIO_GID:-0}
+      PUID: ${STORAGE_UID:-0}
+      PGID: ${STORAGE_GID:-0}
       TZ: '${TIMEZONE:-Europe/Madrid}'
       EXTERNALURL: ${PYDIO_HOST:-pydio.${SITE:-localhost}}
 
