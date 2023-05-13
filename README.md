@@ -104,6 +104,7 @@ If using Hetzner storage, the required box structure must be already created. Ch
     * Set mail vars `MAIL_ENCRYPTION`, `MAIL_FROM`, `MAIL_HOST`, `MAIL_PASSWORD`, `MAIL_PORT` and `MAIL_USERNAME`.
     * Set `STORAGE_SSH_HOST`, `STORAGE_SSH_USER_OTHER` and `STORAGE_SSH_USER_VAULT`.
     * Set `MARIADB_ROOT_PASSWORD` and `PYDIO_DB_PASSWORD`.
+    * Set, if needed, `STORAGE_UID` and `STORAGE_GID`.
     * Set, if needed, `PLATFORM_ARCH` (Ex. 'linux/amd64' or 'linux/arm64')
 8. Create a new SSH key pair for the storage box.
     * `sudo ssh-keygen -t ed25519 -C "VPS1-HetznerStorageBox" -f /srv/server/storage/.ssh/id_ed25519 -q -N ""`.
@@ -121,6 +122,7 @@ If using Hetzner storage, the required box structure must be already created. Ch
     * `sudo systemctl enable server_sshfs_mount_vault.service`.
     * `sudo systemctl enable server_gocryptfs_mount_vault_generic.service`.
     * `sudo systemctl enable server_gocryptfs_mount_vault_private.service`.
+    * `sudo systemctl enable server_syncthing.service.
 15. Reboot system and check that everything works.
 16. Go to the portainer page and set it up.
     * Gen a KEY and save it into the `env.extra.json` file (`HOMEPAGE_PORTAINER_KEY`).
