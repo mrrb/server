@@ -2,63 +2,17 @@
 
 Configuration for VPS1 (Ampere Altra ARM64)
 
-## Gen the default enviroment file
+## Functions
 
-`.env.default` file.
-
-```
-source server.sh && gen_server_default_env
-```
-
-## Gen the enviroment file
-
-`.env` file.
-
-```
-source server.sh && gen_server_env
-```
-
-## Gen the homepage configuration
-
-```
-source server.sh && gen_homepage_config
-```
-
-## Gen the server SystemD service, timers and mounts
-
-```
-source server.sh && gen_server_services
-```
-
-## Install all the SystemD files
-
-```
-source server.sh && server_install_services
-```
-
-## Create the initial config files
-
-```
-source server.sh && server_init_config
-```
-
-## Init the server
-
-```
-source server.sh && server_init
-```
-
-## Start server
-
-```
-source server.sh && server_up
-```
-
-## Stop server
-
-```
-source server.sh && server_down
-```
+* Gen the default enviroment file -> `source server.sh && gen_server_default_env`
+* Gen the enviroment file -> `source server.sh && gen_server_env`
+* Gen the homepage configuration -> `source server.sh && gen_homepage_config`
+* Gen the server SystemD service, timers and mounts -> `source server.sh && gen_server_services`
+* Install all the SystemD files -> `source server.sh && server_install_services`
+* Create the initial config files -> `source server.sh && server_init_config`
+* Init the server -> `source server.sh && server_init`
+* Start server -> `source server.sh && server_up`
+* Stop server -> `source server.sh && server_down`
 
 ## Configuration
 
