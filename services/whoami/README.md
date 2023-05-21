@@ -1,5 +1,5 @@
 # whoami
 
-[https://hub.docker.com/r/containous/whoami](https://hub.docker.com/r/containous/whoami)
+[https://hub.docker.com/r/traefik/whoami](https://hub.docker.com/r/traefik/whoami)
 
-Tiny Go webserver that prints os information and HTTP request to output
+Tiny Go webserver that prints OS information and HTTP request to output
