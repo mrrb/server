@@ -64,6 +64,9 @@ services:
 
     volumes:
       - './services/pydio/data:/config'
+      - './storage/mount/gocryptfs.private:/mnt_host/gocryptfs.private'
+      - './storage/mount/gocryptfs.generic:/mnt_host/gocryptfs.generic'
+
 
     labels:
       ## Traefik
