@@ -35,7 +35,7 @@ services:
       traefik.http.services.syncthing.loadbalancer.server.port: 8384
 
       ## Homepage
-      homepage.group: System
+      homepage.group: Files
       homepage.name: Syncthing
       homepage.icon: syncthing.png
       homepage.href: https://${SYNCTHING_HOST:-syncthing.${SITE:-localhost}}

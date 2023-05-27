@@ -76,7 +76,7 @@ services:
       traefik.grpc.services.pydio.loadbalancer.server.port: 33060
 
       ## Homepage
-      homepage.group: Web
+      homepage.group: Files
       homepage.name: Pydio Cells
       homepage.icon: pydio.png
       homepage.href: https://${PYDIO_HOST:-pydio.${SITE:-localhost}}
