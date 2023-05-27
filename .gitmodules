@@ -117,3 +117,7 @@
 	path = services/kanboard/plugins/URLCleaner
 	url = https://github.com/aljawaid/URLCleaner.git
 	ignore = dirty
+[submodule "services/kanboard/plugins/Calendar"]
+	path = services/kanboard/plugins/Calendar
+	url = https://codeberg.org/abu/Calendar.git
+	ignore = dirty
