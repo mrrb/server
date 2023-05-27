@@ -7,11 +7,11 @@ services:
     platform: ${PLATFORM_ARCH:-linux/amd64}
     container_name: nginx_mrrb_eu
 
-    healthcheck:
-      test: ['CMD', 'curl', '0.0.0.0:80']
-      interval: 10s
-      timeout: 10s
-      retries: 5
+    # healthcheck:
+    #   test: ['CMD', 'curl', '0.0.0.0:80']
+    #   interval: 10s
+    #   timeout: 10s
+    #   retries: 5
 
     networks:
       - server
