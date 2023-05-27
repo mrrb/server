@@ -39,6 +39,7 @@ services:
     image: linuxserver/pydio-cells:${PYDIO_IMAGE_VERSION:-latest}
     restart: unless-stopped
     platform: ${PLATFORM_ARCH:-linux/amd64}
+    hostname: pydio-cells
     container_name: pydio-cells
 
     healthcheck:
