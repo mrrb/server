@@ -99,7 +99,8 @@ function _check_create_dir () {
 }
 
 function _chown_storage () {
-  chown ${STORAGE_UID:-0}:${STORAGE_GID:-0} $@
+  _check_create_dir $1
+  chown -R ${STORAGE_UID:-0}:${STORAGE_GID:-0} $1
 }
 
 function _srv_docker_compose () {
@@ -142,15 +143,16 @@ function server_storage_dir () {
 }
 
 function server_set_storage_permissions () {
-  _chown_storage -R ./services/pydio/data || true
+  _chown_storage ./services/pydio/data || true
+  _chown_storage ./services/syncthing/config || true
 
-  _chown_storage -R ${STORAGE_SSH_MOUNT_OTHER:-${SERVER_PATH}/storage/mount/sshfs.vault} || true
-  _chown_storage -R ${STORAGE_SSH_MOUNT_OTHER:-${SERVER_PATH}/storage/mount/sshfs.other} || true
+  _chown_storage ${STORAGE_SSH_MOUNT_OTHER:-${SERVER_PATH}/storage/mount/sshfs.vault} || true
+  _chown_storage ${STORAGE_SSH_MOUNT_OTHER:-${SERVER_PATH}/storage/mount/sshfs.other} || true
 
   # _chown_storage ${STORAGE_SSH_MOUNT_VAULT:-${SERVER_PATH}/storage/mount/sshfs.vault}/gocryptfs/generic.crypt
   # _chown_storage ${STORAGE_SSH_MOUNT_VAULT:-${SERVER_PATH}/storage/mount/sshfs.vault}/gocryptfs/private.crypt
-  _chown_storage -R ${STORAGE_GOCRYPTFS_MOUNT_GENERIC:-${SERVER_PATH}/storage/mount/gocryptfs.generic} || true
-  _chown_storage -R ${STORAGE_GOCRYPTFS_MOUNT_PRIVATE:-${SERVER_PATH}/storage/mount/gocryptfs.private} || true
+  _chown_storage ${STORAGE_GOCRYPTFS_MOUNT_GENERIC:-${SERVER_PATH}/storage/mount/gocryptfs.generic} || true
+  _chown_storage ${STORAGE_GOCRYPTFS_MOUNT_PRIVATE:-${SERVER_PATH}/storage/mount/gocryptfs.private} || true
 }
 
 function server_init () {
