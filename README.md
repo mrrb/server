@@ -81,5 +81,6 @@ If using Hetzner storage, the required box structure must be already created. Ch
 17. Go to the portainer page and set it up.
     * Gen a KEY and save it into the `env.extra.json` file (`HOMEPAGE_PORTAINER_KEY`).
 18. Regenerate the environment file `sudo bash -c 'source /srv/server/server.sh && gen_server_env'`.
-19. Restart service `sudo systemctl restart server.service`.
-20. Enjoy 😉.
+19. Go to syncthing and add a user and password.
+20. Restart service `sudo systemctl restart server.service`.
+21. Enjoy 😉.
