@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+  adminer:
+    image: adminer:${ADMINER_IMAGE_VERSION:-latest}
+    restart: unless-stopped
+    platform: ${PLATFORM_ARCH:-linux/amd64}
+    container_name: adminer
+
+    networks:
+      - server
+      - pydio-internal
+
+    labels:
+      ## Traefik
+      traefik.enable: true
+      traefik.http.routers.adminer.rule: Host(`${ADMINER_HOST:-adminer.${SITE:-localhost}}`)
+      traefik.http.services.adminer.loadbalancer.server.port: 8080
+
+      ## Homepage
+      homepage.group: System
+      homepage.name: Adminer
+      homepage.icon: adminer.png
+      homepage.href: https://${ADMINER_HOST:-adminer.${SITE:-localhost}}
+      homepage.description: Full-featured database management tool written in PHP.
