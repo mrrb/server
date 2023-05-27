@@ -27,5 +27,6 @@ services:
       ## Homepage
       homepage.group: Web
       homepage.name: Simply Shorten
+      homepage.icon: mdi-link-box-variant-outline
       homepage.href: https://${SIMPLYSHORTEN_HOST:-simply-shorten.${SITE:-localhost}}
       homepage.description: A simple selfhosted URL shortener with no unnecessary features.
