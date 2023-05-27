@@ -70,16 +70,17 @@ If using Hetzner storage, the required box structure must be already created. Ch
     * `sudo bash -c 'source /srv/server/server.sh && store_gocrypt_password generic'` and insert `generic` key.
 12. Init server files `sudo bash -c 'source /srv/server/server.sh && server_init'`. This will generate the environment file, fill some config files and generate and install all the services, timers and mounts.
 13. Allow grpc port in firewall. UFW example, `sudo ufw allow 33060/tcp && sudo ufw enable && sudo ufw status`
-14. Enable the required server service(s), timer(s) and mount(s).
+14. Allow syncthing port in firewall. UFW example, `sudo ufw allow 22000,21027/udp && sudo ufw allow 22000/tcp && sudo ufw enable && sudo ufw status`
+15. Enable the required server service(s), timer(s) and mount(s).
     * `sudo systemctl enable server.service`.
     * `sudo systemctl enable server_sshfs_mount_other.service`.
     * `sudo systemctl enable server_sshfs_mount_vault.service`.
     * `sudo systemctl enable server_gocryptfs_mount_vault_generic.service`.
     * `sudo systemctl enable server_gocryptfs_mount_vault_private.service`.
     * `sudo systemctl enable server_syncthing.service.
-15. Reboot system and check that everything works.
-16. Go to the portainer page and set it up.
+16. Reboot system and check that everything works.
+17. Go to the portainer page and set it up.
     * Gen a KEY and save it into the `env.extra.json` file (`HOMEPAGE_PORTAINER_KEY`).
-17. Regenerate the environment file `sudo bash -c 'source /srv/server/server.sh && gen_server_env'`.
-18. Restart service `sudo systemctl restart server.service`.
-19. Enjoy 😉.
+18. Regenerate the environment file `sudo bash -c 'source /srv/server/server.sh && gen_server_env'`.
+19. Restart service `sudo systemctl restart server.service`.
+20. Enjoy 😉.

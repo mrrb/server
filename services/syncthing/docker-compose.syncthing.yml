@@ -1,0 +1,46 @@
+version: '3.8'
+
+services:
+  syncthing:
+    image: syncthing/syncthing:${SYNCTHING_IMAGE_VERSION:-latest}
+    restart: unless-stopped
+    platform: ${PLATFORM_ARCH:-linux/amd64}
+    hostname: ${SYNCTHING_HOST:-syncthing.${SITE:-localhost}}
+    container_name: syncthing
+
+    healthcheck:
+      test: ['CMD', 'curl', '0.0.0.0:8384']
+      start_period: 60s
+      interval: 30s
+      timeout: 60s
+      retries: 5
+
+    environment:
+      PUID: ${STORAGE_UID:-0}
+      PGID: ${STORAGE_GID:-0}
+
+    networks:
+      - server
+
+    volumes:
+      - './storage/mount/gocryptfs.private:/mnt_host/gocryptfs.private'
+      - './storage/mount/gocryptfs.generic:/mnt_host/gocryptfs.generic'
+
+    labels:
+      ## Traefik
+      traefik.enable: true
+      traefik.http.routers.syncthing.rule: Host(`${SYNCTHING_HOST:-syncthing.${SITE:-localhost}}`)
+      traefik.http.services.syncthing.loadbalancer.server.port: 8384
+      traefik.http.routers.syncthing.middlewares: shadow_auth@docker
+
+      ## Homepage
+      homepage.group: System
+      homepage.name: Syncthing
+      homepage.icon: syncthing.png
+      homepage.href: https://${SYNCTHING_HOST:-syncthing.${SITE:-localhost}}
+      homepage.description: Continuous file synchronization.
+
+    ports:
+      - 22000:22000/tcp ## TCP file transfers
+      - 22000:22000/udp ## QUIC file transfers
+      - 21027:21027/udp ## Receive local discovery broadcasts

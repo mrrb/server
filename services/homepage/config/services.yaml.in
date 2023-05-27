@@ -1,4 +1,0 @@
-- Web:
-  - Syncthing:
-    href: https://${SYNCTHING_HOST:-sync.${SITE:-localhost}}
-    description: Continuous file synchronization program [GUI].
