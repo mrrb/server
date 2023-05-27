@@ -24,6 +24,7 @@ services:
 
     volumes:
       - './services/syncthing/config/:/var/syncthing/config/'
+      - './services/syncthing/sync/:/var/syncthing/Sync'
       - './storage/mount/gocryptfs.private:/mnt_host/gocryptfs.private'
       - './storage/mount/gocryptfs.generic:/mnt_host/gocryptfs.generic'
 

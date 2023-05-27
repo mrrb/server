@@ -145,6 +145,7 @@ function server_storage_dir () {
 function server_set_storage_permissions () {
   _chown_storage ./services/pydio/data || true
   _chown_storage ./services/syncthing/config || true
+  _chown_storage ./services/syncthing/sync || true
 
   _chown_storage ${STORAGE_SSH_MOUNT_OTHER:-${SERVER_PATH}/storage/mount/sshfs.vault} || true
   _chown_storage ${STORAGE_SSH_MOUNT_OTHER:-${SERVER_PATH}/storage/mount/sshfs.other} || true
