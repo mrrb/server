@@ -19,7 +19,7 @@ services:
 
     command: >
       --transaction-isolation=READ-COMMITTED --log-bin=binlog --binlog-format=ROW
-      --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+      --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci --max_connections=500
 
     environment:
       MYSQL_ROOT_PASSWORD: ${MARIADB_ROOT_PASSWORD:-bXJyYmV1}pydio
