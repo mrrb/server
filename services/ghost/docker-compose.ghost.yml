@@ -1,0 +1,94 @@
+version: '3.8'
+
+services:
+  ghost-db:
+    image: mariadb:${MARIADB_IMAGE_VERSION:-latest}
+    restart: unless-stopped
+    platform: ${PLATFORM_ARCH:-linux/amd64}
+    hostname: ghost-db
+    container_name: ghost-db
+
+    healthcheck:
+      test: mysqladmin ping -h 127.0.0.1 -u $$MYSQL_USER --password=$$MYSQL_PASSWORD
+      start_period: 30s
+      interval: 15s
+      timeout: 30s
+      retries: 10
+
+    networks:
+      - ghost-internal
+
+    command: >
+      --transaction-isolation=READ-COMMITTED --log-bin=binlog --binlog-format=ROW
+      --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci --max_connections=500
+
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MARIADB_ROOT_PASSWORD:-bXJyYmV1}ghost
+      MYSQL_DATABASE: ${GHOST_DB_DATABASE:-ghost}
+      MYSQL_USER: ${GHOST_DB_USER:-ghost}
+      MYSQL_PASSWORD: ${GHOST_DB_PASSWORD:-tsohg}
+
+    volumes:
+      - './services/ghost/db:/var/lib/mysql'
+      - '/etc/localtime:/etc/localtime:ro'
+
+    labels:
+      ## Traefik
+      traefik.enable: false
+
+  ghost:
+    image: ghost:${GHOST_IMAGE_VERSION:-latest}
+    restart: unless-stopped
+    platform: ${PLATFORM_ARCH:-linux/amd64}
+    hostname: ghost
+    container_name: ghost
+
+    healthcheck:
+      test: ['CMD', 'curl', 'https://0.0.0.0:2368', '-k']
+      start_period: 60s
+      interval: 30s
+      timeout: 60s
+      retries: 5
+
+    environment:
+      ## DB
+      database__client: mysql
+      database__connection__host: ghost-db
+      database__connection__user: ${GHOST_DB_USER:-ghost}
+      database__connection__database: ${GHOST_DB_DATABASE:-ghost}
+      database__connection__password: ${GHOST_DB_PASSWORD:-tsohg}
+
+      ## URL
+      # TODO
+
+      ## URL
+      url: https://${GHOST_HOST:-ghost.${SITE:-localhost}}
+
+      ## Other
+      NODE_ENV: production
+
+    depends_on:
+      - ghost-db
+
+    networks:
+      - server
+      - ghost-internal
+
+    volumes:
+      - './services/ghost/data:/var/lib/ghost/content'
+
+    labels:
+      ## Traefik
+      traefik.enable: true
+      traefik.http.routers.ghost.rule: Host(`${GHOST_HOST:-ghost.${SITE:-localhost}}`)
+      traefik.http.services.ghost.loadbalancer.server.port: 2368
+
+      ## Homepage
+      homepage.group: Web
+      homepage.name: Ghost
+      homepage.icon: ghost.png
+      homepage.href: https://${GHOST_HOST:-ghost.${SITE:-localhost}}
+      homepage.description: Just a blogging platform.
+
+networks:
+  ghost-internal:

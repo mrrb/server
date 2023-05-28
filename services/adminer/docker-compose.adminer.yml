@@ -10,6 +10,7 @@ services:
     networks:
       - server
       - pydio-internal
+      - ghost-internal
 
     labels:
       ## Traefik
