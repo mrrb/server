@@ -22,6 +22,8 @@
   * [kanban.mrrb.eu](https://kanban.mrrb.eu) 
 * [Pydio](pydio)
   * [files.mrrb.eu](https://files.mrrb.eu) 
+* [Syncthing](syncthing)
+  * [sync.files.mrrb.eu](https://sync.files.mrrb.eu) 
 <!-- * [Nextcloud](nextcloud)
   * [files.mrrb.eu](https://cloud.mrrb.eu)  -->
 <!-- * [Authentik](authentik)

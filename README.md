@@ -23,10 +23,10 @@ List of files or folders to configure the system
   * [.env.default](.env.default). Default environment.
   * [env.json](env.json). JSON with the default variables, used to generate the `.env` file(s) with `gen_server_env` or `gen_server_default_env`
   * [env.extra.json](). Untracked JSON with extra variables. Useful for a custom configuration on the server.
-* __**homepage/config**__. Homepage dashboard configuration files [(./homepage/config)](homepage/config).
+* __**services/homepage/config**__. Homepage dashboard configuration files [(./homepage/config)](homepage/config).
 * __**.shadow**__. File where the hashed passwords are stored.
-* __**traefik/dynamic**__. Traefik dynamic configuration files [(./traefik/dynamic)](traefik/dynamic).
-* __**nginx/conf**__. Nginx config files [(./nginx/conf)](nginx/conf).
+* __**services/traefik/dynamic**__. Traefik dynamic configuration files [(./traefik/dynamic)](traefik/dynamic).
+* __**services/nginx\*/conf**__. Nginx config files [(./nginx/conf)](nginx/conf).
 
 ## Services hosted on VPS1
 
