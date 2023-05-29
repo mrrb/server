@@ -5,6 +5,7 @@ services:
     image: mariadb:${MARIADB_IMAGE_VERSION:-latest}
     restart: unless-stopped
     platform: ${PLATFORM_ARCH:-linux/amd64}
+    hostname: pydio-db
     container_name: pydio-db
 
     healthcheck:
@@ -42,12 +43,12 @@ services:
     hostname: pydio-cells
     container_name: pydio-cells
 
-    healthcheck:
-      test: ['CMD', 'curl', 'https://0.0.0.0:8080', '-k']
-      start_period: 60s
-      interval: 30s
-      timeout: 60s
-      retries: 5
+    # healthcheck:
+    #   test: ['CMD', 'curl', 'https://0.0.0.0:8080', '-k']
+    #   start_period: 60s
+    #   interval: 30s
+    #   timeout: 60s
+    #   retries: 5
 
     environment:
       PUID: ${STORAGE_UID:-0}
@@ -66,7 +67,6 @@ services:
       - './services/pydio/data:/config'
       - './storage/mount/gocryptfs.private:/mnt_host/gocryptfs.private'
       - './storage/mount/gocryptfs.generic:/mnt_host/gocryptfs.generic'
-
 
     labels:
       ## Traefik
