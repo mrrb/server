@@ -60,7 +60,7 @@ services:
     container_name: seafile
 
     healthcheck:
-      test: ['CMD', 'curl', 'https://0.0.0.0:80', '-k']
+      test: ['CMD', 'curl', 'http://0.0.0.0:80', '-k']
       start_period: 60s
       interval: 30s
       timeout: 60s
