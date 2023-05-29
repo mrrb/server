@@ -37,7 +37,7 @@ services:
     image: memcached:${MEMCACHED_IMAGE_VERSION:-latest}
     restart: unless-stopped
     platform: ${PLATFORM_ARCH:-linux/amd64}
-    hostname: seafile-memcached
+    hostname: memcached
     container_name: seafile-memcached
 
     networks:
