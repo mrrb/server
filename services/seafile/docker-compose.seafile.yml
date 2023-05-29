@@ -1,0 +1,113 @@
+version: '3.8'
+
+services:
+  seafile-db:
+    image: mariadb:${MARIADB_IMAGE_VERSION:-latest}
+    restart: unless-stopped
+    platform: ${PLATFORM_ARCH:-linux/amd64}
+    hostname: seafile-db
+    container_name: seafile-db
+
+    healthcheck:
+      test: mysqladmin ping -h 127.0.0.1 -u $$MYSQL_USER --password=$$MYSQL_PASSWORD
+      start_period: 30s
+      interval: 15s
+      timeout: 30s
+      retries: 10
+
+    networks:
+      - seafile-internal
+
+    command: >
+      --transaction-isolation=READ-COMMITTED --log-bin=binlog --binlog-format=ROW
+      --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci --max_connections=500
+
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MARIADB_ROOT_PASSWORD:-bXJyYmV1}seafile
+
+    volumes:
+      - './services/seafile/db:/var/lib/mysql'
+      - '/etc/localtime:/etc/localtime:ro'
+
+    labels:
+      ## Traefik
+      traefik.enable: false
+
+  seafile-memcached:
+    image: memcached:${MEMCACHED_IMAGE_VERSION:-latest}
+    restart: unless-stopped
+    platform: ${PLATFORM_ARCH:-linux/amd64}
+    hostname: seafile-memcached
+    container_name: seafile-memcached
+
+    networks:
+      - seafile-internal
+
+    entrypoint: memcached -m 256
+
+    volumes:
+      - '/etc/localtime:/etc/localtime:ro'
+
+    labels:
+      ## Traefik
+      traefik.enable: false
+
+  seafile:
+    image: seafileltd/seafile-mc:${SEAFILE_IMAGE_VERSION:-latest}
+    restart: unless-stopped
+    platform: ${PLATFORM_ARCH:-linux/amd64}
+    hostname: seafile
+    container_name: seafile
+
+    healthcheck:
+      test: ['CMD', 'curl', 'https://0.0.0.0:80', '-k']
+      start_period: 60s
+      interval: 30s
+      timeout: 60s
+      retries: 5
+
+    environment:
+      ## DB
+      DB_HOST: seafile-db
+      DB_ROOT_PASSWD: ${MARIADB_ROOT_PASSWORD:-bXJyYmV1}seafile
+
+      ## Admin credential
+      SEAFILE_ADMIN_EMAIL: ${SEAFILE_ADMIN_EMAIL:-${ROOT_EMAIL:-me@example.com}}
+      SEAFILE_ADMIN_PASSWORD: ${SEAFILE_ADMIN_PASSWORD:-elifaes}
+
+      ## System
+      TIME_ZONE: '${TIMEZONE:-Europe/Madrid}'
+
+      ## Other
+      SEAFILE_SERVER_LETSENCRYPT: false
+      SEAFILE_SERVER_HOSTNAME: ${SEAFILE_HOST:-seafile.${SITE:-localhost}}
+
+    depends_on:
+      - seafile-db
+      - seafile-memcached
+
+    networks:
+      - server
+      - seafile-internal
+
+    volumes:
+      - './services/seafile/data:/shared'
+      - './storage/mount/gocryptfs.private:/mnt_host/gocryptfs.private'
+      - './storage/mount/gocryptfs.generic:/mnt_host/gocryptfs.generic'
+      - '/etc/localtime:/etc/localtime:ro'
+
+    labels:
+      ## Traefik
+      traefik.enable: true
+      traefik.http.routers.seafile.rule: Host(`${SEAFILE_HOST:-seafile.${SITE:-localhost}}`)
+      traefik.http.services.seafile.loadbalancer.server.port: 80
+
+      ## Homepage
+      homepage.group: Files
+      homepage.name: Seafile Cells
+      homepage.icon: seafile.png
+      homepage.href: https://${SEAFILE_HOST:-seafile.${SITE:-localhost}}
+      homepage.description: File-hosting software system.
+
+networks:
+  seafile-internal:
