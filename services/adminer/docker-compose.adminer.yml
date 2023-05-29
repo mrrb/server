@@ -11,7 +11,8 @@ services:
       - server
       - pydio-internal
       - ghost-internal
-      - seafile-internal
+      # - nextcloud-internal
+      # - seafile-internal
 
     labels:
       ## Traefik
