@@ -13,6 +13,7 @@ Configuration for VPS1 (Ampere Altra ARM64)
 * Init the server -> `source server.sh && server_init`
 * Start server -> `source server.sh && server_up`
 * Stop server -> `source server.sh && server_down`
+* Move permanent filestash files -> `source server.sh && server_perma_filestash`
 
 ## Configuration
 
@@ -57,7 +58,7 @@ If using Hetzner storage, the required box structure must be already created. Ch
     * Set API keys `FIREFLYIII_APP_KEY` and `FIREFLYIII_STATIC_CRON_TOKEN` (32 long strings).
     * Set mail vars `MAIL_ENCRYPTION`, `MAIL_FROM`, `MAIL_HOST`, `MAIL_PASSWORD`, `MAIL_PORT` and `MAIL_USERNAME`.
     * Set `STORAGE_SSH_HOST`, `STORAGE_SSH_USER_OTHER` and `STORAGE_SSH_USER_VAULT`.
-    * Set `MARIADB_ROOT_PASSWORD` and `PYDIO_DB_PASSWORD`.
+    * Set `MARIADB_ROOT_PASSWORD` and `GHOST_DB_PASSWORD`.
     * Set, if needed, `STORAGE_UID` and `STORAGE_GID`.
     * Set, if needed, `PLATFORM_ARCH` (Ex. 'linux/amd64' or 'linux/arm64')
 8. Create a new SSH key pair for the storage box.
@@ -82,5 +83,6 @@ If using Hetzner storage, the required box structure must be already created. Ch
     * Gen a KEY and save it into the `env.extra.json` file (`HOMEPAGE_PORTAINER_KEY`).
 18. Regenerate the environment file `sudo bash -c 'source /srv/server/server.sh && gen_server_env'`.
 19. Go to syncthing and add a user and password.
-20. Restart service `sudo systemctl restart server.service`.
-21. Enjoy 😉.
+20. Copy internal filestash state files to local directory `sudo bash -c 'source /srv/server/server.sh && server_perma_filestash'`.
+21. Restart service `sudo systemctl restart server.service`.
+22. Enjoy 😉.

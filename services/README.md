@@ -20,10 +20,14 @@
   * [finance.mrrb.eu](https://finance.mrrb.eu) 
 * [Kanboard](kanboard)
   * [kanban.mrrb.eu](https://kanban.mrrb.eu) 
-* [Pydio](pydio)
+* [Filestash](filestash)
   * [files.mrrb.eu](https://files.mrrb.eu) 
 * [Syncthing](syncthing)
   * [sync.files.mrrb.eu](https://sync.files.mrrb.eu) 
+* [Ghost](ghost)
+  * [blog.mrrb.eu](https://blog.mrrb.eu) 
+<!-- * [Pydio](pydio)
+  * [files.mrrb.eu](https://files.mrrb.eu)  -->
 <!-- * [Nextcloud](nextcloud)
   * [files.mrrb.eu](https://cloud.mrrb.eu)  -->
 <!-- * [Authentik](authentik)

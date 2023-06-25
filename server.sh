@@ -143,8 +143,8 @@ function server_storage_dir () {
 }
 
 function server_set_storage_permissions () {
-  _chown_storage ./services/pydio/data/ || true
-  _chown_storage ./services/syncthing/data/ || true
+  # _chown_storage $_SERVICESPATH/pydio/data/ || true
+  _chown_storage $_SERVICESPATH/syncthing/data/ || true
 
   _chown_storage ${STORAGE_SSH_MOUNT_OTHER:-${SERVER_PATH}/storage/mount/sshfs.vault} || true
   _chown_storage ${STORAGE_SSH_MOUNT_OTHER:-${SERVER_PATH}/storage/mount/sshfs.other} || true
@@ -169,4 +169,10 @@ function server_init () {
 
   server_storage_dir
   server_set_storage_permissions
+}
+
+function server_perma_filestash () {
+  _check_create_dir $_SERVICESPATH/filestash/data/
+  docker cp filestash:/app/data/state $_SERVICESPATH/filestash/data/
+  sed -i.bck '/state/s/^.*#/     /g' $_SERVICESPATH/filestash/docker-compose.filestash.yml
 }

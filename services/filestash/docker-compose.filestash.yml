@@ -12,13 +12,16 @@ services:
       APPLICATION_URL: https://${FILESTASH_HOST:-filestash.${SITE:-localhost}}
 
     depends_on:
-      - filestash-init
+      - filestash-onlyoffice
 
     networks:
       - server
+      - filestash-internal
 
     volumes:
-      - './services/filestash/data:/app/data/state'
+      # - './services/filestash/data/state:/app/data/state'
+      - './storage/mount/gocryptfs.private:/mnt_host/gocryptfs.private'
+      - './storage/mount/gocryptfs.generic:/mnt_host/gocryptfs.generic'
 
     labels:
       ## Traefik
@@ -29,30 +32,26 @@ services:
       ## Homepage
       homepage.group: Web
       homepage.name: Filestash
-      homepage.icon: filestash.png
+      homepage.icon: https://${FILESTASH_HOST:-filestash.${SITE:-localhost}}/assets/logo/apple-touch-icon.png
       homepage.href: https://${FILESTASH_HOST:-filestash.${SITE:-localhost}}
       homepage.description: A modern web client for SFTP, S3, FTP, WebDAV, Git, Minio, LDAP, CalDAV, CardDAV, Mysql, Backblaze.
 
-  filestash-init:
-    image: machines/filestash:${FILESTASH_IMAGE_VERSION:-latest}
+  filestash-onlyoffice:
+    image: onlyoffice/documentserver:${ONLYOFFICE_IMAGE_VERSION:-latest}
+    restart: unless-stopped
     platform: ${PLATFORM_ARCH:-linux/amd64}
-    network_mode: none
-    container_name: filestash-init
+    hostname: filestash-onlyoffice
+    container_name: filestash-onlyoffice
 
-    environment:
-      APPLICATION_URL: https://${FILESTASH_HOST:-filestash.${SITE:-localhost}}
+    networks:
+      - filestash-internal
 
-    command: >
-      if [ "$(ls -A /mnt_state/)" ]; then
-        echo "/mnt_state/ is not empty. Ignoring!"
-      else
-        echo "/mnt_state/ is empty. Copying state files!"
-        cp -n -r /app/data/state /mnt_state
-      fi
-
-    volumes:
-      - './services/filestash/data:/mnt_state'
+    security_opt:
+      - seccomp:unconfined
 
     labels:
       ## Traefik
       traefik.enable: false
+
+networks:
+  filestash-internal:

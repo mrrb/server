@@ -9,10 +9,11 @@ services:
 
     networks:
       - server
-      - pydio-internal
       - ghost-internal
-      # - nextcloud-internal
+      - filestash-internal
+      # - pydio-internal
       # - seafile-internal
+      # - nextcloud-internal
 
     labels:
       ## Traefik
