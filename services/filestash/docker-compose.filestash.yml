@@ -46,6 +46,15 @@ services:
     networks:
       - filestash-internal
 
+    volumes:
+      - './services/filestash/data_filestash/fonts:/usr/share/fonts/truetype/custom'
+      - './services/filestash/data_filestash/onlyoffice:/var/lib/onlyoffice'
+      - './services/filestash/data_filestash/postgresql:/var/lib/postgresql'
+      - './services/filestash/data_filestash/data:/var/www/onlyoffice/Data'
+      - './services/filestash/data_filestash/rabbitmq:/var/lib/rabbitmq'
+      - './services/filestash/data_filestash/log:/var/log/onlyoffice'
+      - './services/filestash/data_filestash/redis:/var/lib/redis'
+
     security_opt:
       - seccomp:unconfined
 

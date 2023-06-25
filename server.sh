@@ -173,6 +173,10 @@ function server_init () {
 
 function server_perma_filestash () {
   _check_create_dir $_SERVICESPATH/filestash/data/
+
   docker cp filestash:/app/data/state $_SERVICESPATH/filestash/data/
+
+  chown -R 1000:1000 $_SERVICESPATH/filestash/data/
+
   sed -i.bck '/state/s/^.*#/     /g' $_SERVICESPATH/filestash/docker-compose.filestash.yml
 }
