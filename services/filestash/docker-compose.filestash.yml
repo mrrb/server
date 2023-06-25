@@ -19,7 +19,7 @@ services:
       - filestash-internal
 
     volumes:
-      # - './services/filestash/data/state:/app/data/state'
+      - './services/filestash/data/state:/app/data/state'
       - './storage/mount/gocryptfs.private:/mnt_host/gocryptfs.private'
       - './storage/mount/gocryptfs.generic:/mnt_host/gocryptfs.generic'
 
