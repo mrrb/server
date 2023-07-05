@@ -10,6 +10,7 @@ services:
 
     environment:
       APPLICATION_URL: https://${FILESTASH_HOST:-filestash.${SITE:-localhost}}
+      ONLYOFFICE_URL: http://filestash-onlyoffice
 
     depends_on:
       - filestash-onlyoffice
