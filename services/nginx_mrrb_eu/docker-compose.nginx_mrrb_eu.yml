@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   nginx_mrrb_eu:
     image: nginx:${NGINX_IMAGE_VERSION:-stable-alpine}

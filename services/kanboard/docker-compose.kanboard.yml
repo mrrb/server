@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   kanboard:
     image: kanboard/kanboard:${KANBOARD_IMAGE_VERSION:-latest}

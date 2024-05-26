@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   authentik-server:
     image: ${AUTHENTIK_IMAGE:-ghcr.io/goauthentik/server}:${AUTHENTIK_IMAGE_VERSION:-2023.2}

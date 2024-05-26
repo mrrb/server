@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   pydio-db:
     image: mariadb:${MARIADB_IMAGE_VERSION:-latest}
