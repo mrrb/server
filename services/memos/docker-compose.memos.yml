@@ -28,6 +28,6 @@ services:
       ## Homepage
       homepage.group: Web
       homepage.name: Memos
-      homepage.icon: https://${MEMOS_HOST:-memos.${SITE:-localhost}}/full-logo.webp
+      homepage.icon: https://${MEMOS_HOST:-memos.${SITE:-localhost}}/android-chrome-192x192.png
       homepage.href: https://${MEMOS_HOST:-memos.${SITE:-localhost}}
       homepage.description: A privacy-first, lightweight note-taking service. Easily capture and share your great thoughts.
