@@ -35,6 +35,7 @@ services:
 
       ## Enable HTTP/3
       - '--experimental.http3=true'
+      - '--entryPoints.websecure.http3'
       - '--entrypoints.websecure.http3.advertisedPort=${TRAEFIK_WEBSECURE_ENTRYPOINT:-443}'
 
       ## Let's Encrypt
