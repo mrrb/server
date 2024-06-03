@@ -7,7 +7,7 @@ services:
 
     networks:
       - server
-      - ghost-internal
+      # - ghost-internal
       # - filestash-internal
       # - pydio-internal
       # - seafile-internal
