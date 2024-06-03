@@ -1,0 +1,27 @@
+services:
+  chyrp-lite:
+    image: mrrbeu/chyrp-lite:${CHYRPLITE_IMAGE_VERSION:-latest}
+    restart: unless-stopped
+    platform: ${PLATFORM_ARCH:-linux/amd64}
+    hostname: chyrp-lite
+    container_name: chyrp-lite
+
+    networks:
+      - server
+
+    volumes:
+      - './services/chyrp-lite/uploads:/var/www/html/uploads'
+      - './services/chyrp-lite/db:/var/www/db'
+
+    labels:
+      ## Traefik
+      traefik.enable: true
+      traefik.http.routers.chyrp-lite.rule: Host(`${CHYRPLITE_HOST:-chyrp-lite.${SITE:-localhost}}`)
+      traefik.http.services.chyrp-lite.loadbalancer.server.port: 2368
+
+      ## Homepage
+      homepage.group: Web
+      homepage.name: Chyrp lite
+      homepage.icon: https://${CHYRPLITE_HOST:-chyrp-lite.${SITE:-localhost}}/favicon.svg
+      homepage.href: https://${CHYRPLITE_HOST:-chyrp-lite.${SITE:-localhost}}
+      homepage.description: An ultra-lightweight blogging engine, written in PHP.
