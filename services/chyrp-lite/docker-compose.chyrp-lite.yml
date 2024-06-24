@@ -6,12 +6,19 @@ services:
     hostname: chyrp-lite
     container_name: chyrp-lite
 
+    healthcheck:
+      test: ['CMD', 'curl', '0.0.0.0:80']
+      start_period: 60s
+      interval: 30s
+      timeout: 60s
+      retries: 5
+
     networks:
       - server
 
     volumes:
       - './services/chyrp-lite/uploads:/var/www/html/uploads'
-      - './services/chyrp-lite/db:/var/www/db'
+      - './services/chyrp-lite/db.sqlite:/db.sqlite'
 
     labels:
       ## Traefik

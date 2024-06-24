@@ -115,6 +115,7 @@ function server_up () {
 
   _check_create $_SERVICESPATH/traefik/acme.json
   _check_create $_SERVICESPATH/simply-shorten/urls.sqlite
+  _check_create $_SERVICESPATH/chyrp-lite/db.sqlite
   _check_create $_SERVICESPATH/fireflyiii/db.sqlite
 
   _srv_docker_compose up -d
