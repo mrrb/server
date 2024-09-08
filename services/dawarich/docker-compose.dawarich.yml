@@ -59,7 +59,7 @@ services:
       ## Traefik
       traefik.enable: false
 
-    user: 1000:1000
+    # user: 1000:1000
 
   dawarich:
     image: freikin/dawarich:${DAWARICH_IMAGE_VERSION:-latest}
@@ -73,7 +73,7 @@ services:
     tty: true
 
     healthcheck:
-      test: ['CMD', 'curl', '0.0.0.0:3000']
+      test: ['CMD', 'wget', '127.0.0.1:3000', '-O', '/dev/null']
       start_period: 60s
       interval: 30s
       timeout: 60s
