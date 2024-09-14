@@ -49,7 +49,7 @@ services:
     networks:
       - dawarich-internal
 
-    command: redis-server --save 60 1 --loglevel warning
+    command: redis-server
 
     volumes:
       - './services/dawarich/shared_data:/var/shared/redis'
@@ -87,7 +87,7 @@ services:
       APPLICATION_HOST: '${DAWARICH_HOST:-dawarich.${SITE:-localhost}}'
       APPLICATION_HOSTS: '${DAWARICH_HOST:-dawarich.${SITE:-localhost}},localhost,127.0.0.1'
       APPLICATION_PROTOCOL: http
-      MIN_MINUTES_SPENT_IN_CITY: 60
+      MIN_MINUTES_SPENT_IN_CITY: 20
 
       ## Redis config
       REDIS_URL: redis://dawarich-redis:6379/0
