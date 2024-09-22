@@ -61,12 +61,12 @@ services:
 
     # user: 1000:1000
 
-  immich-ml:
+  immich-machine-learning:
     image: ghcr.io/immich-app/immich-machine-learning:${IMMICH_ML_IMAGE_VERSION:-release}
     restart: unless-stopped
     platform: ${PLATFORM_ARCH:-linux/amd64}
-    hostname: immich-ml
-    container_name: immich-ml
+    hostname: immich-machine-learning
+    container_name: immich-machine-learning
 
     healthcheck:
       disable: false
