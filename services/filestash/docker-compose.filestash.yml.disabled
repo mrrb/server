@@ -8,14 +8,9 @@ services:
 
     environment:
       APPLICATION_URL: https://${FILESTASH_HOST:-filestash.${SITE:-localhost}}
-      ONLYOFFICE_URL: http://filestash-onlyoffice
-
-    depends_on:
-      - filestash-onlyoffice
 
     networks:
       - server
-      - filestash-internal
 
     volumes:
       - './services/filestash/data/state:/app/data/state'
@@ -34,32 +29,3 @@ services:
       homepage.icon: https://${FILESTASH_HOST:-filestash.${SITE:-localhost}}/assets/logo/apple-touch-icon.png
       homepage.href: https://${FILESTASH_HOST:-filestash.${SITE:-localhost}}
       homepage.description: A modern web client for SFTP, S3, FTP, WebDAV, Git, Minio, LDAP, CalDAV, CardDAV, Mysql, Backblaze.
-
-  filestash-onlyoffice:
-    image: onlyoffice/documentserver:${ONLYOFFICE_IMAGE_VERSION:-latest}
-    restart: unless-stopped
-    platform: ${PLATFORM_ARCH:-linux/amd64}
-    hostname: filestash-onlyoffice
-    container_name: filestash-onlyoffice
-
-    networks:
-      - filestash-internal
-
-    volumes:
-      - './services/filestash/data_filestash/fonts:/usr/share/fonts/truetype/custom'
-      - './services/filestash/data_filestash/onlyoffice:/var/lib/onlyoffice'
-      - './services/filestash/data_filestash/postgresql:/var/lib/postgresql'
-      - './services/filestash/data_filestash/data:/var/www/onlyoffice/Data'
-      - './services/filestash/data_filestash/rabbitmq:/var/lib/rabbitmq'
-      - './services/filestash/data_filestash/log:/var/log/onlyoffice'
-      - './services/filestash/data_filestash/redis:/var/lib/redis'
-
-    security_opt:
-      - seccomp:unconfined
-
-    labels:
-      ## Traefik
-      traefik.enable: false
-
-networks:
-  filestash-internal:
