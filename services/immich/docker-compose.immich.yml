@@ -93,6 +93,12 @@ services:
       ## App config
       TZ: '${TIMEZONE:-Europe/Madrid}'
 
+      ## Database
+      DB_URL: 'postgres://${IMMICH_POSTGRES_USER:-immich}:${IMMICH_POSTGRES_PASSWORD:-hcimmi}@immich-db:5432/${IMMICH_POSTGRES_DB:-immich}'
+      DB_USERNAME: ${IMMICH_POSTGRES_USER:-immich}
+      DB_PASSWORD: ${IMMICH_POSTGRES_PASSWORD:-hcimmi}
+      DB_DATABASE_NAME: ${IMMICH_POSTGRES_DB:-immich}
+
     depends_on:
       - immich-redis
       - immich-db
