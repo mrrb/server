@@ -8,6 +8,7 @@ services:
     networks:
       - server
       - dawarich-internal
+      - immich-internal
       # - ghost-internal
       # - filestash-internal
       # - pydio-internal

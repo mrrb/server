@@ -1,0 +1,124 @@
+services:
+  immich-db:
+    image: postgres:${POSTGRES_IMAGE_VERSION:-latest}
+    restart: unless-stopped
+    platform: ${PLATFORM_ARCH:-linux/amd64}
+    hostname: immich-db
+    container_name: immich-db
+
+    healthcheck:
+      test: ['CMD', 'pg_isready', '-d', '${IMMICH_POSTGRES_DB:-immich}']
+      start_interval: 30s
+      start_period: 1m
+      interval: 5m
+      timeout: 30s
+      retries: 10
+
+    networks:
+      - immich-internal
+
+    environment:
+      POSTGRES_PASSWORD: ${IMMICH_POSTGRES_PASSWORD:-hcimmi}
+      POSTGRES_USER: ${IMMICH_POSTGRES_USER:-immich}
+      POSTGRES_DB: ${IMMICH_POSTGRES_DB:-immich}
+      POSTGRES_INITDB_ARGS: '--data-checksums'
+
+    volumes:
+      - './services/immich/db:/var/lib/postgresql/data'
+      - '/etc/localtime:/etc/localtime:ro'
+
+    labels:
+      ## Traefik
+      traefik.enable: false
+
+  immich-redis:
+    image: redis:${REDIS_IMAGE_VERSION:-alpine}
+    restart: unless-stopped
+    platform: ${PLATFORM_ARCH:-linux/amd64}
+    hostname: immich-redis
+    container_name: immich-redis
+
+    healthcheck:
+      test: ["CMD-SHELL", "redis-cli ping | grep PONG"]
+      start_period: 30s
+      interval: 60s
+      timeout: 30s
+      retries: 5
+
+    networks:
+      - immich-internal
+
+    command: redis-server
+
+    volumes:
+      - '/etc/localtime:/etc/localtime:ro'
+
+    labels:
+      ## Traefik
+      traefik.enable: false
+
+    # user: 1000:1000
+
+  immich-ml:
+    image: ghcr.io/immich-app/immich-machine-learning:${IMMICH_ML_IMAGE_VERSION:-release}
+    restart: unless-stopped
+    platform: ${PLATFORM_ARCH:-linux/amd64}
+    hostname: immich-ml
+    container_name: immich-ml
+
+    healthcheck:
+      disable: false
+
+    networks:
+      - immich-internal
+
+    volumes:
+      - '/services/immich/cache:/cache'
+      - '/etc/localtime:/etc/localtime:ro'
+
+    labels:
+      ## Traefik
+      traefik.enable: false
+
+  immich:
+    image: ghcr.io/immich-app/immich-server:${IMMICH_IMAGE_VERSION:-release}
+    restart: unless-stopped
+    platform: ${PLATFORM_ARCH:-linux/amd64}
+    container_name: immich
+
+    healthcheck:
+      disable: false
+
+    environment:
+      ## App config
+      TZ: '${TIMEZONE:-Europe/Madrid}'
+
+    depends_on:
+      - immich-redis
+      - immich-db
+      - immich-ml
+
+    networks:
+      - server
+      - immich-internal
+
+    volumes:
+      - './services/immich/upload:/usr/src/app/upload'  # ToDo, set correct path
+      - '/etc/localtime:/etc/localtime:ro'
+
+    labels:
+      ## Traefik
+      traefik.enable: true
+      traefik.http.routers.immich.rule: Host(`${IMMICH_HOST:-immich.${SITE:-localhost}}`)
+      traefik.http.services.immich.loadbalancer.server.port: 3001
+
+      ## Homepage
+      homepage.group: Web
+      homepage.name: Immich
+      homepage.icon: https://${IMMICH_HOST:-immich.${SITE:-localhost}}/assets/img/touch-icon-ipad-retina.png
+      homepage.href: https://${IMMICH_HOST:-immich.${SITE:-localhost}}
+      homepage.description: High performance self-hosted photo and video management solution.
+
+
+networks:
+  immich-internal:
