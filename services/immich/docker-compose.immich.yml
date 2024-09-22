@@ -62,7 +62,7 @@ services:
     # user: 1000:1000
 
   immich-machine-learning:
-    image: ghcr.io/immich-app/immich-machine-learning:${IMMICH_ML_IMAGE_VERSION:-release}
+    image: ghcr.io/immich-app/immich-machine-learning:${IMMICH_MACHINE_LEARNING_IMAGE_VERSION:-release}
     restart: unless-stopped
     platform: ${PLATFORM_ARCH:-linux/amd64}
     hostname: immich-machine-learning
@@ -107,7 +107,7 @@ services:
     depends_on:
       - immich-redis
       - immich-db
-      - immich-ml
+      - immich-machine-learning
 
     networks:
       - server
