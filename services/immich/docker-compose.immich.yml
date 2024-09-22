@@ -1,6 +1,6 @@
 services:
   immich-db:
-    image: postgres:${POSTGRES_IMAGE_VERSION:-latest}
+    image: tensorchord/pgvecto-rs:${PGVECTO_RS_IMAGE_VERSION:-pg14-v0.3.0}
     restart: unless-stopped
     platform: ${PLATFORM_ARCH:-linux/amd64}
     hostname: immich-db
@@ -22,6 +22,8 @@ services:
       POSTGRES_USER: ${IMMICH_POSTGRES_USER:-immich}
       POSTGRES_DB: ${IMMICH_POSTGRES_DB:-immich}
       POSTGRES_INITDB_ARGS: '--data-checksums'
+
+    command: ["postgres", "-c", "shared_preload_libraries=vectors.so", "-c", 'search_path="$$user", public, vectors', "-c", "logging_collector=on", "-c", "max_wal_size=2GB", "-c", "shared_buffers=512MB", "-c", "wal_compression=on"]
 
     volumes:
       - './services/immich/db:/var/lib/postgresql/data'
