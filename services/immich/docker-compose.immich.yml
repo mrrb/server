@@ -99,6 +99,9 @@ services:
       DB_PASSWORD: ${IMMICH_POSTGRES_PASSWORD:-hcimmi}
       DB_DATABASE_NAME: ${IMMICH_POSTGRES_DB:-immich}
 
+      ## Redis
+      REDIS_HOSTNAME: immich-redis
+
     depends_on:
       - immich-redis
       - immich-db
