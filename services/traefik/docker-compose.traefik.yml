@@ -59,6 +59,10 @@ services:
       - '--global.sendanonymoususage=${TRAEFIK_SEND_ANONYMOUS_USAGE:-false}'
       - '--ping'
 
+      ## Plugins
+      - '--experimental.plugins.fail2ban.modulename=github.com/tommoulard/fail2ban'
+      - '--experimental.plugins.fail2ban.version=${TRAEFIK_FAIL2BAN_VERSION:-v0.8.3}'
+
     volumes:
       - '/var/run/docker.sock:/var/run/docker.sock'
       - '${USERS_FILE:-./.shadow}:/.shadow:ro'
