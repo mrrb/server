@@ -4,6 +4,9 @@
 # Secrets
 .shadow
 
+# Backups
+**/.bck
+
 # Environment
 .env
 env*.json
