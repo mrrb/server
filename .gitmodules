@@ -114,5 +114,5 @@
 	url = https://codeberg.org/abu/Calendar.git
 	ignore = dirty
 [submodule "services/kanboard/plugins/GlobalSearch"]
-	path = services/kanboard/plugins/GlobalSearch
+	path = services/kanboard/plugins/Globalsearch
 	url = https://github.com/kenlog/global-search-kanboard.git
