@@ -73,10 +73,6 @@
 	path = services/kanboard/plugins/Group_assign
 	url = https://github.com/creecros/Group_assign.git
 	ignore = dirty
-[submodule "services/kanboard/plugins/Gantt"]
-	path = services/kanboard/plugins/Gantt
-	url = https://github.com/kanboard/plugin-gantt.git
-	ignore = dirty
 [submodule "services/kanboard/plugins/EncryptedContent"]
 	path = services/kanboard/plugins/EncryptedContent
 	url = https://github.com/kenlog/EncryptedContent.git
@@ -101,10 +97,6 @@
 	path = services/kanboard/plugins/Coverimage
 	url = https://github.com/TimoStahl/kanboard_plugin_coverimage.git
 	ignore = dirty
-[submodule "services/kanboard/plugins/CCIT"]
-	path = services/kanboard/plugins/CCIT
-	url = https://github.com/Chaosmeister/CCIT.git
-	ignore = dirty
 [submodule "services/kanboard/plugins/PAM"]
 	path = services/kanboard/plugins/PAM
 	url = https://github.com/Chaosmeister/PAM.git
@@ -121,3 +113,6 @@
 	path = services/kanboard/plugins/Calendar
 	url = https://codeberg.org/abu/Calendar.git
 	ignore = dirty
+[submodule "services/kanboard/plugins/GlobalSearch"]
+	path = services/kanboard/plugins/GlobalSearch
+	url = https://github.com/kenlog/global-search-kanboard.git
