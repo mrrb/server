@@ -18,8 +18,12 @@ services:
     labels:
       ## Traefik
       traefik.enable: true
-      traefik.http.routers.adminer.rule: Host(`${ADMINER_HOST:-adminer.${SITE:-localhost}}`)
+
       traefik.http.services.adminer.loadbalancer.server.port: 8080
+
+      traefik.http.routers.adminer.entrypoints: web,websecure
+      traefik.http.routers.adminer.service: adminer
+      traefik.http.routers.adminer.rule: Host(`${ADMINER_HOST:-adminer.${SITE:-localhost}}`)
 
       ## Homepage
       homepage.group: System

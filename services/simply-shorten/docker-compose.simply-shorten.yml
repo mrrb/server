@@ -19,8 +19,12 @@ services:
     labels:
       ## Traefik
       traefik.enable: true
-      traefik.http.routers.simply-shorten.rule: Host(`${SIMPLYSHORTEN_HOST:-simply-shorten.${SITE:-localhost}}`)
+
       traefik.http.services.simply-shorten.loadbalancer.server.port: 4567
+
+      traefik.http.routers.simply-shorten.entrypoints: web,websecure
+      traefik.http.routers.simply-shorten.service: simply-shorten
+      traefik.http.routers.simply-shorten.rule: Host(`${SIMPLYSHORTEN_HOST:-simply-shorten.${SITE:-localhost}}`)
 
       ## Homepage
       homepage.group: Web

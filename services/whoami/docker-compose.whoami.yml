@@ -11,9 +11,13 @@ services:
     labels:
       ## Traefik
       traefik.enable: true
-      traefik.http.routers.whoami.rule: Host(`${WHOAMI_HOST:-whoami.${SITE:-localhost}}`)
+
       traefik.http.services.whoami.loadbalancer.server.port: 80
+
+      traefik.http.routers.whoami.entrypoints: web,websecure
       traefik.http.routers.whoami.middlewares: shadow_auth@docker
+      traefik.http.routers.whoami.service: whoami
+      traefik.http.routers.whoami.rule: Host(`${WHOAMI_HOST:-whoami.${SITE:-localhost}}`)
 
       ## Homepage
       homepage.group: System

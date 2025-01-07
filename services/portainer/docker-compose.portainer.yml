@@ -20,21 +20,25 @@ services:
       traefik.enable: true
 
       ## Frontend
-      traefik.http.routers.portainer.rule: Host(`${PORTAINER_HOST:-portainer.${SITE:-localhost}}`)
       traefik.http.services.portainer.loadbalancer.server.port: 9000
+
+      traefik.http.routers.portainer.entrypoints: web,websecure
       traefik.http.routers.portainer.service: portainer
+      traefik.http.routers.portainer.rule: Host(`${PORTAINER_HOST:-portainer.${SITE:-localhost}}`)
 
       ## Edge
-      traefik.http.routers.edge.rule: Host(`${PORTAINER_EDGE_HOST:-edge.${SITE:-localhost}}`)
-      traefik.http.services.edge.loadbalancer.server.port: 8000
-      traefik.http.routers.edge.service: edge
+      traefik.http.services.portainer-edge.loadbalancer.server.port: 8000
+
+      traefik.http.routers.portainer-edge.entrypoints: web,websecure
+      traefik.http.routers.portainer-edge.service: portainer-edge
+      traefik.http.routers.portainer-edge.rule: Host(`${PORTAINER_EDGE_HOST:-edge.${SITE:-localhost}}`)
 
       ## Homepage
       homepage.group: Docker
       homepage.name: Portainer
       homepage.icon: portainer.png
       homepage.href: https://${PORTAINER_HOST:-portainer.${SITE:-localhost}}
-      homepage.description: Traefik is an open-source Edge Router that makes publishing your services a fun and easy experience.
+      homepage.description: Making Docker and Kubernetes management easy.
 
       homepage.widget.type: portainer
       homepage.widget.url: https://${PORTAINER_HOST:-portainer.${SITE:-localhost}}

@@ -54,8 +54,12 @@ services:
     labels:
       ## Traefik
       traefik.enable: true
-      traefik.http.routers.fireflyiii.rule: Host(`${FIREFLYIII_HOST:-firefly.${SITE:-localhost}}`)
+
       traefik.http.services.fireflyiii.loadbalancer.server.port: 8080
+
+      traefik.http.routers.fireflyiii.entrypoints: web,websecure
+      traefik.http.routers.fireflyiii.service: fireflyiii
+      traefik.http.routers.fireflyiii.rule: Host(`${FIREFLYIII_HOST:-firefly.${SITE:-localhost}}`)
 
       ## Homepage
       homepage.group: Web

@@ -23,8 +23,12 @@ services:
     labels:
       ## Traefik
       traefik.enable: true
-      traefik.http.routers.chyrp-lite.rule: Host(`${CHYRPLITE_HOST:-chyrp-lite.${SITE:-localhost}}`)
+
       traefik.http.services.chyrp-lite.loadbalancer.server.port: 80
+
+      traefik.http.routers.chyrp-lite.entrypoints: web,websecure
+      traefik.http.routers.chyrp-lite.service: chyrp-lite
+      traefik.http.routers.chyrp-lite.rule: Host(`${CHYRPLITE_HOST:-chyrp-lite.${SITE:-localhost}}`)
 
       ## Homepage
       homepage.group: Web

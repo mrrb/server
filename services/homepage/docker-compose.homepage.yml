@@ -16,6 +16,10 @@ services:
     labels:
       ## Traefik
       traefik.enable: true
-      traefik.http.routers.homepage.rule: Host(`${HOMEPAGE_HOST:-dashboard.${SITE:-localhost}}`)
+
       traefik.http.services.homepage.loadbalancer.server.port: 3000
+
+      traefik.http.routers.homepage.entrypoints: web,websecure
       traefik.http.routers.homepage.middlewares: shadow_auth@docker
+      traefik.http.routers.homepage.service: homepage
+      traefik.http.routers.homepage.rule: Host(`${HOMEPAGE_HOST:-dashboard.${SITE:-localhost}}`)

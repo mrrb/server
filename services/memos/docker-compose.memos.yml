@@ -21,9 +21,12 @@ services:
     labels:
       ## Traefik
       traefik.enable: true
-      traefik.http.routers.memos.rule: Host(`${MEMOS_HOST:-memos.${SITE:-localhost}}`)
+
       traefik.http.services.memos.loadbalancer.server.port: 5230
+
+      traefik.http.routers.memos.entrypoints: web,websecure
       traefik.http.routers.memos.service: memos
+      traefik.http.routers.memos.rule: Host(`${MEMOS_HOST:-memos.${SITE:-localhost}}`)
 
       ## Homepage
       homepage.group: Web

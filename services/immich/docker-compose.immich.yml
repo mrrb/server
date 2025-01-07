@@ -120,8 +120,12 @@ services:
     labels:
       ## Traefik
       traefik.enable: true
-      traefik.http.routers.immich.rule: Host(`${IMMICH_HOST:-immich.${SITE:-localhost}}`)
+
       traefik.http.services.immich.loadbalancer.server.port: 3001
+
+      traefik.http.routers.immich.entrypoints: web,websecure
+      traefik.http.routers.immich.service: immich
+      traefik.http.routers.immich.rule: Host(`${IMMICH_HOST:-immich.${SITE:-localhost}}`)
 
       ## Homepage
       homepage.group: Web

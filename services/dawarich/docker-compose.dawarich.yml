@@ -125,8 +125,12 @@ services:
     labels:
       ## Traefik
       traefik.enable: true
-      traefik.http.routers.dawarich.rule: Host(`${DAWARICH_HOST:-dawarich.${SITE:-localhost}}`)
+
       traefik.http.services.dawarich.loadbalancer.server.port: 3000
+
+      traefik.http.routers.dawarich.entrypoints: web,websecure
+      traefik.http.routers.dawarich.service: dawarich
+      traefik.http.routers.dawarich.rule: Host(`${DAWARICH_HOST:-dawarich.${SITE:-localhost}}`)
 
       ## Homepage
       homepage.group: Web

@@ -47,8 +47,12 @@ services:
     labels:
       ## Traefik
       traefik.enable: true
-      traefik.http.routers.kanboard.rule: Host(`${KANBOARD_HOST:-kanboard.${SITE:-localhost}}`)
+
       traefik.http.services.kanboard.loadbalancer.server.port: 80
+
+      traefik.http.routers.kanboard.entrypoints: web,websecure
+      traefik.http.routers.kanboard.service: kanboard
+      traefik.http.routers.kanboard.rule: Host(`${KANBOARD_HOST:-kanboard.${SITE:-localhost}}`)
 
       ## Homepage
       homepage.group: Web
