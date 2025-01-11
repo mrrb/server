@@ -11,9 +11,6 @@ services:
       timeout: 10s
       retries: 5
 
-    depends_on:
-      - traefik-init
-
     networks:
       - server
 
