@@ -35,3 +35,5 @@ services:
       homepage.icon: filegator.png
       homepage.href: https://${FILEGATOR_HOST:-filegator.${SITE:-localhost}}
       homepage.description: Powerful Multi-User File Manager.
+    
+    user: '33:33'

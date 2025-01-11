@@ -112,13 +112,19 @@ function _srv_docker_compose () {
 }
 
 function server_up () {
+  # Create shadow file if not exists
   _check_create $_SCRIPTPATH/.shadow
 
+  # Create required files if they don't exist
   _check_create $_SERVICESPATH/traefik/acme.json
   _check_create $_SERVICESPATH/simply-shorten/urls.sqlite
   _check_create $_SERVICESPATH/chyrp-lite/db.sqlite
   _check_create $_SERVICESPATH/fireflyiii/db.sqlite
 
+  # Filegator permissions
+  chown -R 33:33 $_SERVICESPATH/filegator/private/
+
+  # Start services
   _srv_docker_compose up -d
 }
 
