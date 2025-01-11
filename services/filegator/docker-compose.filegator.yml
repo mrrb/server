@@ -1,6 +1,6 @@
 services:
   filegator:
-    image: filegator/filegator:${FILEGATOR_IMAGE_VERSION:-latest}
+    image: filegator/filegator:${FILEGATOR_IMAGE_VERSION:-latest-multiarch}
     restart: unless-stopped
     platform: ${PLATFORM_ARCH:-linux/amd64}
     container_name: filegator
