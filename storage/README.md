@@ -93,3 +93,5 @@ After the set-up, on the "Storage Box data" tab, disable the *External reachabil
 2. Create the gocryptfs data for the `generic` and `vault` volumes. For each one, use a unique and complex key.
    * `sudo gocryptfs -init ./vault/gocryptfs/private.crypt/`
    * `sudo gocryptfs -init ./vault/gocryptfs/generic.crypt/`
+3. [Optional] Depending on the set-up and config, the `user_allow_other` tag must be defined on the FUSE config file `/etc/fuse.conf`.
+   * This may be necessary if the user mounting the external storage is not `root`.

@@ -82,6 +82,7 @@ function store_gocrypt_password () {
 
   echo -n $_password > $_SCRIPTPATH/storage/.keys/$1.key
 
+  chown -R ${STORAGE_UID:-0}:${STORAGE_GID:-0} $_SCRIPTPATH/storage/.keys/$1.key
   chmod 600 $_SCRIPTPATH/storage/.keys/$1.key
 }
 
