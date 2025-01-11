@@ -12,9 +12,6 @@ services:
       timeout: 60s
       retries: 5
 
-    environment:
-      ## Empty
-
     networks:
       - server
 
