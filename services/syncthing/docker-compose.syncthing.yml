@@ -22,8 +22,7 @@ services:
 
     volumes:
       - './services/syncthing/data/:/var/syncthing/'
-      - './storage/mount/gocryptfs.private:/mnt_host/gocryptfs.private'
-      - './storage/mount/gocryptfs.generic:/mnt_host/gocryptfs.generic'
+      - './storage/mount/gocryptfs:/mnt_host/gocryptfs'
 
     labels:
       ## Traefik

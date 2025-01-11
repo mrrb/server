@@ -2,7 +2,7 @@
 Description=Mount 'vault - private' directory with gocryptfs
 After=server_sshfs_mount_vault.service
 BindsTo=server_sshfs_mount_vault.service
-ConditionPathIsDirectory=${STORAGE_GOCRYPTFS_MOUNT_PRIVATE:-${SERVER_PATH}/storage/mount/gocryptfs.private}
+ConditionPathIsDirectory=${STORAGE_GOCRYPTFS_MOUNT_PRIVATE:-${SERVER_PATH}/storage/mount/gocryptfs/private}
 ConditionPathExists=${STORAGE_GOCRYPTFS_KEYS_PATH:-${SERVER_PATH}/storage/.keys}/private.key
 
 [Service]
@@ -12,10 +12,10 @@ NotifyAccess=all
 User=${STORAGE_UID:-0}
 Group=${STORAGE_GID:-0}
 
-ExecStartPre=-/usr/bin/fusermount -u -q ${STORAGE_GOCRYPTFS_MOUNT_PRIVATE:-${SERVER_PATH}/storage/mount/gocryptfs.private}
-ExecStart=/usr/bin/gocryptfs -allow_other -rw -nodev -exec -passfile ${STORAGE_GOCRYPTFS_KEYS_PATH:-${SERVER_PATH}/storage/.keys}/private.key ${STORAGE_SSH_MOUNT_VAULT:-${SERVER_PATH}/storage/mount/sshfs.vault}/gocryptfs/private.crypt ${STORAGE_GOCRYPTFS_MOUNT_PRIVATE:-${SERVER_PATH}/storage/mount/gocryptfs.private}
+ExecStartPre=-/usr/bin/fusermount -u -q ${STORAGE_GOCRYPTFS_MOUNT_PRIVATE:-${SERVER_PATH}/storage/mount/gocryptfs/private}
+ExecStart=/usr/bin/gocryptfs -allow_other -rw -nodev -exec -passfile ${STORAGE_GOCRYPTFS_KEYS_PATH:-${SERVER_PATH}/storage/.keys}/private.key ${STORAGE_SSH_MOUNT_VAULT:-${SERVER_PATH}/storage/mount/sshfs/vault}/gocryptfs/private.crypt ${STORAGE_GOCRYPTFS_MOUNT_PRIVATE:-${SERVER_PATH}/storage/mount/gocryptfs/private}
 
-ExecStop=/usr/bin/fusermount -u ${STORAGE_GOCRYPTFS_MOUNT_PRIVATE:-${SERVER_PATH}/storage/mount/gocryptfs.private}
+ExecStop=/usr/bin/fusermount -u ${STORAGE_GOCRYPTFS_MOUNT_PRIVATE:-${SERVER_PATH}/storage/mount/gocryptfs/private}
 
 TimeoutStopSec=5min
 Restart=on-failure

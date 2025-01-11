@@ -136,7 +136,7 @@ function server_init_config () {
 }
 
 function server_storage_dir () {
-  declare -a _storage_dirs=("sshfs.vault" "sshfs.other" "gocryptfs.private" "gocryptfs.generic")
+  declare -a _storage_dirs=("sshfs/vault" "sshfs/other" "gocryptfs/private" "gocryptfs/generic")
   for i in "${_storage_dirs[@]}"
   do
     _check_create_dir "$_SCRIPTPATH/storage/mount/$i"
@@ -147,13 +147,13 @@ function server_set_storage_permissions () {
   # _chown_storage $_SERVICESPATH/pydio/data/ || true
   _chown_storage $_SERVICESPATH/syncthing/data/ || true
 
-  _chown_storage ${STORAGE_SSH_MOUNT_OTHER:-${SERVER_PATH}/storage/mount/sshfs.vault} || true
-  _chown_storage ${STORAGE_SSH_MOUNT_OTHER:-${SERVER_PATH}/storage/mount/sshfs.other} || true
+  _chown_storage ${STORAGE_SSH_MOUNT_OTHER:-${SERVER_PATH}/storage/mount/sshfs/vault} || true
+  _chown_storage ${STORAGE_SSH_MOUNT_OTHER:-${SERVER_PATH}/storage/mount/sshfs/other} || true
 
-  # _chown_storage ${STORAGE_SSH_MOUNT_VAULT:-${SERVER_PATH}/storage/mount/sshfs.vault}/gocryptfs/generic.crypt
-  # _chown_storage ${STORAGE_SSH_MOUNT_VAULT:-${SERVER_PATH}/storage/mount/sshfs.vault}/gocryptfs/private.crypt
-  _chown_storage ${STORAGE_GOCRYPTFS_MOUNT_GENERIC:-${SERVER_PATH}/storage/mount/gocryptfs.generic} || true
-  _chown_storage ${STORAGE_GOCRYPTFS_MOUNT_PRIVATE:-${SERVER_PATH}/storage/mount/gocryptfs.private} || true
+  # _chown_storage ${STORAGE_SSH_MOUNT_VAULT:-${SERVER_PATH}/storage/mount/sshfs/vault}/gocryptfs/generic.crypt
+  # _chown_storage ${STORAGE_SSH_MOUNT_VAULT:-${SERVER_PATH}/storage/mount/sshfs/vault}/gocryptfs/private.crypt
+  _chown_storage ${STORAGE_GOCRYPTFS_MOUNT_GENERIC:-${SERVER_PATH}/storage/mount/gocryptfs/generic} || true
+  _chown_storage ${STORAGE_GOCRYPTFS_MOUNT_PRIVATE:-${SERVER_PATH}/storage/mount/gocryptfs/private} || true
 }
 
 function server_init () {
