@@ -122,7 +122,7 @@ function server_up () {
   _check_create $_SERVICESPATH/fireflyiii/db.sqlite
 
   # Set correct traefik acme.json permissions
-  chmod 600 /acme.json $_SERVICESPATH/traefik/acme.json
+  chmod 600 $_SERVICESPATH/traefik/acme.json
 
   # Set correct filegator permissions
   chown -R 33:33 $_SERVICESPATH/filegator/private/
