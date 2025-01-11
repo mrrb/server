@@ -121,8 +121,12 @@ function server_up () {
   _check_create $_SERVICESPATH/chyrp-lite/db.sqlite
   _check_create $_SERVICESPATH/fireflyiii/db.sqlite
 
-  # Filegator permissions
+  # Set correct traefik acme.json permissions
+  chmod 600 /acme.json $_SERVICESPATH/traefik/acme.json
+
+  # Set correct filegator permissions
   chown -R 33:33 $_SERVICESPATH/filegator/private/
+  chmod -R 755 $_SERVICESPATH/filegator/private/
 
   # Start services
   _srv_docker_compose up -d
