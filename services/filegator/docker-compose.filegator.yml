@@ -16,8 +16,8 @@ services:
       - server
 
     volumes:
-      - './services/filegator/private/:/var/www/filegator/private'
-      - './storage/mount/gocryptfs:/var/www/filegator/repository'
+      - './services/filegator/private/:/var/www/filegator/private:z'
+      - './storage/mount/gocryptfs:/var/www/filegator/repository:z'
 
     labels:
       ## Traefik
