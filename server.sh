@@ -157,17 +157,22 @@ function server_perma_filegator_private () {
 }
 
 function server_chyrp_lite_chk_fix () {
-  # Create db.sqlite file if not exists
-  _check_create $_SERVICESPATH/chyrp-lite/db.sqlite
+  # Create data directory if not exists
+  _check_create_dir $_SERVICESPATH/chyrp-lite/data/
 
-  # Set correct permissions for db.sqlite
-  chown 33:33 $_SERVICESPATH/chyrp-lite/db.sqlite
+  # Create db.sqlite file if not exists
+  _check_create $_SERVICESPATH/chyrp-lite/data/db.sqlite
+
+  # Set correct permissions for data directory
+  chown -R 33:33 $_SERVICESPATH/chyrp-lite/data/
+  chmod -R 755 $_SERVICESPATH/chyrp-lite/data/
 
   # Create uploads directory if not exists
   _check_create_dir $_SERVICESPATH/chyrp-lite/uploads/
   
   # Set correct permissions for uploads directory
   chown -R 33:33 $_SERVICESPATH/chyrp-lite/uploads/
+  chmod -R 755 $_SERVICESPATH/chyrp-lite/uploads/
 }
 
 
@@ -179,7 +184,6 @@ function server_up () {
   # Create required files if they don't exist
   _check_create $_SERVICESPATH/traefik/acme.json
   _check_create $_SERVICESPATH/simply-shorten/urls.sqlite
-  _check_create $_SERVICESPATH/chyrp-lite/db.sqlite
   _check_create $_SERVICESPATH/fireflyiii/db.sqlite
 
   # Set correct traefik acme.json permissions
@@ -187,6 +191,9 @@ function server_up () {
 
   # Check and set correct permissions for chyrp-lite
   server_chyrp_lite_chk_fix
+
+  # Check and set correct permissions for filegator
+  server_perma_filegator_fix_permissions
 
   # Start services
   _srv_docker_compose up -d

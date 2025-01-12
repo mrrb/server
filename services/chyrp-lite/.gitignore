@@ -1,3 +1,2 @@
 uploads
-*.db
-*.sqlite
+data

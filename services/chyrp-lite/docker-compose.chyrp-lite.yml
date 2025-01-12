@@ -17,8 +17,8 @@ services:
       - server
 
     volumes:
-      - './services/chyrp-lite/uploads:/var/www/html/uploads'
-      - './services/chyrp-lite/db.sqlite:/db.sqlite'
+      - './services/chyrp-lite/uploads:/var/www/html/uploads:z'
+      - './services/chyrp-lite/data:/data:z'
 
     labels:
       ## Traefik
