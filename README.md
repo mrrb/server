@@ -85,5 +85,6 @@ If using Hetzner storage, the required box structure must be already created. Ch
 1. Regenerate the environment file `sudo bash -c 'source /srv/server/server.sh && gen_server_env'`.
 1. Go to syncthing and add a user and password.
     <!-- 1. Copy internal filestash state files to local directory `sudo bash -c 'source /srv/server/server.sh && server_perma_filestash'`. -->
-1. Restart service `sudo systemctl restart server.service`.
-1. Enjoy 😉.
+2. Copy internal filegator private files to local directory `sudo bash -c 'source /srv/server/server.sh && server_perma_filegator_private'`.
+3. Restart service `sudo systemctl restart server.service`.
+4. Enjoy 😉.

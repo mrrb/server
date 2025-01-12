@@ -4,6 +4,7 @@
 # _SCRIPT=$(realpath -s "$0")
 # _SCRIPTPATH=$(dirname "$_SCRIPT")
 
+
 # https://stackoverflow.com/questions/59895/how-do-i-get-the-directory-where-a-bash-script-is-located-from-within-the-script
 _SCRIPTPATH=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 _SERVICESPATH="$_SCRIPTPATH/services"
@@ -86,6 +87,7 @@ function store_gocrypt_password () {
   chmod 600 $_SCRIPTPATH/storage/.keys/$1.key
 }
 
+
 ## Control functions
 function _check_create () {
   if [ ! -e "$1" ] ; then
@@ -111,6 +113,48 @@ function _srv_docker_compose () {
   cd $_curr_pwd
 }
 
+
+## File service(s) functions
+# function server_perma_filestash_init () {
+#   _check_create_dir $_SERVICESPATH/filestash/data/
+#   sed -i.bck  's/^.*state:/#&/' $_SERVICESPATH/filestash/docker-compose.filestash.yml
+# }
+
+# function server_perma_filestash () {
+#   docker cp filestash:/app/data/state $_SERVICESPATH/filestash/data/
+
+#   chown -R 1000:1000 $_SERVICESPATH/filestash/data/
+
+#   sed -i.bck '/state/s/^.*#//g' $_SERVICESPATH/filestash/docker-compose.filestash.yml
+# }
+
+function server_perma_filegator_fix_permissions () {
+  chown -R 33:33 $_SERVICESPATH/filegator/private/
+  chmod -R 755 $_SERVICESPATH/filegator/private/
+}
+
+function server_perma_filegator_init () {
+  _check_create_dir $_SERVICESPATH/filegator/private/
+  server_perma_filegator_fix_permissions
+}
+
+function server_perma_filegator_private () {
+  # Clone filegator repo in temp dir
+  _temp_dir=$(mktemp -d)
+  git clone https://github.com/filegator/filegator.git $_temp_dir
+
+  # Make sure the 'private' service directory exists
+  server_perma_filegator_init
+
+  # Copy filegator 'private' directory files to the correct location
+  cp -r $_temp_dir/private/{.,}* $_SERVICESPATH/filegator/private/
+
+  # Set correct permissions
+  server_perma_filegator_fix_permissions
+}
+
+
+## Server functions
 function server_up () {
   # Create shadow file if not exists
   _check_create $_SCRIPTPATH/.shadow
@@ -123,11 +167,6 @@ function server_up () {
 
   # Set correct traefik acme.json permissions
   chmod 600 $_SERVICESPATH/traefik/acme.json
-
-  # Create required filegator directories and set permissions
-  _check_create_dir $_SERVICESPATH/filegator/private/
-  chown -R 33:33 $_SERVICESPATH/filegator/private/
-  chmod -R 755 $_SERVICESPATH/filegator/private/
 
   # Start services
   _srv_docker_compose up -d
@@ -182,17 +221,6 @@ function server_init () {
 
   server_storage_dir
   server_set_storage_permissions
+
+  server_perma_filegator_init
 }
-
-# function server_perma_filestash_init () {
-#   _check_create_dir $_SERVICESPATH/filestash/data/
-#   sed -i.bck  's/^.*state:/#&/' $_SERVICESPATH/filestash/docker-compose.filestash.yml
-# }
-
-# function server_perma_filestash () {
-#   docker cp filestash:/app/data/state $_SERVICESPATH/filestash/data/
-
-#   chown -R 1000:1000 $_SERVICESPATH/filestash/data/
-
-#   sed -i.bck '/state/s/^.*#//g' $_SERVICESPATH/filestash/docker-compose.filestash.yml
-# }
