@@ -114,7 +114,7 @@ function _srv_docker_compose () {
 }
 
 
-## File service(s) functions
+## Permanent files/dirs and permissions functions
 # function server_perma_filestash_init () {
 #   _check_create_dir $_SERVICESPATH/filestash/data/
 #   sed -i.bck  's/^.*state:/#&/' $_SERVICESPATH/filestash/docker-compose.filestash.yml
@@ -151,6 +151,23 @@ function server_perma_filegator_private () {
 
   # Set correct permissions
   server_perma_filegator_fix_permissions
+
+  # Remove temp dir
+  rm -fdr $_temp_dir
+}
+
+function server_chyrp_lite_chk_fix () {
+  # Create db.sqlite file if not exists
+  _check_create $_SERVICESPATH/chyrp-lite/db.sqlite
+
+  # Set correct permissions for db.sqlite
+  chown 33:33 $_SERVICESPATH/chyrp-lite/db.sqlite
+
+  # Create uploads directory if not exists
+  _check_create_dir $_SERVICESPATH/chyrp-lite/uploads/
+  
+  # Set correct permissions for uploads directory
+  chown -R 33:33 $_SERVICESPATH/chyrp-lite/uploads/
 }
 
 
@@ -167,6 +184,9 @@ function server_up () {
 
   # Set correct traefik acme.json permissions
   chmod 600 $_SERVICESPATH/traefik/acme.json
+
+  # Check and set correct permissions for chyrp-lite
+  server_chyrp_lite_chk_fix
 
   # Start services
   _srv_docker_compose up -d
