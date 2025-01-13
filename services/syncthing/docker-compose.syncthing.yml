@@ -34,17 +34,17 @@ services:
       traefik.http.routers.syncthing.service: syncthing
       traefik.http.routers.syncthing.rule: Host(`${SYNCTHING_HOST:-syncthing.${SITE:-localhost}}`)
 
-      traefik.tcp.services.syncthing.loadbalancer.server.port: ${TRAEFIK_SYNCTHING_ENTRYPOINT:-22000}
+      # traefik.tcp.services.syncthing-tcp.loadbalancer.server.port: ${TRAEFIK_SYNCTHING_ENTRYPOINT:-22000}
 
-      traefik.tcp.routers.syncthing.entrypoints: syncthing
-      traefik.tcp.routers.syncthing.service: syncthing
-      traefik.tcp.routers.syncthing.rule: HostSNI(`*`)
+      # traefik.tcp.routers.syncthing-tcp.entrypoints: syncthing-tcp
+      # traefik.tcp.routers.syncthing-tcp.service: syncthing-tcp
+      # traefik.tcp.routers.syncthing-tcp.rule: HostSNI(`*`)
 
-      traefik.udp.services.syncthing.loadbalancer.server.port: ${TRAEFIK_SYNCTHING_ENTRYPOINT:-22000}
+      # traefik.udp.services.syncthing-udp.loadbalancer.server.port: ${TRAEFIK_SYNCTHING_ENTRYPOINT:-22000}
 
-      traefik.udp.routers.syncthing.entrypoints: syncthing
-      traefik.udp.routers.syncthing.service: syncthing
-      traefik.udp.routers.syncthing.rule: HostSNI(`*`)
+      # traefik.udp.routers.syncthing-udp.entrypoints: syncthing-udp
+      # traefik.udp.routers.syncthing-udp.service: syncthing-udp
+      # traefik.udp.routers.syncthing-udp.rule: HostSNI(`*`)
 
       ## Homepage
       homepage.group: Files
@@ -52,6 +52,10 @@ services:
       homepage.icon: syncthing.png
       homepage.href: https://${SYNCTHING_HOST:-syncthing.${SITE:-localhost}}
       homepage.description: Continuous file synchronization.
+
+    ports:
+      - '${TRAEFIK_SYNCTHING_ENTRYPOINT:-22000}:${TRAEFIK_SYNCTHING_ENTRYPOINT:-22000}/tcp'  ## TCP file transfers
+      - '${TRAEFIK_SYNCTHING_ENTRYPOINT:-22000}:${TRAEFIK_SYNCTHING_ENTRYPOINT:-22000}/udp'  ## QUIC file transfers
 
 
   syncthing-relaysrv:
@@ -61,18 +65,22 @@ services:
     hostname: syncthing-relaysrv
     container_name: syncthing-relaysrv
 
-    labels:
-      ## Traefik
-      traefik.enable: true
+    # labels:
+    #   ## Traefik
+    #   traefik.enable: true
 
-      traefik.tcp.services.syncthing-relaysrv.loadbalancer.server.port: ${TRAEFIK_SYNCTHING_RELAYSRV_ENTRYPOINT:-22067}
+    #   traefik.tcp.services.syncthing-relaysrv.loadbalancer.server.port: ${TRAEFIK_SYNCTHING_RELAYSRV_ENTRYPOINT:-22067}
 
-      traefik.tcp.routers.syncthing-relaysrv.entrypoints: syncthing-relaysrv
-      traefik.tcp.routers.syncthing-relaysrv.service: syncthing-relaysrv
-      traefik.tcp.routers.syncthing-relaysrv.rule: HostSNI(`*`)
+    #   traefik.tcp.routers.syncthing-relaysrv.entrypoints: syncthing-relaysrv
+    #   traefik.tcp.routers.syncthing-relaysrv.service: syncthing-relaysrv
+    #   traefik.tcp.routers.syncthing-relaysrv.rule: HostSNI(`*`)
 
-      traefik.tcp.services.syncthing-relaysrv-status.loadbalancer.server.port: ${TRAEFIK_SYNCTHING_RELAYSRV_STATUS_ENTRYPOINT:-22070}
+    #   traefik.tcp.services.syncthing-relaysrv-status.loadbalancer.server.port: ${TRAEFIK_SYNCTHING_RELAYSRV_STATUS_ENTRYPOINT:-22070}
 
-      traefik.tcp.routers.syncthing-relaysrv-status.entrypoints: syncthing-relaysrv-status
-      traefik.tcp.routers.syncthing-relaysrv-status.service: syncthing-relaysrv-status
-      traefik.tcp.routers.syncthing-relaysrv-status.rule: HostSNI(`*`)
+    #   traefik.tcp.routers.syncthing-relaysrv-status.entrypoints: syncthing-relaysrv-status
+    #   traefik.tcp.routers.syncthing-relaysrv-status.service: syncthing-relaysrv-status
+    #   traefik.tcp.routers.syncthing-relaysrv-status.rule: HostSNI(`*`)
+    
+    ports:
+      - '${TRAEFIK_SYNCTHING_RELAYSRV_ENTRYPOINT:-22067}:22067/tcp'
+      - '${TRAEFIK_SYNCTHING_RELAYSRV_STATUS_ENTRYPOINT:-22070}:22070/tcp'
