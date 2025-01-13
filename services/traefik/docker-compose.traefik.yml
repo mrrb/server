@@ -27,8 +27,25 @@ services:
       - '--entrypoints.web.address=:${TRAEFIK_WEB_ENTRYPOINT:-80}'
       - '--entrypoints.web.http.redirections.entrypoint.to=websecure'
       - '--entrypoints.web.http.redirections.entrypoint.scheme=https'
+
       - '--entrypoints.websecure.address=:${TRAEFIK_WEBSECURE_ENTRYPOINT:-443}'
-      - '--entrypoints.grpc.address=:${TRAEFIK_GRPC_ENTRYPOINT:-33060}'
+
+      - '--entrypoints.syncthing.address=:${TRAEFIK_SYNCTHING_ENTRYPOINT:-22000}'
+      - '--entrypoints.syncthing.observability.accessLogs=false'
+      - '--entrypoints.syncthing.observability.metrics=false'
+      - '--entrypoints.syncthing.observability.tracing=false'
+
+      - '--entrypoints.syncthing-relaysrv.address=:${TRAEFIK_SYNCTHING_RELAYSRV_ENTRYPOINT:-22067}'
+      - '--entrypoints.syncthing-relaysrv.observability.accessLogs=false'
+      - '--entrypoints.syncthing-relaysrv.observability.metrics=false'
+      - '--entrypoints.syncthing-relaysrv.observability.tracing=false'
+
+      - '--entrypoints.syncthing-relaysrv-status.address=:${TRAEFIK_SYNCTHING_RELAYSRV_STATUS_ENTRYPOINT:-22070}'
+      - '--entrypoints.syncthing-relaysrv-status.observability.accessLogs=false'
+      - '--entrypoints.syncthing-relaysrv-status.observability.metrics=false'
+      - '--entrypoints.syncthing-relaysrv-status.observability.tracing=false'
+
+      # - '--entrypoints.grpc.address=:${TRAEFIK_GRPC_ENTRYPOINT:-33060}'
 
       ## Enable HTTP/3
       - '--experimental.http3=true'
@@ -95,4 +112,8 @@ services:
     ports:
       - '${TRAEFIK_WEB_ENTRYPOINT:-80}:${TRAEFIK_WEB_ENTRYPOINT:-80}'
       - '${TRAEFIK_WEBSECURE_ENTRYPOINT:-443}:${TRAEFIK_WEBSECURE_ENTRYPOINT:-443}'
-      - '${TRAEFIK_GRPC_ENTRYPOINT:-33060}:${TRAEFIK_GRPC_ENTRYPOINT:-33060}'
+      - '${TRAEFIK_SYNCTHING_ENTRYPOINT:-22000}:${TRAEFIK_SYNCTHING_ENTRYPOINT:-22000}/tcp' ## Syncthing TCP file transfers
+      - '${TRAEFIK_SYNCTHING_ENTRYPOINT:-22000}:${TRAEFIK_SYNCTHING_ENTRYPOINT:-22000}/udp' ## Syncthing QUIC file transfers
+      - '${TRAEFIK_SYNCTHING_RELAYSRV_ENTRYPOINT:-22067}:${TRAEFIK_SYNCTHING_RELAYSRV_ENTRYPOINT:-22067}/tcp' ## Syncthing relay server
+      - '${TRAEFIK_SYNCTHING_RELAYSRV_STATUS_ENTRYPOINT:-22070}:${TRAEFIK_SYNCTHING_RELAYSRV_STATUS_ENTRYPOINT:-22070}/tcp' ## Syncthing relay server status
+      # - '${TRAEFIK_GRPC_ENTRYPOINT:-33060}:${TRAEFIK_GRPC_ENTRYPOINT:-33060}'

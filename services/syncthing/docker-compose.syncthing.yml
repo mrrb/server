@@ -34,6 +34,18 @@ services:
       traefik.http.routers.syncthing.service: syncthing
       traefik.http.routers.syncthing.rule: Host(`${SYNCTHING_HOST:-syncthing.${SITE:-localhost}}`)
 
+      traefik.tcp.services.syncthing.loadbalancer.server.port: ${TRAEFIK_SYNCTHING_ENTRYPOINT:-22000}
+
+      traefik.tcp.routers.syncthing.entrypoints: syncthing
+      traefik.tcp.routers.syncthing.service: syncthing
+      traefik.tcp.routers.syncthing.rule: HostSNI(`*`)
+
+      traefik.udp.services.syncthing.loadbalancer.server.port: ${TRAEFIK_SYNCTHING_ENTRYPOINT:-22000}
+
+      traefik.udp.routers.syncthing.entrypoints: syncthing
+      traefik.udp.routers.syncthing.service: syncthing
+      traefik.udp.routers.syncthing.rule: HostSNI(`*`)
+
       ## Homepage
       homepage.group: Files
       homepage.name: Syncthing
@@ -41,7 +53,26 @@ services:
       homepage.href: https://${SYNCTHING_HOST:-syncthing.${SITE:-localhost}}
       homepage.description: Continuous file synchronization.
 
-    ports:
-      - 22000:22000/tcp ## TCP file transfers
-      - 22000:22000/udp ## QUIC file transfers
-      - 21027:21027/udp ## Receive local discovery broadcasts
+
+  syncthing-relaysrv:
+    image: syncthing/relaysrv:${SYNCTHING_RELAYSRV_IMAGE_VERSION:-latest}
+    restart: unless-stopped
+    platform: ${PLATFORM_ARCH:-linux/amd64}
+    hostname: syncthing-relaysrv
+    container_name: syncthing-relaysrv
+
+    labels:
+      ## Traefik
+      traefik.enable: true
+
+      traefik.tcp.services.syncthing-relaysrv.loadbalancer.server.port: ${TRAEFIK_SYNCTHING_RELAYSRV_ENTRYPOINT:-22067}
+
+      traefik.tcp.routers.syncthing-relaysrv.entrypoints: syncthing-relaysrv
+      traefik.tcp.routers.syncthing-relaysrv.service: syncthing-relaysrv
+      traefik.tcp.routers.syncthing-relaysrv.rule: HostSNI(`*`)
+
+      traefik.tcp.services.syncthing-relaysrv-status.loadbalancer.server.port: ${TRAEFIK_SYNCTHING_RELAYSRV_STATUS_ENTRYPOINT:-22070}
+
+      traefik.tcp.routers.syncthing-relaysrv-status.entrypoints: syncthing-relaysrv-status
+      traefik.tcp.routers.syncthing-relaysrv-status.service: syncthing-relaysrv-status
+      traefik.tcp.routers.syncthing-relaysrv-status.rule: HostSNI(`*`)
