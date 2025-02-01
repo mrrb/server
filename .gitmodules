@@ -53,10 +53,6 @@
 	path = services/kanboard/plugins/MetaMagik
 	url = https://github.com/creecros/MetaMagik.git
 	ignore = dirty
-[submodule "services/kanboard/plugins/mathjaxForKanboard"]
-	path = services/kanboard/plugins/mathjaxForKanboard
-	url = https://github.com/Zaunmich/mathjaxForKanboard.git
-	ignore = dirty
 [submodule "services/kanboard/plugins/KADIFF"]
 	path = services/kanboard/plugins/KADIFF
 	url = https://github.com/Chaosmeister/KADIFF.git
