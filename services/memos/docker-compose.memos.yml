@@ -1,6 +1,6 @@
 services:
   memos:
-    image: neosmemo/memos:${MEMOS_IMAGE_VERSION:-latest}
+    image: neosmemo/memos:${MEMOS_IMAGE_VERSION:-stable}
     restart: unless-stopped
     platform: ${PLATFORM_ARCH:-linux/amd64}
     container_name: memos
