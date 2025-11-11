@@ -5,6 +5,7 @@
 [submodule "refs/server-private"]
 	path = refs/server-private
 	url = git@github.com:mrrb/server-private.git
+
 [submodule "services/kanboard/plugins/Task2pdf"]
 	path = services/kanboard/plugins/Task2pdf
 	url = https://github.com/creecros/Task2pdf.git
@@ -112,3 +113,6 @@
 [submodule "services/kanboard/plugins/GlobalSearch"]
 	path = services/kanboard/plugins/Globalsearch
 	url = https://github.com/kenlog/global-search-kanboard.git
+[submodule "services/kanboard/plugins/ModelContextProtocol"]
+	path = services/kanboard/plugins/ModelContextProtocol
+	url = https://github.com/ChristianJStarr/kanboard-mcp.git
