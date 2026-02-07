@@ -169,7 +169,7 @@ function server_chyrp_lite_chk_fix () {
 
   # Create uploads directory if not exists
   _check_create_dir $_SERVICESPATH/chyrp-lite/uploads/
-  
+
   # Set correct permissions for uploads directory
   chown -R 33:33 $_SERVICESPATH/chyrp-lite/uploads/
   chmod -R 755 $_SERVICESPATH/chyrp-lite/uploads/

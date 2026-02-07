@@ -1,0 +1,42 @@
+services:
+  vikunja:
+    image: vikunja/vikunja:${VIKUNJA_IMAGE_VERSION:-latest}
+    restart: unless-stopped
+    platform: ${PLATFORM_ARCH:-linux/amd64}
+    container_name: vikunja
+
+    environment:
+      VIKUNJA_SERVICE_JWTSECRET: ${VIKUNJA_JWTSECRET:-tercestwj}
+      VIKUNJA_SERVICE_PUBLICURL: https://${VIKUNJA_HOST:-vikunja.${SITE:-localhost}}/
+      VIKUNJA_DATABASE_PATH: /db/vikunja.db
+
+    healthcheck:
+      test: ['CMD', 'curl', '0.0.0.0:3456']
+      start_period: 60s
+      interval: 30s
+      timeout: 60s
+      retries: 5
+
+    volumes:
+      - './services/vikunja/data/:/app/vikunja/files'
+      - './services/vikunja/db/:/db'
+
+    networks:
+      - server
+
+    labels:
+      ## Traefik
+      traefik.enable: true
+
+      traefik.http.services.vikunja.loadbalancer.server.port: 3456
+
+      traefik.http.routers.vikunja.entrypoints: web,websecure
+      traefik.http.routers.vikunja.service: vikunja
+      traefik.http.routers.vikunja.rule: Host(`${VIKUNJA_HOST:-vikunja.${SITE:-localhost}}`)
+
+      ## Homepage
+      homepage.group: Web
+      homepage.name: Vikunja
+      homepage.icon: vikunja.png
+      homepage.href: https://${VIKUNJA_HOST:-vikunja.${SITE:-localhost}}
+      homepage.description: The to-do app to organize your life.
