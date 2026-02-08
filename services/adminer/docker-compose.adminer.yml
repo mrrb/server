@@ -9,6 +9,7 @@ services:
       - server
       - dawarich-internal
       - immich-internal
+      - vikunja-internal
       # - ghost-internal
       # - filestash-internal
       # - pydio-internal

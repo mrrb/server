@@ -55,7 +55,7 @@ If using Hetzner storage, the required box structure must be already created. Ch
     * `HOMEPAGE_PORTAINER_KEY` can be defined but ignored for the moment.
     * Set `SIMPLYSHORTEN_USER` and `SIMPLYSHORTEN_PASS`.
     <!-- * Set `AUTHENTIK_POSTGRES_PASSWORD`. -->
-    * Set `VIKUNJA_JWTSECRET`. 
+    * Set `VIKUNJA_JWTSECRET` and `VIKUNJA_DB_PASSWORD`.
     * Set API keys `FIREFLYIII_APP_KEY` and `FIREFLYIII_STATIC_CRON_TOKEN` (32 long strings).
     * Set mail vars `MAIL_ENCRYPTION`, `MAIL_FROM`, `MAIL_HOST`, `MAIL_PASSWORD`, `MAIL_PORT` and `MAIL_USERNAME`.
     * Set `STORAGE_SSH_HOST`, `STORAGE_SSH_USER_OTHER` and `STORAGE_SSH_USER_VAULT`.

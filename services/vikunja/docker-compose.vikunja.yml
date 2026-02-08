@@ -7,18 +7,29 @@ services:
 
     environment:
       VIKUNJA_SERVICE_JWTSECRET: ${VIKUNJA_JWTSECRET:-tercestwj}
+
       VIKUNJA_SERVICE_PUBLICURL: https://${VIKUNJA_HOST:-vikunja.${SITE:-localhost}}/
-      VIKUNJA_DATABASE_PATH: /db/vikunja.db
+
+      VIKUNJA_DATABASE_HOST: vikunja-db
+      VIKUNJA_DATABASE_PASSWORD: ${VIKUNJA_DB_PASSWORD:-drowssap}
+      VIKUNJA_DATABASE_TYPE: postgres
+      VIKUNJA_DATABASE_USER: vikunja
+      VIKUNJA_DATABASE_DATABASE: vikunja
 
     healthcheck:
-      test: ['CMD', 'curl', '0.0.0.0:3456']
-      start_period: 60s
+      test: ["CMD-SHELL", "vikunja healthcheck"]
+      start_period: 40s
       interval: 30s
-      timeout: 60s
-      retries: 5
+      timeout: 10s
+      retries: 3
+
+    depends_on:
+      vikunja-db:
+        condition: service_healthy
 
     networks:
       - server
+      - vikunja-internal
 
     volumes:
       - './services/vikunja/data/:/app/vikunja/files'
@@ -40,3 +51,33 @@ services:
       homepage.icon: vikunja.png
       homepage.href: https://${VIKUNJA_HOST:-vikunja.${SITE:-localhost}}
       homepage.description: The to-do app to organize your life.
+
+  vikunja-db:
+    image: paradedb/paradedb:${VIKUNJA_PARADEDB_IMAGE_VERSION:-latest}
+    restart: unless-stopped
+    platform: ${PLATFORM_ARCH:-linux/amd64}
+    container_name: vikunja-db
+
+    environment:
+      POSTGRES_PASSWORD: ${VIKUNJA_DB_PASSWORD:-drowssap}
+      POSTGRES_USER: vikunja
+      POSTGRES_DB: vikunja
+
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -h localhost -U $$POSTGRES_USER"]
+      start_period: 30s
+      interval: 2s
+
+    networks:
+      - vikunja-internal
+
+    volumes:
+      - './services/vikunja/db:/var/lib/postgresql/data'
+
+    labels:
+      ## Traefik
+      traefik.enable: false
+
+
+networks:
+  vikunja-internal:
