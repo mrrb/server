@@ -24,8 +24,7 @@ services:
       retries: 3
 
     depends_on:
-      vikunja-db:
-        condition: service_healthy
+      - 'vikunja-db'
 
     networks:
       - server
