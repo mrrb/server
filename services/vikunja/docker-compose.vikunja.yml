@@ -16,6 +16,10 @@ services:
       VIKUNJA_DATABASE_USER: vikunja
       VIKUNJA_DATABASE_DATABASE: vikunja
 
+      VIKUNJA_SERVICE_TIMEZONE: '${TIMEZONE:-Europe/Madrid}'
+
+      VIKUNJA_SERVICE_ENABLEREGISTRATION: ${VIKUNJA_SERVICE_ENABLEREGISTRATION:-true}
+
     # healthcheck:
     #   test: ["CMD-SHELL", "vikunja healthcheck"]
     #   start_period: 40s
