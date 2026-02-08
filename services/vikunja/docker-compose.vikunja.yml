@@ -72,7 +72,7 @@ services:
       - vikunja-internal
 
     volumes:
-      - './services/vikunja/db:/var/lib/postgresql/data'
+      - './services/vikunja/db/pg:/var/lib/postgresql/data'
 
     labels:
       ## Traefik
