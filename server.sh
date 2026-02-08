@@ -175,6 +175,14 @@ function server_chyrp_lite_chk_fix () {
   chmod -R 755 $_SERVICESPATH/chyrp-lite/uploads/
 }
 
+function server_vikunja_chk_fix () {
+  # Set correct permissions for data directory
+  chown -R 1000 $_SERVICESPATH/vikunja/data/
+
+  # Set correct permissions for db directory
+  chown -R 1000 $_SERVICESPATH/vikunja/db/
+}
+
 
 ## Server functions
 function server_up () {
@@ -191,6 +199,9 @@ function server_up () {
 
   # Check and set correct permissions for chyrp-lite
   server_chyrp_lite_chk_fix
+
+  # Check and set correct permissions for vikunja
+  server_vikunja_chk_fix
 
   # Check and set correct permissions for filegator
   server_perma_filegator_fix_permissions

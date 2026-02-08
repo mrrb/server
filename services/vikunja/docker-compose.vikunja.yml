@@ -10,12 +10,12 @@ services:
       VIKUNJA_SERVICE_PUBLICURL: https://${VIKUNJA_HOST:-vikunja.${SITE:-localhost}}/
       VIKUNJA_DATABASE_PATH: /db/vikunja.db
 
-    # healthcheck:
-    #   test: ['CMD', 'curl', '0.0.0.0:3456']
-    #   start_period: 60s
-    #   interval: 30s
-    #   timeout: 60s
-    #   retries: 5
+    healthcheck:
+      test: ['CMD', 'curl', '0.0.0.0:3456']
+      start_period: 60s
+      interval: 30s
+      timeout: 60s
+      retries: 5
 
     networks:
       - server
