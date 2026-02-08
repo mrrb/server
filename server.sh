@@ -178,9 +178,6 @@ function server_chyrp_lite_chk_fix () {
 function server_vikunja_chk_fix () {
   # Set correct permissions for data directory
   chown -R 1000 $_SERVICESPATH/vikunja/data/
-
-  # Set correct permissions for db directory
-  chown -R 1000 $_SERVICESPATH/vikunja/db/
 }
 
 
