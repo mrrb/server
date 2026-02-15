@@ -1,3 +1,6 @@
+networks:
+  immich-internal: {}
+
 services:
   immich-db:
     image: tensorchord/pgvecto-rs:${PGVECTO_RS_IMAGE_VERSION:-pg14-v0.3.0}
@@ -133,7 +136,3 @@ services:
       homepage.icon: https://${IMMICH_HOST:-immich.${SITE:-localhost}}/assets/img/touch-icon-ipad-retina.png
       homepage.href: https://${IMMICH_HOST:-immich.${SITE:-localhost}}
       homepage.description: High performance self-hosted photo and video management solution.
-
-
-networks:
-  immich-internal:

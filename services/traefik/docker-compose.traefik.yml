@@ -13,6 +13,7 @@ services:
 
     networks:
       - server
+      - server-metrics
 
     command:
       ## Providers
