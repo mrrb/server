@@ -20,15 +20,17 @@ services:
 
       VIKUNJA_SERVICE_ENABLEREGISTRATION: ${VIKUNJA_SERVICE_ENABLEREGISTRATION:-true}
 
-    # healthcheck:
-    #   test: ["CMD-SHELL", "vikunja healthcheck"]
-    #   start_period: 40s
-    #   interval: 30s
-    #   timeout: 10s
-    #   retries: 3
+    healthcheck:
+      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:3456/health || exit 1"]
+      start_period: 40s
+      interval: 30s
+      timeout: 10s
+      retries: 3
 
     depends_on:
-      - 'vikunja-db'
+      vikunja-db:
+        condition: service_healthy
+        restart: true
 
     networks:
       - server
@@ -47,6 +49,11 @@ services:
       traefik.http.routers.vikunja.entrypoints: web,websecure
       traefik.http.routers.vikunja.service: vikunja
       traefik.http.routers.vikunja.rule: Host(`${VIKUNJA_HOST:-vikunja.${SITE:-localhost}}`)
+
+      # Timeout configuration
+      traefik.http.services.vikunja.loadbalancer.server.scheme: http
+      traefik.http.services.vikunja.loadbalancer.responseforwarding.flushinterval: 100ms
+      traefik.http.services.vikunja.loadbalancer.passhostheader: true
 
       ## Homepage
       homepage.group: Web
@@ -75,7 +82,7 @@ services:
       - vikunja-internal
 
     volumes:
-      - './services/vikunja/db/pg:/var/lib/postgresql/data'
+      - './services/vikunja/db/pg:/var/lib/postgresql'
 
     labels:
       ## Traefik
@@ -83,4 +90,6 @@ services:
 
 
 networks:
+  server:
+    external: true
   vikunja-internal:
