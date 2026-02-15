@@ -18,8 +18,6 @@
   * [go.mrrb.eu](https://go.mrrb.eu) 
 * [Firefly III](fireflyiii)
   * [finance.mrrb.eu](https://finance.mrrb.eu) 
-* [Kanboard](kanboard)
-  * [kanban.mrrb.eu](https://kanban.mrrb.eu) 
 * [Filestash](filestash)
   * [files.mrrb.eu](https://files.mrrb.eu) 
 * [Syncthing](syncthing)
