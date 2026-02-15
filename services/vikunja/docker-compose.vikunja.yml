@@ -52,11 +52,6 @@ services:
       traefik.http.routers.vikunja.service: vikunja
       traefik.http.routers.vikunja.rule: Host(`${VIKUNJA_HOST:-vikunja.${SITE:-localhost}}`)
 
-      # Timeout configuration
-      traefik.http.services.vikunja.loadbalancer.server.scheme: http
-      traefik.http.services.vikunja.loadbalancer.responseforwarding.flushinterval: 100ms
-      traefik.http.services.vikunja.loadbalancer.passhostheader: true
-
       ## Homepage
       homepage.group: Web
       homepage.name: Vikunja
