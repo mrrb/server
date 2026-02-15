@@ -203,10 +203,6 @@ function server_up () {
   # Check and set correct permissions for filegator
   server_perma_filegator_fix_permissions
 
-  # Create networks manually to ensure correct naming
-  docker network create server 2>/dev/null || true
-  docker network create server-metrics 2>/dev/null || true
-
   # Start services
   _srv_docker_compose up -d
 }

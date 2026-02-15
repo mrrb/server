@@ -90,6 +90,4 @@ services:
 
 
 networks:
-  server:
-    external: true
   vikunja-internal:
