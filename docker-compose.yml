@@ -1,7 +1,3 @@
 networks:
-  server:
-    name: server
-    external: true
-  server-metrics:
-    name: server-metrics
-    external: true
+  server: {}
+  server-metrics: {}

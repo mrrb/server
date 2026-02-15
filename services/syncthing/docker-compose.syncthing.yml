@@ -65,6 +65,9 @@ services:
     hostname: syncthing-relaysrv
     container_name: syncthing-relaysrv
 
+    networks:
+      - server
+
     # labels:
     #   ## Traefik
     #   traefik.enable: true
@@ -80,7 +83,7 @@ services:
     #   traefik.tcp.routers.syncthing-relaysrv-status.entrypoints: syncthing-relaysrv-status
     #   traefik.tcp.routers.syncthing-relaysrv-status.service: syncthing-relaysrv-status
     #   traefik.tcp.routers.syncthing-relaysrv-status.rule: HostSNI(`*`)
-    
+
     ports:
       - '${TRAEFIK_SYNCTHING_RELAYSRV_ENTRYPOINT:-22067}:22067/tcp'
       - '${TRAEFIK_SYNCTHING_RELAYSRV_STATUS_ENTRYPOINT:-22070}:22070/tcp'

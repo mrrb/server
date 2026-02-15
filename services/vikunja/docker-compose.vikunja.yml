@@ -1,3 +1,6 @@
+networks:
+  vikunja-internal: {}
+
 services:
   vikunja:
     image: vikunja/vikunja:${VIKUNJA_IMAGE_VERSION:-latest}
@@ -88,7 +91,3 @@ services:
     labels:
       ## Traefik
       traefik.enable: false
-
-
-networks:
-  vikunja-internal:

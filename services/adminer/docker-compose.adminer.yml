@@ -10,11 +10,6 @@ services:
       - dawarich-internal
       - immich-internal
       - vikunja-internal
-      # - ghost-internal
-      # - filestash-internal
-      # - pydio-internal
-      # - seafile-internal
-      # - nextcloud-internal
 
     labels:
       ## Traefik

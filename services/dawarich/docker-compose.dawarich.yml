@@ -1,3 +1,6 @@
+networks:
+  dawarich-internal: {}
+
 services:
   dawarich-db:
     image: postgres:${POSTGRES_IMAGE_VERSION:-latest}
@@ -199,6 +202,3 @@ services:
     labels:
       ## Traefik
       traefik.enable: false
-
-networks:
-  dawarich-internal:
