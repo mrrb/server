@@ -1,4 +1,4 @@
 *
 !.gitignore
-!limiter.toml
-!settings.yml
+!limiter.toml.in
+!settings.yml.in

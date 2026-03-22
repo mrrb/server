@@ -65,6 +65,14 @@ function gen_server_services () {
   done
 }
 
+function gen_searxng_config () {
+  for i in $(find $_SERVICESPATH/searxng/config -type f ! -path "*/refs/*" -name '*.in')
+  do
+    envsubst < $i > ${i::-3}
+    eval "echo \"$(cat ${i::-3})\"" > ${i::-3}
+  done
+}
+
 
 ## Crypt functions
 function sha256_passwd () {
@@ -251,6 +259,7 @@ function server_init () {
   gen_traefik_config
   gen_homepage_config
   gen_server_services
+  gen_searxng_config
 
   server_install_services
 
