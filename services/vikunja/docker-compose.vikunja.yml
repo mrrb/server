@@ -1,6 +1,3 @@
-networks:
-  vikunja-internal: {}
-
 services:
   vikunja:
     image: vikunja/vikunja:${VIKUNJA_IMAGE_VERSION:-latest}

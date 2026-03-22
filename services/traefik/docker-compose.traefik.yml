@@ -19,7 +19,7 @@ services:
       ## Providers
       - '--providers.docker'
       - '--providers.docker.exposedbydefault=${TRAEFIK_DOCKER_EXPOSED_BY_DEFAULT:-false}'
-      - '--providers.docker.network=${TRAEFIK_DOCKER_NETWORK:-traefik}'
+      - '--providers.docker.network=${TRAEFIK_DOCKER_NETWORK:-server}'
       - '--providers.file'
       - '--providers.file.directory=/dynamic/'
       - '--providers.file.watch=true'

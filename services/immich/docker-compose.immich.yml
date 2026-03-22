@@ -1,6 +1,3 @@
-networks:
-  immich-internal: {}
-
 services:
   immich-db:
     image: tensorchord/pgvecto-rs:${PGVECTO_RS_IMAGE_VERSION:-pg14-v0.3.0}

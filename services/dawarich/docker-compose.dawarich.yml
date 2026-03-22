@@ -1,6 +1,3 @@
-networks:
-  dawarich-internal: {}
-
 services:
   dawarich-db:
     image: postgres:${POSTGRES_IMAGE_VERSION:-latest}

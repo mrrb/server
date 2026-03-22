@@ -1,3 +1,7 @@
 networks:
   server: {}
   server-metrics: {}
+  immich-internal: {}
+  vikunja-internal: {}
+  dawarich-internal: {}
+  open-webui-internal: {}
