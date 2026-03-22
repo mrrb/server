@@ -7,7 +7,9 @@ services:
 
     environment:
       SEARXNG_BASE_URL: https://${SEARXNG_HOST:-searxng.${SITE:-localhost}}
-      SEARXNG_SECRET_KEY: ${SEARXNG_SECRET_KEY:-yek_terces_gnxraes}
+
+      # python3 -c "import secrets; print(secrets.token_hex(32))"
+      SEARXNG_SECRET_KEY: ${SEARXNG_SECRET_KEY:-ad3c2fc45baf07600bd469c5ebffe3f34276fc3b76ebe2ca6df6bc999fd6eaa6}
 
     networks:
       - server
