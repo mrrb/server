@@ -28,11 +28,12 @@ services:
     container_name: open-webui
 
     environment:
+      WEBUI_URL: http://${OPEN_WEBUI_HOST:-http://chat.${SITE:-localhost}}:${OPEN_WEBUI_PORT:-8080}
       OLLAMA_BASE_URL: http://ollama:11434
       WEBUI_SECRET_KEY: ${OPEN_WEBUI_SECRET_KEY:-YEK_TERCES_IUBEW_NEPO}
 
     healthcheck:
-      test: ['CMD', 'curl', '0.0.0.0:8080']
+      test: ['CMD', 'curl', '0.0.0.0:${OPEN_WEBUI_PORT:-8080}']
       start_period: 60s
       interval: 30s
       timeout: 60s
