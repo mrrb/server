@@ -53,6 +53,7 @@ If using Hetzner storage, the required box structure must be already created. Ch
 1. Create the custom environment JSON file `sudo touch env.extra.json` (or `sudo bash -c 'source /srv/server/server.sh && server_init_config'`) and add the following fields.
     * `HOMEPAGE_TRAEFIK_PASSWORD` and `HOMEPAGE_TRAEFIK_USERNAME` should match the password and user generated previously.
     * `HOMEPAGE_PORTAINER_KEY` can be defined but ignored for the moment.
+    * Set `SEARXNG_SECRET_KEY`.
     * Set `SIMPLYSHORTEN_USER` and `SIMPLYSHORTEN_PASS`.
     <!-- * Set `AUTHENTIK_POSTGRES_PASSWORD`. -->
     * Set `VIKUNJA_JWTSECRET` and `VIKUNJA_DB_PASSWORD`.

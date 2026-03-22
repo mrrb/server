@@ -1,0 +1,4 @@
+# See https://github.com/searxng/searxng/blob/master/searx/limiter.toml
+
+[botdetection.ip_limit]
+link_token = true
