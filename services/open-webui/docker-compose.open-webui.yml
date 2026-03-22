@@ -1,22 +1,4 @@
 services:
-  ollama:
-    tty: true
-    image: ollama/ollama:${OLLAMA_IMAGE_VERSION:-latest}
-    restart: unless-stopped
-    platform: ${PLATFORM_ARCH:-linux/amd64}
-    pull_policy: always
-    container_name: ollama
-
-    networks:
-      - open-webui-internal
-
-    volumes:
-      - './services/open-webui/ollama/:/root/.ollama'
-
-    labels:
-      ## Traefik
-      traefik.enable: false
-
   open-webui:
     image: openwebui/open-webui:${OPEN_WEBUI_IMAGE_VERSION:-slim}
     restart: unless-stopped
@@ -68,3 +50,21 @@ services:
       homepage.icon: https://${OPEN_WEBUI_HOST:-chat.${SITE:-localhost}}/static/favicon.png
       homepage.href: https://${OPEN_WEBUI_HOST:-chat.${SITE:-localhost}}
       homepage.description: User-friendly AI Interface.
+
+  ollama:
+    tty: true
+    image: ollama/ollama:${OLLAMA_IMAGE_VERSION:-latest}
+    restart: unless-stopped
+    platform: ${PLATFORM_ARCH:-linux/amd64}
+    pull_policy: always
+    container_name: ollama
+
+    networks:
+      - open-webui-internal
+
+    volumes:
+      - './services/open-webui/ollama/:/root/.ollama'
+
+    labels:
+      ## Traefik
+      traefik.enable: false
