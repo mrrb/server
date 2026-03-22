@@ -31,12 +31,12 @@ services:
       OLLAMA_BASE_URL: http://ollama:11434
       WEBUI_SECRET_KEY: ${OPEN_WEBUI_SECRET_KEY:-}
 
-    # healthcheck:
-    #   test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:3456/health || exit 1"]
-    #   start_period: 40s
-    #   interval: 30s
-    #   timeout: 10s
-    #   retries: 3
+    healthcheck:
+      test: ['CMD', 'curl', '0.0.0.0:8080']
+      start_period: 60s
+      interval: 30s
+      timeout: 60s
+      retries: 5
 
     depends_on:
       - ollama
@@ -55,12 +55,12 @@ services:
       traefik.http.services.openwebui.loadbalancer.server.port: 8080
 
       traefik.http.routers.openwebui.entrypoints: web,websecure
-      traefik.http.routers.openwebui.service: Open WebUI
+      traefik.http.routers.openwebui.service: openwebui
       traefik.http.routers.openwebui.rule: Host(`${OPEN_WEBUI_HOST:-chat.${SITE:-localhost}}`)
 
       ## Homepage
       homepage.group: Web
       homepage.name: Open WebUI
-      homepage.icon: openwebui.png
+      homepage.icon: https://${OPEN_WEBUI_HOST:-chat.${SITE:-localhost}}/static/favicon.png
       homepage.href: https://${OPEN_WEBUI_HOST:-chat.${SITE:-localhost}}
       homepage.description: User-friendly AI Interface.
