@@ -1,6 +1,6 @@
 services:
   open-webui:
-    image: openwebui/open-webui:${OPEN_WEBUI_IMAGE_VERSION:-slim}
+    image: openwebui/open-webui:${OPEN_WEBUI_IMAGE_VERSION:-latest}
     restart: unless-stopped
     platform: ${PLATFORM_ARCH:-linux/amd64}
     pull_policy: always
