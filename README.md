@@ -2,6 +2,8 @@
 
 Configuration for VPS1 (Ampere Altra ARM64)
 
+Based on [tomMoulard / make-my-server](https://github.com/tomMoulard/make-my-server)
+
 ## Functions
 
 * Gen the default enviroment file -> `source server.sh && gen_server_default_env`
