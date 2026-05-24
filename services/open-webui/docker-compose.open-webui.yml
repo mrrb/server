@@ -17,7 +17,7 @@ services:
       SEARXNG_QUERY_URL: "https://${SEARXNG_HOST:-searxng.${SITE:-localhost}}/search?q=<query>"
 
     healthcheck:
-      test: ['CMD', 'curl', '0.0.0.0:${OPEN_WEBUI_PORT:-8080}']
+      test: ['CMD', 'curl', '-f', 'http://localhost:8080']
       start_period: 60s
       interval: 30s
       timeout: 60s
@@ -36,7 +36,6 @@ services:
     labels:
       ## Traefik
       traefik.enable: true
-      traefik.docker.network: server
 
       traefik.http.services.openwebui.loadbalancer.server.port: 8080
 
