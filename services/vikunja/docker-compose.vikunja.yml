@@ -21,7 +21,7 @@ services:
       VIKUNJA_SERVICE_ENABLEREGISTRATION: ${VIKUNJA_SERVICE_ENABLEREGISTRATION:-true}
 
     healthcheck:
-      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:3456/health || exit 1"]
+      test: ["CMD", "/app/vikunja/vikunja", "healthcheck"]
       start_period: 40s
       interval: 30s
       timeout: 10s
@@ -44,6 +44,9 @@ services:
       traefik.enable: true
 
       traefik.http.services.vikunja.loadbalancer.server.port: 3456
+      traefik.http.services.vikunja.loadbalancer.healthcheck.path: /health
+      traefik.http.services.vikunja.loadbalancer.healthcheck.interval: 30s
+      traefik.http.services.vikunja.loadbalancer.healthcheck.timeout: 10s
 
       traefik.http.routers.vikunja.entrypoints: web,websecure
       traefik.http.routers.vikunja.service: vikunja

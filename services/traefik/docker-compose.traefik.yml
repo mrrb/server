@@ -30,6 +30,8 @@ services:
       - '--entrypoints.web.http.redirections.entrypoint.scheme=https'
 
       - '--entrypoints.websecure.address=:${TRAEFIK_WEBSECURE_ENTRYPOINT:-443}'
+      - '--entrypoints.websecure.transport.respondingTimeouts.readTimeout=300'
+      - '--entrypoints.websecure.transport.respondingTimeouts.writeTimeout=300'
 
       # - '--entrypoints.syncthing-tcp.address=:${TRAEFIK_SYNCTHING_ENTRYPOINT:-22000}/tcp'
       # - '--entrypoints.syncthing-tcp.observability.accessLogs=false'
