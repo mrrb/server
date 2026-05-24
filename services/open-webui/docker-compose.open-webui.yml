@@ -1,9 +1,8 @@
 services:
   open-webui:
-    image: openwebui/open-webui:${OPEN_WEBUI_IMAGE_VERSION:-latest}
+    image: ghcr.io/open-webui/open-webui:${OPEN_WEBUI_IMAGE_VERSION:-main}
     restart: unless-stopped
     platform: ${PLATFORM_ARCH:-linux/amd64}
-    pull_policy: always
     container_name: open-webui
 
     environment:
@@ -18,13 +17,14 @@ services:
 
     healthcheck:
       test: ['CMD', 'curl', '-f', 'http://localhost:8080']
-      start_period: 60s
+      start_period: 120s
       interval: 30s
       timeout: 60s
       retries: 5
 
     depends_on:
-      - ollama
+      ollama:
+        condition: service_healthy
 
     networks:
       - server
@@ -55,8 +55,14 @@ services:
     image: ollama/ollama:${OLLAMA_IMAGE_VERSION:-latest}
     restart: unless-stopped
     platform: ${PLATFORM_ARCH:-linux/amd64}
-    pull_policy: always
     container_name: ollama
+
+    healthcheck:
+      test: ['CMD-SHELL', 'ollama list || exit 1']
+      start_period: 30s
+      interval: 10s
+      timeout: 10s
+      retries: 5
 
     networks:
       - open-webui-internal
