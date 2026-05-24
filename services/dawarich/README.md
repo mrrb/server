@@ -1,4 +1,4 @@
-# Firefly III
+# Dawarich
 
 [https://dawarich.app](https://dawarich.app)
 
