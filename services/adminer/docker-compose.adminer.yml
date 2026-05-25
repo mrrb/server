@@ -7,9 +7,10 @@ services:
 
     networks:
       - server
-      - dawarich-internal
       - immich-internal
       - vikunja-internal
+      - dawarich-internal
+      - open-webui-internal
 
     labels:
       ## Traefik

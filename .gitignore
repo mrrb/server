@@ -6,6 +6,7 @@
 
 # Backups
 **/.bck
+**/.backup
 
 # Environment
 .env

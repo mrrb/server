@@ -30,7 +30,7 @@ load_env
 
 ## Environment functions
 function _gen_server_env () {
-  "$_SCRIPTPATH/env.py" $(find $_SCRIPTPATH -maxdepth 4 -type f ! -path "*/refs/*" ! -path "*/disable/*" -name 'docker-compose.*.yml' -o -name '*.yaml.in' -o -name '*.yml.in') $(find $_SCRIPTPATH/systemd -type f -name '*.in') -s -v "$_SCRIPTPATH/env.json" -e "$_SCRIPTPATH/env.extra.json" -E "SERVER_PATH=$_SCRIPTPATH"
+  "$_SCRIPTPATH/env.py" $(find $_SCRIPTPATH -maxdepth 4 -type f ! -path "*/.*/*" ! -path "*/refs/*" ! -path "*/disable/*" -name 'docker-compose.*.yml' -o -name '*.yaml.in' -o -name '*.yml.in') $(find $_SCRIPTPATH/systemd -type f -name '*.in') -s -v "$_SCRIPTPATH/env.json" -e "$_SCRIPTPATH/env.extra.json" -E "SERVER_PATH=$_SCRIPTPATH"
 }
 
 function gen_server_default_env () {
@@ -59,6 +59,14 @@ function gen_traefik_config () {
 
 function gen_server_services () {
   for i in $(find "$_SCRIPTPATH/systemd" -type f -name '*.in')
+  do
+    envsubst < $i > ${i::-3}
+    eval "echo \"$(cat ${i::-3})\"" > ${i::-3}
+  done
+}
+
+function gen_searxng_config () {
+  for i in $(find $_SERVICESPATH/searxng/config -type f ! -path "*/refs/*" -name '*.in')
   do
     envsubst < $i > ${i::-3}
     eval "echo \"$(cat ${i::-3})\"" > ${i::-3}
@@ -109,7 +117,7 @@ function _chown_storage () {
 function _srv_docker_compose () {
   _curr_pwd=$(pwd)
   cd $_SCRIPTPATH
-	/usr/bin/docker compose -p ${SERVER_NAME:-server} $(find -maxdepth 3 -name 'docker-compose*.yml' -not -name '*disable*' -type f -printf '%p\t%d\n'  2>/dev/null | grep -v 'refs' | sort -n -k2 | cut -f 1 | awk '{print "-f "$0}') $@
+	/usr/bin/docker compose -p ${SERVER_NAME:-server} $(find -maxdepth 3 -name 'docker-compose*.yml' -not -path "*/.*/*" -not -name '*disable*' -type f -printf '%p\t%d\n'  2>/dev/null | grep -v 'refs' | sort -n -k2 | cut -f 1 | awk '{print "-f "$0}') $@
   cd $_curr_pwd
 }
 
@@ -251,6 +259,7 @@ function server_init () {
   gen_traefik_config
   gen_homepage_config
   gen_server_services
+  gen_searxng_config
 
   server_install_services
 

@@ -1,0 +1,16 @@
+# See https://docs.searxng.org/admin/settings/settings.html#settings-use-default-settings
+
+use_default_settings: true
+
+search:
+  formats:
+    - html
+    - json
+
+server:
+  secret_key: "${SEARXNG_SECRET_KEY:-ad3c2fc45baf07600bd469c5ebffe3f34276fc3b76ebe2ca6df6bc999fd6eaa6}"
+  limiter: true
+  image_proxy: true
+
+# redis:
+#   url: redis://redis:6379/0

@@ -5,8 +5,15 @@ services:
     platform: ${PLATFORM_ARCH:-linux/amd64}
     container_name: searxng
 
+    environment:
+      SEARXNG_BASE_URL: https://${SEARXNG_HOST:-searxng.${SITE:-localhost}}
+
     networks:
       - server
+
+    volumes:
+      - './services/searxng/config/:/etc/searxng:rw'
+      - './services/searxng/data/:/var/cache/searxng:rw'
 
     labels:
       ## Traefik
@@ -24,3 +31,5 @@ services:
       homepage.icon: go.png
       homepage.href: https://${SEARXNG_HOST:-searxng.${SITE:-localhost}}
       homepage.description: Internet metasearch engine. Users are neither tracked nor profiled.
+
+  # ToDo: Add valkey/redis??

@@ -1,0 +1,76 @@
+services:
+  open-webui:
+    image: ghcr.io/open-webui/open-webui:${OPEN_WEBUI_IMAGE_VERSION:-main}
+    restart: unless-stopped
+    platform: ${PLATFORM_ARCH:-linux/amd64}
+    container_name: open-webui
+
+    environment:
+      OLLAMA_BASE_URL: http://ollama:11434
+      WEBUI_SECRET_KEY: ${OPEN_WEBUI_SECRET_KEY:-YEK_TERCES_IUBEW_NEPO}
+
+      ENABLE_RAG_WEB_SEARCH: True
+      RAG_WEB_SEARCH_ENGINE: "searxng"
+      RAG_WEB_SEARCH_RESULT_COUNT: 3
+      RAG_WEB_SEARCH_CONCURRENT_REQUESTS: 10
+      SEARXNG_QUERY_URL: "https://${SEARXNG_HOST:-searxng.${SITE:-localhost}}/search?q=<query>"
+
+    healthcheck:
+      test: ['CMD', 'curl', '-f', 'http://localhost:8080']
+      start_period: 120s
+      interval: 30s
+      timeout: 60s
+      retries: 5
+
+    depends_on:
+      ollama:
+        condition: service_healthy
+
+    networks:
+      - server
+      - open-webui-internal
+
+    volumes:
+      - './services/open-webui/data/:/app/backend/data'
+
+    labels:
+      ## Traefik
+      traefik.enable: true
+
+      traefik.http.services.openwebui.loadbalancer.server.port: 8080
+      traefik.http.services.openwebui.loadbalancer.responseforwarding.flushinterval: -1
+
+      traefik.http.routers.openwebui.entrypoints: web,websecure
+      traefik.http.routers.openwebui.service: openwebui
+      traefik.http.routers.openwebui.rule: Host(`${OPEN_WEBUI_HOST:-chat.${SITE:-localhost}}`)
+
+      ## Homepage
+      homepage.group: Web
+      homepage.name: Open WebUI
+      homepage.icon: https://${OPEN_WEBUI_HOST:-chat.${SITE:-localhost}}/static/favicon.png
+      homepage.href: https://${OPEN_WEBUI_HOST:-chat.${SITE:-localhost}}
+      homepage.description: User-friendly AI Interface.
+
+  ollama:
+    tty: true
+    image: ollama/ollama:${OLLAMA_IMAGE_VERSION:-latest}
+    restart: unless-stopped
+    platform: ${PLATFORM_ARCH:-linux/amd64}
+    container_name: ollama
+
+    healthcheck:
+      test: ['CMD-SHELL', 'ollama list || exit 1']
+      start_period: 30s
+      interval: 10s
+      timeout: 10s
+      retries: 5
+
+    networks:
+      - open-webui-internal
+
+    volumes:
+      - './services/open-webui/ollama/:/root/.ollama'
+
+    labels:
+      ## Traefik
+      traefik.enable: false
