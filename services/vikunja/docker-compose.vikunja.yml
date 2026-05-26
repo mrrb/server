@@ -44,7 +44,7 @@ services:
       traefik.enable: true
 
       traefik.http.services.vikunja.loadbalancer.server.port: 3456
-      traefik.http.services.vikunja.loadbalancer.server.transport: keepalive@file
+      traefik.http.services.vikunja.loadbalancer.serverstransport: keepalive@file
       traefik.http.services.vikunja.loadbalancer.healthcheck.path: /health
       traefik.http.services.vikunja.loadbalancer.healthcheck.interval: 30s
       traefik.http.services.vikunja.loadbalancer.healthcheck.timeout: 10s

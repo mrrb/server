@@ -38,7 +38,7 @@ services:
       traefik.enable: true
 
       traefik.http.services.openwebui.loadbalancer.server.port: 8080
-      traefik.http.services.openwebui.loadbalancer.server.transport: keepalive@file
+      traefik.http.services.openwebui.loadbalancer.serverstransport: keepalive@file
       traefik.http.services.openwebui.loadbalancer.responseforwarding.flushinterval: -1
       traefik.http.services.openwebui.loadbalancer.healthcheck.path: /health
       traefik.http.services.openwebui.loadbalancer.healthcheck.interval: 30s
