@@ -1,6 +1,6 @@
 services:
   traefik:
-    image: traefik:${TRAEFIK_IMAGE_VERSION:-v2.11}
+    image: traefik:${TRAEFIK_IMAGE_VERSION:-v3.7}
     restart: unless-stopped
     platform: ${PLATFORM_ARCH:-linux/amd64}
     container_name: traefik
@@ -30,8 +30,8 @@ services:
       - '--entrypoints.web.http.redirections.entrypoint.scheme=https'
 
       - '--entrypoints.websecure.address=:${TRAEFIK_WEBSECURE_ENTRYPOINT:-443}'
-      - '--entrypoints.websecure.transport.respondingTimeouts.readTimeout=300'
-      - '--entrypoints.websecure.transport.respondingTimeouts.writeTimeout=300'
+      - '--entrypoints.websecure.transport.respondingTimeouts.readTimeout=300s'
+      - '--entrypoints.websecure.transport.respondingTimeouts.writeTimeout=300s'
 
       # - '--entrypoints.syncthing-tcp.address=:${TRAEFIK_SYNCTHING_ENTRYPOINT:-22000}/tcp'
       # - '--entrypoints.syncthing-tcp.observability.accessLogs=false'
@@ -56,8 +56,7 @@ services:
       # - '--entrypoints.grpc.address=:${TRAEFIK_GRPC_ENTRYPOINT:-33060}'
 
       ## Enable HTTP/3
-      - '--experimental.http3=true'
-      - '--entryPoints.websecure.http3'
+      - '--entrypoints.websecure.http3'
       - '--entrypoints.websecure.http3.advertisedPort=${TRAEFIK_WEBSECURE_ENTRYPOINT:-443}'
 
       ## Let's Encrypt
@@ -86,7 +85,7 @@ services:
 
       ## Plugins
       - '--experimental.plugins.fail2ban.modulename=github.com/tommoulard/fail2ban'
-      - '--experimental.plugins.fail2ban.version=${TRAEFIK_FAIL2BAN_VERSION:-v0.8.3}'
+      - '--experimental.plugins.fail2ban.version=${TRAEFIK_FAIL2BAN_VERSION:-v0.9.0}'
 
     volumes:
       - '/var/run/docker.sock:/var/run/docker.sock'
