@@ -45,7 +45,7 @@ If using Hetzner storage, the required box structure must be already created. Ch
     * `git`, `git-lfs` and `sudo` should be installed on the machine.
     * `sshfs`, `gocryptfs` and `syncthing` should be installed on the machine.
     * Root permissions required.
-    * Ports 80 and 443 accessible. UFW example, `sudo ufw allow "WWW full" && sudo ufw enable && sudo ufw status`.
+    * Ports 80 and 443 accessible. UFW example, `sudo ufw allow "WWW full" && sudo ufw allow 443/udp && sudo ufw enable && sudo ufw status`.
 1. Go to `/srv/` directory.
 1. Download repo (`sudo git clone git@github.com:mrrb/server.git --recursive`). CD into it `cd /srv/server/`.
 1. Checkout to VPS1 branch `sudo git checkout vps1`.
