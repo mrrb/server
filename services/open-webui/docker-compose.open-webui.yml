@@ -38,7 +38,6 @@ services:
       traefik.enable: true
 
       traefik.http.services.openwebui.loadbalancer.server.port: 8080
-      traefik.http.services.openwebui.loadbalancer.serverstransport: keepalive@file
       traefik.http.services.openwebui.loadbalancer.responseforwarding.flushinterval: -1
 
       traefik.http.routers.openwebui.entrypoints: web,websecure

@@ -2,7 +2,3 @@ http:
   serversTransports:
     ignorecert:
       insecureSkipVerify: true
-    keepalive:
-      forwardingTimeouts:
-        dialTimeout: 30s
-        idleConnTimeout: 60s
