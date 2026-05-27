@@ -6,8 +6,8 @@ http:
           rules:
             bantime: '3h'
             enabled: true
-            findtime: '10m'
-            maxretry: 1000
+            findtime: '1m'
+            maxretry: 20
             ports: '80:443'
           whitelist:
             ip:

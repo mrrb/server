@@ -1,6 +1,6 @@
 services:
   traefik:
-    image: traefik:${TRAEFIK_IMAGE_VERSION:-v2.9}
+    image: traefik:${TRAEFIK_IMAGE_VERSION:-v2.11}
     restart: unless-stopped
     platform: ${PLATFORM_ARCH:-linux/amd64}
     container_name: traefik
@@ -69,6 +69,9 @@ services:
       ## Logs
       - '--accesslog.filepath=/logs/access.log'
       - '--accesslog.format=json'
+      - '--accesslog.bufferingsize=100'
+      - '--accesslog.filters.statuscodes=400-599'
+      - '--accesslog.filters.minduration=1s'
       - '--log.filepath=/logs/traefik.log'
       - '--log.format=json'
       - '--log.level=${TRAEFIK_LOG_LEVEL:-ERROR}'

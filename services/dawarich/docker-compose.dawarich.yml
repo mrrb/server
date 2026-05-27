@@ -9,7 +9,7 @@ services:
     healthcheck:
       test: ['CMD', 'pg_isready', '-d', '${DAWARICH_POSTGRES_DB:-dawarich}']
       start_period: 30s
-      interval: 15s
+      interval: 30s
       timeout: 30s
       retries: 10
 

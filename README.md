@@ -30,6 +30,7 @@ List of files or folders to configure the system
 * __**.shadow**__. File where the hashed passwords are stored.
 * __**services/traefik/dynamic**__. Traefik dynamic configuration files [(./traefik/dynamic)](traefik/dynamic).
 * __**services/nginx\*/conf**__. Nginx config files [(./nginx/conf)](nginx/conf).
+* __**stuff/docker-daemon.json**__. Reference Docker daemon config (log rotation caps). Copy/edir `/etc/docker/daemon.json` on the host and `sudo systemctl restart docker` to apply. See [stuff/README.md](stuff/README.md).
 
 ## Services hosted on VPS1
 

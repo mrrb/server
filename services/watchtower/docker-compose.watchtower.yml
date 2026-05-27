@@ -6,9 +6,10 @@ services:
     container_name: watchtower
 
     environment:
+      TZ: '${TIMEZONE:-Europe/Madrid}'
       WATCHTOWER_CLEANUP: ${WATCHTOWER_CLEANUP:-true}
       WATCHTOWER_ROLLING_RESTART: ${WATCHTOWER_ROLLING_RESTART:-true}
-      WATCHTOWER_SCHEDULE: '${WATCHTOWER_SCHEDULE:-0 0 2 * * *}'
+      WATCHTOWER_SCHEDULE: '${WATCHTOWER_SCHEDULE:-0 0 4 */2 * *}'
       WATCHTOWER_HTTP_API_METRICS: ${WATCHTOWER_HTTP_API_METRICS:-true}
       WATCHTOWER_HTTP_API_TOKEN: ${WATCHTOWER_HTTP_API_TOKEN:-super_fancy_watchtower_token}
 
