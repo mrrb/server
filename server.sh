@@ -230,7 +230,7 @@ function server_init_config () {
 }
 
 function server_storage_dir () {
-  declare -a _storage_dirs=("sshfs/vault" "sshfs/other" "gocryptfs/private" "gocryptfs/generic")
+  declare -a _storage_dirs=("sshfs/vault" "sshfs/other" "gocryptfs/generic" "gocryptfs/immich")
   for i in "${_storage_dirs[@]}"
   do
     _check_create_dir "$_SCRIPTPATH/storage/mount/$i"
@@ -245,9 +245,9 @@ function server_set_storage_permissions () {
   _chown_storage ${STORAGE_SSH_MOUNT_OTHER:-${SERVER_PATH}/storage/mount/sshfs/other} || true
 
   # _chown_storage ${STORAGE_SSH_MOUNT_VAULT:-${SERVER_PATH}/storage/mount/sshfs/vault}/gocryptfs/generic.crypt
-  # _chown_storage ${STORAGE_SSH_MOUNT_VAULT:-${SERVER_PATH}/storage/mount/sshfs/vault}/gocryptfs/private.crypt
+  # _chown_storage ${STORAGE_SSH_MOUNT_VAULT:-${SERVER_PATH}/storage/mount/sshfs/vault}/gocryptfs/immich.crypt
   _chown_storage ${STORAGE_GOCRYPTFS_MOUNT_GENERIC:-${SERVER_PATH}/storage/mount/gocryptfs/generic} || true
-  _chown_storage ${STORAGE_GOCRYPTFS_MOUNT_PRIVATE:-${SERVER_PATH}/storage/mount/gocryptfs/private} || true
+  _chown_storage ${STORAGE_GOCRYPTFS_MOUNT_IMMICH:-${SERVER_PATH}/storage/mount/gocryptfs/immich} || true
 }
 
 function server_init () {
