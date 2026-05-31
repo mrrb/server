@@ -2,9 +2,6 @@
 Description=Start all the server docker containers
 Requires=docker.service
 After=docker.service
-After=server_gocryptfs_mount_vault_generic.service
-After=server_gocryptfs_mount_vault_immich.service
-
 
 [Service]
 Type=oneshot

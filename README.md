@@ -1,6 +1,6 @@
 # server
 
-Configuration for VPS1 (Ampere Altra ARM64)
+Configuration for VPS2 (linux/amd64)
 
 Based on [tomMoulard / make-my-server](https://github.com/tomMoulard/make-my-server)
 
@@ -15,7 +15,6 @@ Based on [tomMoulard / make-my-server](https://github.com/tomMoulard/make-my-ser
 * Init the server -> `source server.sh && server_init`
 * Start server -> `source server.sh && server_up`
 * Stop server -> `source server.sh && server_down`
-* Move permanent filestash files -> `source server.sh && server_perma_filestash`
 
 ## Configuration
 
@@ -29,67 +28,38 @@ List of files or folders to configure the system
 * __**services/homepage/config**__. Homepage dashboard configuration files [(./homepage/config)](homepage/config).
 * __**.shadow**__. File where the hashed passwords are stored.
 * __**services/traefik/dynamic**__. Traefik dynamic configuration files [(./traefik/dynamic)](traefik/dynamic).
-* __**services/nginx\*/conf**__. Nginx config files [(./nginx/conf)](nginx/conf).
-* __**stuff/docker-daemon.json**__. Reference Docker daemon config (log rotation caps). Copy/edir `/etc/docker/daemon.json` on the host and `sudo systemctl restart docker` to apply. See [stuff/README.md](stuff/README.md).
+* __**stuff/docker-daemon.json**__. Reference Docker daemon config (log rotation caps). Copy/edit to `/etc/docker/daemon.json` on the host and `sudo systemctl restart docker` to apply. See [stuff/README.md](stuff/README.md).
 
-## Services hosted on VPS1
+## Hosted services
 
 Check [services/README.md](services/README.md) for the complete list.
 
 ## First start steps
 
-If using Hetzner storage, the required box structure must be already created. Check [storage/README.md](storage/README.md) for more info.
-
 1. Prerequisites
     * Docker (with docker compose) should be installed and running on the host machine.
     * `git`, `git-lfs` and `sudo` should be installed on the machine.
-    * `sshfs`, `gocryptfs` and `syncthing` should be installed on the machine.
     * Root permissions required.
     * Ports 80 and 443 accessible. UFW example, `sudo ufw allow "WWW full" && sudo ufw allow 443/udp && sudo ufw enable && sudo ufw status`.
 1. Go to `/srv/` directory.
 1. Download repo (`sudo git clone git@github.com:mrrb/server.git --recursive`). CD into it `cd /srv/server/`.
-1. Checkout to VPS1 branch `sudo git checkout vps1`.
-1. JIC `sudo git submodule update --init --recursive` and `cd refs/server-private && sudo git lfs install && sudo git lfs fetch && sudo git lfs checkout && cd ../..`.
+1. Checkout to VPS2 branch `sudo git checkout vps2`.
+1. JIC `sudo git submodule update --init --recursive`.
 1. Create the `.shadow` file `sudo touch .shadow` (or `sudo bash -c 'source /srv/server/server.sh && server_init_config'`) and add into it all the required users.
     * Gen hased user:password strings with `htpasswd -nb USER PASSWORD`.
     * It should include the user `homepage` to integrate traefik into homepage.
 1. Create the custom environment JSON file `sudo touch env.extra.json` (or `sudo bash -c 'source /srv/server/server.sh && server_init_config'`) and add the following fields.
     * `HOMEPAGE_TRAEFIK_PASSWORD` and `HOMEPAGE_TRAEFIK_USERNAME` should match the password and user generated previously.
     * `HOMEPAGE_PORTAINER_KEY` can be defined but ignored for the moment.
-    * Set `SEARXNG_SECRET_KEY` and `OPEN_WEBUI_SECRET_KEY` (python3 -c "import secrets; print(secrets.token_hex(32))").
-    * Set `SIMPLYSHORTEN_USER` and `SIMPLYSHORTEN_PASS`.
-    <!-- * Set `AUTHENTIK_POSTGRES_PASSWORD`. -->
-    * Set `VIKUNJA_JWTSECRET` and `VIKUNJA_DB_PASSWORD`.
-    * Set API keys `FIREFLYIII_APP_KEY` and `FIREFLYIII_STATIC_CRON_TOKEN` (32 long strings).
     * Set mail vars `MAIL_ENCRYPTION`, `MAIL_FROM`, `MAIL_HOST`, `MAIL_PASSWORD`, `MAIL_PORT` and `MAIL_USERNAME`.
-    * Set `STORAGE_SSH_HOST`, `STORAGE_SSH_USER_OTHER` and `STORAGE_SSH_USER_VAULT`.
-    * Set `MARIADB_ROOT_PASSWORD` and `GHOST_DB_PASSWORD`.
-    * Set, if needed, `STORAGE_UID` and `STORAGE_GID`.
     * Set, if needed, `PLATFORM_ARCH` (Ex. 'linux/amd64' or 'linux/arm64')
-1. Create a new SSH key pair for the storage box.
-    * `sudo ssh-keygen -t ed25519 -C "VPS1-HetznerStorageBox" -f /srv/server/storage/.ssh/id_ed25519 -q -N ""`.
-    * Convert public key to RFC4716 format: `sudo bash -c 'ssh-keygen -e -f /srv/server/storage/.ssh/id_ed25519.pub > /srv/server/storage/.ssh/id_ed25519_rfc.pub'`
-1. Add generated public key (`/srv/server/storage/.ssh/id_ed25519_rfc.pub`) to the Hetzner storage box `.ssh/authorized_keys` for the *vault*, *other* and *backup* subaccounts, optionally, disable the *External reachability* function for the primary account. Check [storage/README.md](storage/README.md) for more info.
-1. Init gocryptfs directories. Check [storage/README.md](storage/README.md) for more info.
-1. Store gocryptfs keys.
-    * `sudo bash -c 'source /srv/server/server.sh && store_gocrypt_password generic'` and insert `generic` key.
-    * `sudo bash -c 'source /srv/server/server.sh && store_gocrypt_password immich'` and insert `immich` key.
 1. Init server files `sudo bash -c 'source /srv/server/server.sh && server_init'`. This will generate the environment file, fill some config files and generate and install all the services, timers and mounts.
    <!-- 1. Allow grpc port in firewall. UFW example, `sudo ufw allow 33060/tcp && sudo ufw enable && sudo ufw status` -->
-1. Allow syncthing port in firewall. UFW example, `sudo ufw allow 22000/udp && sudo ufw allow 22000,22067,22070/tcp && sudo ufw enable && sudo ufw status`
-    <!-- 1. Prepare internal filestash state files `sudo bash -c 'source /srv/server/server.sh && server_perma_filestash_init'`. -->
 1. Enable the required server service(s), timer(s) and mount(s).
     * `sudo systemctl enable server.service`.
-    * `sudo systemctl enable server_sshfs_mount_other.service`.
-    * `sudo systemctl enable server_sshfs_mount_vault.service`.
-    * `sudo systemctl enable server_gocryptfs_mount_vault_generic.service`.
-    * `sudo systemctl enable server_gocryptfs_mount_vault_immich.service`.
 1. Reboot system and check that everything works.
 1. Go to the portainer page and set it up.
     * Gen a KEY and save it into the `env.extra.json` file (`HOMEPAGE_PORTAINER_KEY`).
 1. Regenerate the environment file `sudo bash -c 'source /srv/server/server.sh && gen_server_env'`.
-1. Go to syncthing and add a user and password.
-    <!-- 1. Copy internal filestash state files to local directory `sudo bash -c 'source /srv/server/server.sh && server_perma_filestash'`. -->
-1. Copy internal filegator private files to local directory `sudo bash -c 'source /srv/server/server.sh && server_perma_filegator_private'`.
 1. Restart service `sudo systemctl restart server.service`.
 1. Enjoy :)

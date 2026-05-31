@@ -33,26 +33,6 @@ services:
       - '--entrypoints.websecure.transport.respondingTimeouts.readTimeout=300s'
       - '--entrypoints.websecure.transport.respondingTimeouts.writeTimeout=300s'
 
-      # - '--entrypoints.syncthing-tcp.address=:${TRAEFIK_SYNCTHING_ENTRYPOINT:-22000}/tcp'
-      # - '--entrypoints.syncthing-tcp.observability.accessLogs=false'
-      # - '--entrypoints.syncthing-tcp.observability.metrics=false'
-      # - '--entrypoints.syncthing-tcp.observability.tracing=false'
-
-      # - '--entrypoints.syncthing-udp.address=:${TRAEFIK_SYNCTHING_ENTRYPOINT:-22000}/udp'
-      # - '--entrypoints.syncthing-udp.observability.accessLogs=false'
-      # - '--entrypoints.syncthing-udp.observability.metrics=false'
-      # - '--entrypoints.syncthing-udp.observability.tracing=false'
-
-      # - '--entrypoints.syncthing-relaysrv.address=:${TRAEFIK_SYNCTHING_RELAYSRV_ENTRYPOINT:-22067}/tcp'
-      # - '--entrypoints.syncthing-relaysrv.observability.accessLogs=false'
-      # - '--entrypoints.syncthing-relaysrv.observability.metrics=false'
-      # - '--entrypoints.syncthing-relaysrv.observability.tracing=false'
-
-      # - '--entrypoints.syncthing-relaysrv-status.address=:${TRAEFIK_SYNCTHING_RELAYSRV_STATUS_ENTRYPOINT:-22070}/tcp'
-      # - '--entrypoints.syncthing-relaysrv-status.observability.accessLogs=false'
-      # - '--entrypoints.syncthing-relaysrv-status.observability.metrics=false'
-      # - '--entrypoints.syncthing-relaysrv-status.observability.tracing=false'
-
       # - '--entrypoints.grpc.address=:${TRAEFIK_GRPC_ENTRYPOINT:-33060}'
 
       ## Enable HTTP/3
@@ -123,8 +103,4 @@ services:
       - '${TRAEFIK_WEB_ENTRYPOINT:-80}:${TRAEFIK_WEB_ENTRYPOINT:-80}/tcp'
       - '${TRAEFIK_WEBSECURE_ENTRYPOINT:-443}:${TRAEFIK_WEBSECURE_ENTRYPOINT:-443}/tcp'
       - '${TRAEFIK_WEBSECURE_ENTRYPOINT:-443}:${TRAEFIK_WEBSECURE_ENTRYPOINT:-443}/udp'
-      # - '${TRAEFIK_SYNCTHING_ENTRYPOINT:-22000}:${TRAEFIK_SYNCTHING_ENTRYPOINT:-22000}/tcp' ## Syncthing TCP file transfers
-      # - '${TRAEFIK_SYNCTHING_ENTRYPOINT:-22000}:${TRAEFIK_SYNCTHING_ENTRYPOINT:-22000}/udp' ## Syncthing QUIC file transfers
-      # - '${TRAEFIK_SYNCTHING_RELAYSRV_ENTRYPOINT:-22067}:${TRAEFIK_SYNCTHING_RELAYSRV_ENTRYPOINT:-22067}/tcp' ## Syncthing relay server
-      # - '${TRAEFIK_SYNCTHING_RELAYSRV_STATUS_ENTRYPOINT:-22070}:${TRAEFIK_SYNCTHING_RELAYSRV_STATUS_ENTRYPOINT:-22070}/tcp' ## Syncthing relay server status
       # - '${TRAEFIK_GRPC_ENTRYPOINT:-33060}:${TRAEFIK_GRPC_ENTRYPOINT:-33060}'
