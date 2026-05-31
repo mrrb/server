@@ -1,7 +1,5 @@
 # Random
 
-Yeah, folder for some random stuff, just in case. ;D
-
 ## Files
 
 * [docker-daemon.json](docker-daemon.json). Reference Docker daemon

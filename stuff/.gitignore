@@ -4,4 +4,4 @@
 # Except...
 !.gitignore
 !README.md
-!docker-daemon.json
+!*.json

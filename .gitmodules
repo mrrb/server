@@ -1,4 +1,0 @@
-[submodule "refs/server-private"]
-	path = refs/server-private
-	url = git@github.com:mrrb/server-private.git
-
