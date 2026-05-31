@@ -5,6 +5,8 @@ services:
     platform: ${PLATFORM_ARCH:-linux/amd64}
     container_name: wireguard
 
+    network_mode: host
+
     environment:
       ## System config
       PUID: ${WIREGUARD_UID:-1000}
@@ -18,8 +20,8 @@ services:
       ## Optional
       PEERS: ${WIREGUARD_PEERS:-1}
       PEERDNS: ${WIREGUARD_PEERDNS:-auto}
-      INTERNAL_SUBNET: ${WIREGUARD_INTERNAL_SUBNET:-172.20.0.0}
-      ALLOWEDIPS: '${WIREGUARD_ALLOWEDIPS:-0.0.0.0/0}'
+      INTERNAL_SUBNET: ${WIREGUARD_INTERNAL_SUBNET:-10.11.12.0}
+      ALLOWEDIPS: '${WIREGUARD_ALLOWEDIPS:-0.0.0.0/0, ::/0}'
       PERSISTENTKEEPALIVE: ${WIREGUARD_PERSISTENTKEEPALIVE:-25}
       LOG_CONFS: ${WIREGUARD_LOG_CONFS:-false}
 
@@ -30,8 +32,9 @@ services:
       - NET_ADMIN
       - SYS_MODULE
 
-    sysctls:
-      - net.ipv4.conf.all.src_valid_mark=1
+    # sysctls cannot be set per-container with network_mode: host — set on the host instead:
+    #   net.ipv4.conf.all.src_valid_mark=1
+    #   net.ipv6.conf.all.forwarding=1
 
     volumes:
       - './services/wireguard/config/:/config'
@@ -45,8 +48,6 @@ services:
       homepage.group: System
       homepage.name: Wireguard
       homepage.icon: wireguard.png
-      homepage.href: '${WIREGUARD_HOST:-wireguard.${SITE:-localhost}}:'
       homepage.description: Extremely simple yet fast and modern VPN.
 
-    ports:
-      - ${WIREGUARD_PORT:-51820}:${WIREGUARD_PORT:-51820}/udp
+    # ports: not needed with network_mode: host — WireGuard binds directly to the host
