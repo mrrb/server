@@ -12,3 +12,5 @@
   * [dashboard.vps2.infra.mrrb.xyz](https://dashboard.vps2.infra.mrrb.xyz)
 * [Adminer](adminer)
   * [dashboard.vps2.infra.mrrb.xyz](https://adminer.vps2.infra.mrrb.xyz)
+* [Wireguard](wireguard)
+  * [wireguard.vps2.infra.mrrb.xyz](https://wireguard.vps2.infra.mrrb.xyz)

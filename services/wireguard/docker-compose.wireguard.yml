@@ -1,0 +1,52 @@
+services:
+  wireguard:
+    image: linuxserver/wireguard:${WIREGUARD_IMAGE_VERSION:-latest}
+    restart: unless-stopped
+    platform: ${PLATFORM_ARCH:-linux/amd64}
+    container_name: wireguard
+
+    environment:
+      ## System config
+      PUID: ${WIREGUARD_UID:-1000}
+      PGID: ${WIREGUARD_GID:-1000}
+      TZ: ${TZ:-Etc/UTC}
+
+      ## Net config
+      SERVERURL: '${WIREGUARD_HOST:-wireguard.${SITE:-localhost}}'
+      SERVERPORT: ${WIREGUARD_PORT:-51820}
+
+      ## Optional
+      PEERS: ${WIREGUARD_PEERS:-1}
+      PEERDNS: ${WIREGUARD_PEERDNS:-auto}
+      INTERNAL_SUBNET: ${WIREGUARD_INTERNAL_SUBNET:-172.20.0.0}
+      ALLOWEDIPS: '${WIREGUARD_ALLOWEDIPS:-0.0.0.0/0}'
+      PERSISTENTKEEPALIVE: ${WIREGUARD_PERSISTENTKEEPALIVE:-25}
+      LOG_CONFS: ${WIREGUARD_LOG_CONFS:-false}
+
+    # networks:
+    #   - server
+
+    cap_add:
+      - NET_ADMIN
+      - SYS_MODULE
+
+    sysctls:
+      - net.ipv4.conf.all.src_valid_mark=1
+
+    volumes:
+      - './services/wireguard/config/:/config'
+      # - './services/wireguard/modules/:/lib/modules'
+
+    labels:
+      ## Traefik
+      traefik.enable: false
+
+      ## Homepage
+      homepage.group: System
+      homepage.name: Wireguard
+      homepage.icon: wireguard.png
+      homepage.href: '${WIREGUARD_HOST:-wireguard.${SITE:-localhost}}:'
+      homepage.description: Extremely simple yet fast and modern VPN.
+
+    ports:
+      - ${WIREGUARD_PORT:-51820}:${WIREGUARD_PORT:-51820}/udp
