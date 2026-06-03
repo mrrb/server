@@ -49,6 +49,7 @@ Check [services/README.md](services/README.md) for the complete list.
 1. JIC `sudo git submodule update --init --recursive`.
 1. Create the `.shadow` file `sudo touch .shadow` (or `sudo bash -c 'source /srv/server/server.sh && server_init_config'`) and add into it all the required users.
     * Gen hased user:password strings with `htpasswd -nb USER PASSWORD`.
+    * It should include the user `admin`.
     * It should include the user `homepage` to integrate traefik into homepage.
 1. Create the custom environment JSON file `sudo touch env.extra.json` (or `sudo bash -c 'source /srv/server/server.sh && server_init_config'`) and add the following fields.
     * `HOMEPAGE_TRAEFIK_PASSWORD` and `HOMEPAGE_TRAEFIK_USERNAME` should match the password and user generated previously.

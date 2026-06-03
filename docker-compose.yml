@@ -1,6 +1,7 @@
 networks:
   server: {}
   server-metrics: {}
+
   wireguard:
     driver: bridge
     enable_ipv6: true
