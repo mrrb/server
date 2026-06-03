@@ -28,7 +28,7 @@ List of files or folders to configure the system
 * __**services/homepage/config**__. Homepage dashboard configuration files [(./homepage/config)](homepage/config).
 * __**.shadow**__. File where the hashed passwords are stored.
 * __**services/traefik/dynamic**__. Traefik dynamic configuration files [(./traefik/dynamic)](traefik/dynamic).
-* __**stuff/docker-daemon.json**__. Reference Docker daemon config (log rotation caps). Copy/edit to `/etc/docker/daemon.json` on the host and `sudo systemctl restart docker` to apply. See [stuff/README.md](stuff/README.md).
+* __**stuff/docker-daemon.json**__. Reference Docker daemon config (log rotation caps, ip6tables for IPv6 container support). Copy/edit to `/etc/docker/daemon.json` on the host and `sudo systemctl restart docker` to apply. See [stuff/README.md](stuff/README.md).
 
 ## Hosted services
 
@@ -40,13 +40,16 @@ Check [services/README.md](services/README.md) for the complete list.
     * Docker (with docker compose) should be installed and running on the host machine.
     * `git`, `git-lfs` and `sudo` should be installed on the machine.
     * Root permissions required.
-    * Ports 80 and 443 accessible. UFW example, `sudo ufw allow "WWW full" && sudo ufw allow 443/udp && sudo ufw enable && sudo ufw status`.
+    * Ports 80 and 443 accessible. UFW example, `sudo ufw allow "WWW full" && sudo ufw allow 443/udp && sudo ufw allow 51820/udp && sudo ufw enable && sudo ufw status`.
+1. Apply Docker daemon config. Check [stuff/README.md](stuff/README.md).
+    * Required for log rotation and IPv6 support (`ip6tables`) in containers.
 1. Go to `/srv/` directory.
 1. Download repo (`sudo git clone git@github.com:mrrb/server.git --recursive`). CD into it `cd /srv/server/`.
 1. Checkout to VPS2 branch `sudo git checkout vps2`.
 1. JIC `sudo git submodule update --init --recursive`.
 1. Create the `.shadow` file `sudo touch .shadow` (or `sudo bash -c 'source /srv/server/server.sh && server_init_config'`) and add into it all the required users.
     * Gen hased user:password strings with `htpasswd -nb USER PASSWORD`.
+    * It should include the user `admin`.
     * It should include the user `homepage` to integrate traefik into homepage.
 1. Create the custom environment JSON file `sudo touch env.extra.json` (or `sudo bash -c 'source /srv/server/server.sh && server_init_config'`) and add the following fields.
     * `HOMEPAGE_TRAEFIK_PASSWORD` and `HOMEPAGE_TRAEFIK_USERNAME` should match the password and user generated previously.

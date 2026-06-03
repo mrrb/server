@@ -1,7 +1,12 @@
 networks:
   server: {}
   server-metrics: {}
-  immich-internal: {}
-  vikunja-internal: {}
-  dawarich-internal: {}
-  open-webui-internal: {}
+
+  wireguard:
+    driver: bridge
+    enable_ipv6: true
+    ipam:
+      driver: default
+      config:
+        - subnet: 10.21.42.0/24
+        - subnet: fdcc:ab21:cd42:ef84::/64
