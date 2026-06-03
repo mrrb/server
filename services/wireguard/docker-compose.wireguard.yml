@@ -14,7 +14,8 @@ services:
       # PASSWORD:
       # WG_DEFAULT_ADDRESS:
       # WG_DEFAULT_DNS:
-      # WG_MTU: 1420
+
+      WG_MTU: ${WIREGUARD_MTU:-1280}
 
     networks:
       server:
