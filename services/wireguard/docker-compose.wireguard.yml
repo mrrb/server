@@ -19,8 +19,8 @@ services:
     networks:
       server:
       wireguard:
-        ipv4_address: 10.21.42.1
-        ipv6_address: fdcc:ab21:cd42:ef84::1
+        ipv4_address: 10.21.42.2
+        ipv6_address: fdcc:ab21:cd42:ef84::2
 
     volumes:
       - ./services/wireguard/config:/etc/wireguard
