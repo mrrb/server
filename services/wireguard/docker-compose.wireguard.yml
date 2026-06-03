@@ -19,8 +19,6 @@ services:
     networks:
       server:
       wireguard:
-        ipv4_address: 10.21.42.2
-        ipv6_address: fdcc:ab21:cd42:ef84::2
 
     volumes:
       - ./services/wireguard/config:/etc/wireguard
@@ -44,7 +42,7 @@ services:
       traefik.http.services.wireguard.loadbalancer.server.port: 51821
 
       traefik.http.routers.wireguard.entrypoints: web,websecure
-      traefik.http.routers.wireguard.middlewares: shadow_auth@docker
+      # traefik.http.routers.wireguard.middlewares: shadow_a uth@docker
       traefik.http.routers.wireguard.service: wireguard
       traefik.http.routers.wireguard.rule: Host(`${WIREGUARD_HOST:-wireguard.${SITE:-localhost}}`)
 

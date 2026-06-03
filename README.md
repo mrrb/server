@@ -40,7 +40,7 @@ Check [services/README.md](services/README.md) for the complete list.
     * Docker (with docker compose) should be installed and running on the host machine.
     * `git`, `git-lfs` and `sudo` should be installed on the machine.
     * Root permissions required.
-    * Ports 80 and 443 accessible. UFW example, `sudo ufw allow "WWW full" && sudo ufw allow 443/udp && sudo ufw enable && sudo ufw status`.
+    * Ports 80 and 443 accessible. UFW example, `sudo ufw allow "WWW full" && sudo ufw allow 443/udp && sudo ufw allow 51820/udp && sudo ufw enable && sudo ufw status`.
 1. Apply Docker daemon config. Check [stuff/README.md](stuff/README.md).
     * Required for log rotation and IPv6 support (`ip6tables`) in containers.
 1. Go to `/srv/` directory.
