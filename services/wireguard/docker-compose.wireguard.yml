@@ -18,8 +18,8 @@ services:
       WG_MTU: ${WIREGUARD_MTU:-1280}
 
     networks:
-      server:
       wireguard:
+      server:
 
     volumes:
       - ./services/wireguard/config:/etc/wireguard
