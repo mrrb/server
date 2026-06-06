@@ -15,7 +15,7 @@ services:
       # WG_DEFAULT_ADDRESS:
       # WG_DEFAULT_DNS:
 
-      WG_MTU: ${WIREGUARD_MTU:-1280}
+      WG_MTU: ${WIREGUARD_MTU:-1420}
 
     networks:
       wireguard:
