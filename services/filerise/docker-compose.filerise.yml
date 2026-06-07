@@ -36,7 +36,7 @@ services:
     volumes:
       - './services/filerise/metadata/:/var/www/metadata'
       - './services/filerise/users/:/var/www/users'
-      - '${FILERISE_UPLOADS_PATH:-${SERVER_PATH}/storage/mount/gocryptfs/}:/var/www/uploads'
+      - '${FILERISE_UPLOADS_PATH:-${STORAGE_GOCRYPTFS_MOUNT_GENERIC:-${SERVER_PATH}/storage/mount/gocryptfs/generic}}:/var/www/uploads'
 
     labels:
       ## Traefik
