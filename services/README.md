@@ -18,15 +18,17 @@
   * [go.mrrb.eu](https://go.mrrb.eu) 
 * [Firefly III](fireflyiii)
   * [finance.mrrb.eu](https://finance.mrrb.eu) 
-* [Filestash](filestash)
+* [FileRise](filerise)
   * [files.mrrb.eu](https://files.mrrb.eu) 
 * [Syncthing](syncthing)
   * [sync.files.mrrb.eu](https://sync.files.mrrb.eu) 
 * [Ghost](ghost)
   * [blog.mrrb.eu](https://blog.mrrb.eu) 
-<!-- * [Pydio](pydio)
-  * [files.mrrb.eu](https://files.mrrb.eu)  -->
-<!-- * [Nextcloud](nextcloud)
-  * [files.mrrb.eu](https://cloud.mrrb.eu)  -->
+* [Vikunja](vikunja)
+  * [tasks.mrrb.eu](https://tasks.mrrb.eu) 
+* [SearXNG](searxng)
+  * [search.mrrb.eu](https://search.mrrb.eu) 
+* [OpenWebUI](openwebui)
+  * [chat.mrrb.eu](https://chat.mrrb.eu) 
 <!-- * [Authentik](authentik)
   * [auth.mrrb.eu](https://auth.mrrb.eu)  -->
