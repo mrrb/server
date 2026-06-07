@@ -69,27 +69,27 @@ If using Hetzner storage, the required box structure must be already created. Ch
 1. Create a new SSH key pair for the storage box.
     * `sudo ssh-keygen -t ed25519 -C "VPS1-HetznerStorageBox" -f /srv/server/storage/.ssh/id_ed25519 -q -N ""`.
     * Convert public key to RFC4716 format: `sudo bash -c 'ssh-keygen -e -f /srv/server/storage/.ssh/id_ed25519.pub > /srv/server/storage/.ssh/id_ed25519_rfc.pub'`
-1. Add generated public key (`/srv/server/storage/.ssh/id_ed25519_rfc.pub`) to the Hetzner storage box `.ssh/authorized_keys` for the *vault* and *other* subaccounts, optionally, disable the *External reachability* function for the primary account. Check [storage/README.md](storage/README.md) for more info.
+1. Add generated public key (`/srv/server/storage/.ssh/id_ed25519_rfc.pub`) to the Hetzner storage box `.ssh/authorized_keys` for the *vault*, *other* and *backup* subaccounts, optionally, disable the *External reachability* function for the primary account. Check [storage/README.md](storage/README.md) for more info.
 1. Init gocryptfs directories. Check [storage/README.md](storage/README.md) for more info.
 1. Store gocryptfs keys.
-    * `sudo bash -c 'source /srv/server/server.sh && store_gocrypt_password private'` and insert `private` key.
     * `sudo bash -c 'source /srv/server/server.sh && store_gocrypt_password generic'` and insert `generic` key.
+    * `sudo bash -c 'source /srv/server/server.sh && store_gocrypt_password immich'` and insert `immich` key.
 1. Init server files `sudo bash -c 'source /srv/server/server.sh && server_init'`. This will generate the environment file, fill some config files and generate and install all the services, timers and mounts.
    <!-- 1. Allow grpc port in firewall. UFW example, `sudo ufw allow 33060/tcp && sudo ufw enable && sudo ufw status` -->
-2. Allow syncthing port in firewall. UFW example, `sudo ufw allow 22000/udp && sudo ufw allow 22000,22067,22070/tcp && sudo ufw enable && sudo ufw status`
+1. Allow syncthing port in firewall. UFW example, `sudo ufw allow 22000/udp && sudo ufw allow 22000,22067,22070/tcp && sudo ufw enable && sudo ufw status`
     <!-- 1. Prepare internal filestash state files `sudo bash -c 'source /srv/server/server.sh && server_perma_filestash_init'`. -->
-3. Enable the required server service(s), timer(s) and mount(s).
+1. Enable the required server service(s), timer(s) and mount(s).
     * `sudo systemctl enable server.service`.
     * `sudo systemctl enable server_sshfs_mount_other.service`.
     * `sudo systemctl enable server_sshfs_mount_vault.service`.
     * `sudo systemctl enable server_gocryptfs_mount_vault_generic.service`.
-    * `sudo systemctl enable server_gocryptfs_mount_vault_private.service`.
-4. Reboot system and check that everything works.
-5. Go to the portainer page and set it up.
+    * `sudo systemctl enable server_gocryptfs_mount_vault_immich.service`.
+1. Reboot system and check that everything works.
+1. Go to the portainer page and set it up.
     * Gen a KEY and save it into the `env.extra.json` file (`HOMEPAGE_PORTAINER_KEY`).
-6. Regenerate the environment file `sudo bash -c 'source /srv/server/server.sh && gen_server_env'`.
-7. Go to syncthing and add a user and password.
+1. Regenerate the environment file `sudo bash -c 'source /srv/server/server.sh && gen_server_env'`.
+1. Go to syncthing and add a user and password.
     <!-- 1. Copy internal filestash state files to local directory `sudo bash -c 'source /srv/server/server.sh && server_perma_filestash'`. -->
-8. Copy internal filegator private files to local directory `sudo bash -c 'source /srv/server/server.sh && server_perma_filegator_private'`.
-9. Restart service `sudo systemctl restart server.service`.
-10. Enjoy 😉.
+1. Copy internal filegator private files to local directory `sudo bash -c 'source /srv/server/server.sh && server_perma_filegator_private'`.
+1. Restart service `sudo systemctl restart server.service`.
+1. Enjoy :)

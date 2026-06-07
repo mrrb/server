@@ -1,0 +1,36 @@
+138a139,166
+> function server_perma_filegator_fix_permissions () {
+>   chown -R 33:33 $_SERVICESPATH/filegator/private/
+>   chmod -R 755 $_SERVICESPATH/filegator/private/
+> }
+> 
+> function server_perma_filegator_init () {
+>   _check_create_dir $_SERVICESPATH/filegator/private/
+>   server_perma_filegator_fix_permissions
+> }
+> 
+> function server_perma_filegator_private () {
+>   # Clone filegator repo in temp dir
+>   _temp_dir=$(mktemp -d)
+>   git clone https://github.com/filegator/filegator.git $_temp_dir
+> 
+>   # Make sure the 'private' service directory exists
+>   server_perma_filegator_init
+> 
+>   # Copy filegator 'private' directory files to the correct location
+>   cp -r $_temp_dir/private/{.,}* $_SERVICESPATH/filegator/private/
+> 
+>   # Set correct permissions
+>   server_perma_filegator_fix_permissions
+> 
+>   # Remove temp dir
+>   rm -fdr $_temp_dir
+> }
+> 
+182a211,213
+>   # Check and set correct permissions for filegator
+>   server_perma_filegator_fix_permissions
+> 
+236a268,269
+> 
+>   server_perma_filegator_init

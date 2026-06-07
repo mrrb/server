@@ -10,7 +10,9 @@
 ├── vault    -> Main folders to be used on the server
 │   ├── gocryptfs
 │   │   ├── generic.crypt -> Sync, media, shares, etc...
-│   │   └── private.crypt -> Personal files (mine and others)
+│   │   └── immich.crypt  -> Immich photo library
+│   └── .ssh
+├── backup   -> Kopia backup repository
 │   └── .ssh
 ├── other    -> Folder intended to be directly mounted and used as-is
 │   ├── .ssh
@@ -39,8 +41,8 @@ All the remote `.ssh` folders need to have the previous public key on theirs `au
 1. Mount the box on a local system and cd into it. See the [commands](#commands) section for more info.
 2. On the mounted FS, create the desired folder structure.
     * `mkdir -p .ssh`
-    * `mkdir -p ./{internal,vault,other}/.ssh`
-    * `mkdir -p ./vault/gocryptfs/{generic.crypt,private.crypt}`
+    * `mkdir -p ./{internal,vault,other,backup}/.ssh`
+    * `mkdir -p ./vault/gocryptfs/{generic.crypt,immich.crypt}`
 3. Create all the `authorized_keys` files.
     * `for dot_ssh_dir in $(find . -name '.ssh' -type d); do touch $dot_ssh_dir/authorized_keys; done`
 4. [Optional] Add personal public key(s) to `authorized_keys` files.
@@ -52,22 +54,26 @@ All the remote `.ssh` folders need to have the previous public key on theirs `au
 
 ## Basic box config and subaccounts
 
-1. Go to the Hetzner Robot platform, and select the desired storage box.
-2. On the "Storage Box data" tab, disable all the options, except:
+1. Go to the Hetzner Console platform, and select the desired storage box.
+2. On the "Action" dropdown menu, select "Change settings" and disable all the options, except:
    * ***SSH support***
    * ***External reachability***
-3. On the "Automatic Snapshots" tab, enable weekly snapshots.
-4. On the "Sub-account" tab, create the following subaccounts.
+3. On the "Snapshots" tab, enable weekly snapshots.
+   * Interval: Weekly
+   * Max amount: 8
+   * Day: Monday
+   * Time: 03:00
+4. On the "Subaccounts" tab, create the following subaccounts.
    1. Internal
-        * Base directory: internal
+        * Base directory: `/internal/`
         * Allow Samba: No
         * Allow WebDAV: No
         * Allow SSH: Yes
         * External reachability: No
         * Read-only: No
-        * Comment: Internal files not reachable externally
+        * Description: Internal files not reachable externally
    2. Vault
-        * Base directory: vault
+        * Base directory: `/vault/`
         * Allow Samba: No
         * Allow WebDAV: No
         * Allow SSH: Yes
@@ -75,13 +81,21 @@ All the remote `.ssh` folders need to have the previous public key on theirs `au
         * Read-only: No
         * Comment: Raw vault folder
    3. Other
-        * Base directory: other
+        * Base directory: `/other/`
         * Allow Samba: Yes
         * Allow WebDAV: Yes
         * Allow SSH: Yes
         * External reachability: Yes
         * Read-only: No
         * Comment: Directly access files
+   4. Backup
+        * Base directory: `/backup/`
+        * Allow Samba: No
+        * Allow WebDAV: No
+        * Allow SSH: Yes
+        * External reachability: Yes
+        * Read-only: No
+        * Comment: Kopia backup repository
 
 ## Extra security
 
@@ -90,8 +104,8 @@ After the set-up, on the "Storage Box data" tab, disable the *External reachabil
 ## Gocryptfs init
 
 1. Mount the box on a local system and cd into it. See the [commands](#commands) section for more info.
-2. Create the gocryptfs data for the `generic` and `vault` volumes. For each one, use a unique and complex key.
-   * `sudo gocryptfs -init ./vault/gocryptfs/private.crypt/`
+2. Create the gocryptfs data for all encrypted volumes. Use a unique and complex key for each.
    * `sudo gocryptfs -init ./vault/gocryptfs/generic.crypt/`
+   * `sudo gocryptfs -init ./vault/gocryptfs/immich.crypt/`
 3. [Optional] Depending on the set-up and config, the `user_allow_other` tag must be defined on the FUSE config file `/etc/fuse.conf`.
    * This may be necessary if the user mounting the external storage is not `root`.

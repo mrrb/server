@@ -136,34 +136,6 @@ function _srv_docker_compose () {
 #   sed -i.bck '/state/s/^.*#//g' $_SERVICESPATH/filestash/docker-compose.filestash.yml
 # }
 
-function server_perma_filegator_fix_permissions () {
-  chown -R 33:33 $_SERVICESPATH/filegator/private/
-  chmod -R 755 $_SERVICESPATH/filegator/private/
-}
-
-function server_perma_filegator_init () {
-  _check_create_dir $_SERVICESPATH/filegator/private/
-  server_perma_filegator_fix_permissions
-}
-
-function server_perma_filegator_private () {
-  # Clone filegator repo in temp dir
-  _temp_dir=$(mktemp -d)
-  git clone https://github.com/filegator/filegator.git $_temp_dir
-
-  # Make sure the 'private' service directory exists
-  server_perma_filegator_init
-
-  # Copy filegator 'private' directory files to the correct location
-  cp -r $_temp_dir/private/{.,}* $_SERVICESPATH/filegator/private/
-
-  # Set correct permissions
-  server_perma_filegator_fix_permissions
-
-  # Remove temp dir
-  rm -fdr $_temp_dir
-}
-
 function server_chyrp_lite_chk_fix () {
   # Create data directory if not exists
   _check_create_dir $_SERVICESPATH/chyrp-lite/data/
@@ -208,9 +180,6 @@ function server_up () {
   # Check and set correct permissions for vikunja
   server_vikunja_chk_fix
 
-  # Check and set correct permissions for filegator
-  server_perma_filegator_fix_permissions
-
   # Start services
   _srv_docker_compose up -d
 }
@@ -230,7 +199,7 @@ function server_init_config () {
 }
 
 function server_storage_dir () {
-  declare -a _storage_dirs=("sshfs/vault" "sshfs/other" "gocryptfs/private" "gocryptfs/generic")
+  declare -a _storage_dirs=("sshfs/vault" "sshfs/other" "gocryptfs/generic" "gocryptfs/immich")
   for i in "${_storage_dirs[@]}"
   do
     _check_create_dir "$_SCRIPTPATH/storage/mount/$i"
@@ -245,9 +214,9 @@ function server_set_storage_permissions () {
   _chown_storage ${STORAGE_SSH_MOUNT_OTHER:-${SERVER_PATH}/storage/mount/sshfs/other} || true
 
   # _chown_storage ${STORAGE_SSH_MOUNT_VAULT:-${SERVER_PATH}/storage/mount/sshfs/vault}/gocryptfs/generic.crypt
-  # _chown_storage ${STORAGE_SSH_MOUNT_VAULT:-${SERVER_PATH}/storage/mount/sshfs/vault}/gocryptfs/private.crypt
+  # _chown_storage ${STORAGE_SSH_MOUNT_VAULT:-${SERVER_PATH}/storage/mount/sshfs/vault}/gocryptfs/immich.crypt
   _chown_storage ${STORAGE_GOCRYPTFS_MOUNT_GENERIC:-${SERVER_PATH}/storage/mount/gocryptfs/generic} || true
-  _chown_storage ${STORAGE_GOCRYPTFS_MOUNT_PRIVATE:-${SERVER_PATH}/storage/mount/gocryptfs/private} || true
+  _chown_storage ${STORAGE_GOCRYPTFS_MOUNT_IMMICH:-${SERVER_PATH}/storage/mount/gocryptfs/immich} || true
 }
 
 function server_init () {
@@ -265,6 +234,4 @@ function server_init () {
 
   server_storage_dir
   server_set_storage_permissions
-
-  server_perma_filegator_init
 }
