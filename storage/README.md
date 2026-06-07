@@ -93,7 +93,7 @@ All the remote `.ssh` folders need to have the previous public key on theirs `au
         * Allow Samba: No
         * Allow WebDAV: No
         * Allow SSH: Yes
-        * External reachability: No
+        * External reachability: Yes
         * Read-only: No
         * Comment: Kopia backup repository
 

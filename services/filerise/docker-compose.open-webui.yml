@@ -1,0 +1,57 @@
+services:
+  filerise:
+    image: error311/filerise-docker:${FILERISE_IMAGE_VERSION:-main}
+    restart: unless-stopped
+    platform: ${PLATFORM_ARCH:-linux/amd64}
+    container_name: filerise
+
+    environment:
+      # Locale
+      TIMEZONE: "${TIMEZONE:-UTC}"
+      DATE_TIME_FORMAT: "${FILERISE_DATE_TIME_FORMAT:-d/m/y  h:iA}"
+
+      # Files and uploads
+      PUID: "${STORAGE_UID:-1000}"
+      PGID: "${STORAGE_GID:-1000}"
+      TOTAL_UPLOAD_SIZE: "${FILERISE_TOTAL_UPLOAD_SIZE:-5G}"
+
+      CHOWN_ON_START: "${FILERISE_CHOWN_ON_START:-true}"
+      SCAN_ON_START: "${FILERISE_SCAN_ON_START:-true}"
+
+      # System
+      SECURE: false
+      # PERSISTENT_TOKENS_KEY:
+      # SHARE_URL:
+
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS http://localhost/ || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 20s
+
+    networks:
+      - server
+
+    volumes:
+      - './services/filerise/metadata/:/var/www/metadata'
+      - './services/filerise/users/:/var/www/users'
+      - '${FILERISE_UPLOADS_PATH:-${SERVER_PATH}/storage/mount/gocryptfs/}:/var/www/uploads'
+
+    labels:
+      ## Traefik
+      traefik.enable: true
+
+      traefik.http.services.filerise.loadbalancer.server.port: 80
+      # traefik.http.services.filerise.loadbalancer.responseforwarding.flushinterval: -1
+
+      traefik.http.routers.filerise.entrypoints: web,websecure
+      traefik.http.routers.filerise.service: FileRise
+      traefik.http.routers.filerise.rule: Host(`${FILERISE_HOST:-files.${SITE:-localhost}}`)
+
+      ## Homepage
+      homepage.group: Web
+      homepage.name: FileRise
+      homepage.icon: https://${FILERISE_HOST:-files.${SITE:-localhost}}/assets/logo-32.png
+      homepage.href: https://${FILERISE_HOST:-files.${SITE:-localhost}}
+      homepage.description: Lightweight, self-hosted file manager & storage hub.
