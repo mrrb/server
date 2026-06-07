@@ -1,6 +1,6 @@
 services:
   filerise:
-    image: error311/filerise-docker:${FILERISE_IMAGE_VERSION:-main}
+    image: error311/filerise-docker:${FILERISE_IMAGE_VERSION:-latest}
     restart: unless-stopped
     platform: ${PLATFORM_ARCH:-linux/amd64}
     container_name: filerise
