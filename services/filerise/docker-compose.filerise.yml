@@ -46,7 +46,7 @@ services:
       # traefik.http.services.filerise.loadbalancer.responseforwarding.flushinterval: -1
 
       traefik.http.routers.filerise.entrypoints: web,websecure
-      traefik.http.routers.filerise.service: FileRise
+      traefik.http.routers.filerise.service: filerise
       traefik.http.routers.filerise.rule: Host(`${FILERISE_HOST:-files.${SITE:-localhost}}`)
 
       ## Homepage
