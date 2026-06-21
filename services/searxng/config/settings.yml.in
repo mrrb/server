@@ -12,5 +12,25 @@ server:
   limiter: true
   image_proxy: true
 
-# redis:
-#   url: redis://redis:6379/0
+redis:
+  url: redis://searxng-valkey:6379/0
+
+engines:
+  - name: startpage
+    disabled: true
+
+  - name: brave
+    disabled: true
+  - name: brave api
+    engine: brave_api
+    shortcut: brave
+    api_key: "${SEARXNG_BRAVE_API_KEY}"
+
+  - name: mojeek
+    engine: mojeek
+    shortcut: mj
+    api_key: "${SEARXNG_MOJEEK_API_KEY}"
+
+  - name: wolfram alpha
+    engine: wolframalpha_noapi
+    shortcut: wa

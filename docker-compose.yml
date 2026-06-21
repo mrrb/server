@@ -1,6 +1,7 @@
 networks:
   server: {}
   server-metrics: {}
+  server-searxng: {}
   immich-internal: {}
   vikunja-internal: {}
   dawarich-internal: {}
