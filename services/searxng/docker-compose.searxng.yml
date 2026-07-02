@@ -9,7 +9,7 @@ services:
       SEARXNG_BASE_URL: https://${SEARXNG_HOST:-searxng.${SITE:-localhost}}
 
     depends_on:
-      - valkey
+      - searxng-valkey
 
     networks:
       - server
