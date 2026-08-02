@@ -8,8 +8,12 @@ services:
     environment:
       SEARXNG_BASE_URL: https://${SEARXNG_HOST:-searxng.${SITE:-localhost}}
 
+    depends_on:
+      - searxng-valkey
+
     networks:
       - server
+      - server-searxng
 
     volumes:
       - './services/searxng/config/:/etc/searxng:rw'
@@ -32,4 +36,16 @@ services:
       homepage.href: https://${SEARXNG_HOST:-searxng.${SITE:-localhost}}
       homepage.description: Internet metasearch engine. Users are neither tracked nor profiled.
 
-  # ToDo: Add valkey/redis??
+  searxng-valkey:
+    image: valkey/valkey:${SEARXNG_VALKEY_IMAGE_VERSION:-8-alpine}
+    restart: unless-stopped
+    platform: ${PLATFORM_ARCH:-linux/amd64}
+    container_name: searxng-valkey
+
+    networks:
+      - server-searxng
+
+    command: valkey-server --save "" --appendonly no
+
+    volumes:
+      - './services/searxng/valkey:/data'
