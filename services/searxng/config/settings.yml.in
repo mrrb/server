@@ -19,9 +19,10 @@ engines:
   # Brave (higher priority)
   - name: braveapi
     engine: braveapi
-    api_key: "${SEARXNG_BRAVE_API_KEY}"
+    api_key: '${SEARXNG_BRAVE_API_KEY}'
     weight: 3.0
     disabled: false
+    inactive: false
 
   - name: brave
     disabled: true
@@ -30,7 +31,7 @@ engines:
   # Privacy engines
   - name: heexy
     engine: heexy
-    weight: 2.0
+    weight: 0.5
     disabled: false
 
   - name: mojeek
@@ -40,6 +41,7 @@ engines:
 
   - name: duckduckgo
     engine: duckduckgo
+    base_url: https://lite.duckduckgo.com/lite/
     weight: 2.0
     disabled: false
 
@@ -54,7 +56,7 @@ engines:
 
   # Common engines
   - name: google
-    engine: google_cse
+    engine: google
     weight: 0.5
     disabled: false
 
