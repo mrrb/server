@@ -81,3 +81,13 @@ engines:
     engine: wikidata
     weight: 1.0
     disabled: false
+
+
+  # Disabled tor engines
+  - name: ahmia
+    inactive: true
+    disabled: true
+
+  - name: torch
+    inactive: true
+    disabled: true
