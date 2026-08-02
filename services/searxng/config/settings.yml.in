@@ -16,21 +16,66 @@ redis:
   url: redis://searxng-valkey:6379/0
 
 engines:
-  - name: startpage
-    disabled: true
+  # Brave (higher priority)
+  - name: braveapi
+    engine: braveapi
+    api_key: "${SEARXNG_BRAVE_API_KEY}"
+    weight: 3.0
+    disabled: false
 
   - name: brave
     disabled: true
-  - name: brave api
-    engine: brave_api
-    shortcut: brave
-    api_key: "${SEARXNG_BRAVE_API_KEY}"
+
+
+  # Privacy engines
+  - name: heexy
+    engine: heexy
+    weight: 2.0
+    disabled: false
 
   - name: mojeek
     engine: mojeek
-    shortcut: mj
-    api_key: "${SEARXNG_MOJEEK_API_KEY}"
+    weight: 2.0
+    disabled: false
 
-  - name: wolfram alpha
+  - name: duckduckgo
+    engine: duckduckgo
+    weight: 2.0
+    disabled: false
+
+  - name: qwant
+    engine: qwant
+    weight: 2.0
+    disabled: false
+
+  - name: startpage
+    disabled: true
+
+
+  # Common engines
+  - name: google
+    engine: google_cse
+    weight: 0.5
+    disabled: false
+
+  - name: bing
+    engine: bing
+    weight: 0.5
+    disabled: false
+
+
+  # Specialized engines
+  - name: wolframalpha
     engine: wolframalpha_noapi
-    shortcut: wa
+    weight: 1.0
+    disabled: false
+
+  - name: wikipedia
+    engine: wikipedia
+    weight: 1.0
+    disabled: false
+
+  - name: wikidata
+    engine: wikidata
+    weight: 1.0
+    disabled: false

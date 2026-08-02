@@ -64,6 +64,7 @@ If using Hetzner storage, the required box structure must be already created. Ch
     * Set mail vars `MAIL_ENCRYPTION`, `MAIL_FROM`, `MAIL_HOST`, `MAIL_PASSWORD`, `MAIL_PORT` and `MAIL_USERNAME`.
     * Set `STORAGE_SSH_HOST`, `STORAGE_SSH_USER_OTHER` and `STORAGE_SSH_USER_VAULT`.
     * Set `MARIADB_ROOT_PASSWORD` and `GHOST_DB_PASSWORD`.
+    * Set `SEARXNG_WOLFRAMALPHA_API_KEY`.
     * Set, if needed, `STORAGE_UID` and `STORAGE_GID`.
     * Set, if needed, `PLATFORM_ARCH` (Ex. 'linux/amd64' or 'linux/arm64')
 1. Create a new SSH key pair for the storage box.
