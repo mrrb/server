@@ -31,7 +31,7 @@ engines:
   # Privacy engines
   - name: heexy
     engine: heexy
-    weight: 0.5
+    weight: 0.4
     disabled: false
 
   - name: mojeek
@@ -59,10 +59,14 @@ engines:
     engine: google
     weight: 0.5
     disabled: false
+    inactive: false
+
+  - name: google cse
+    inactive: true
 
   - name: bing
     engine: bing
-    weight: 0.5
+    weight: 2.0
     disabled: false
 
 
