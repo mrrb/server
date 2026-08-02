@@ -57,6 +57,7 @@ If using Hetzner storage, the required box structure must be already created. Ch
     * `HOMEPAGE_TRAEFIK_PASSWORD` and `HOMEPAGE_TRAEFIK_USERNAME` should match the password and user generated previously.
     * `HOMEPAGE_PORTAINER_KEY` can be defined but ignored for the moment.
     * Set `SEARXNG_SECRET_KEY` and `OPEN_WEBUI_SECRET_KEY` (python3 -c "import secrets; print(secrets.token_hex(32))").
+    * Set `SEARXNG_BRAVE_API_KEY` [(https://brave.com/search/api/)](https://brave.com/search/api/).
     * Set `SIMPLYSHORTEN_USER` and `SIMPLYSHORTEN_PASS`.
     <!-- * Set `AUTHENTIK_POSTGRES_PASSWORD`. -->
     * Set `VIKUNJA_JWTSECRET` and `VIKUNJA_DB_PASSWORD`.

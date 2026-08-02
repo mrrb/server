@@ -12,5 +12,86 @@ server:
   limiter: true
   image_proxy: true
 
-# redis:
-#   url: redis://redis:6379/0
+valkey:
+  url: valkey://searxng-valkey:6379/0
+
+engines:
+  # Brave (higher priority)
+  - name: braveapi
+    engine: braveapi
+    api_key: '${SEARXNG_BRAVE_API_KEY}'
+    weight: 3.0
+    disabled: false
+    inactive: false
+
+  - name: brave
+    disabled: true
+
+
+  # Privacy engines
+  - name: heexy
+    engine: heexy
+    weight: 0.4
+    disabled: false
+
+  - name: mojeek
+    engine: mojeek
+    weight: 2.0
+    disabled: false
+
+  - name: duckduckgo
+    engine: duckduckgo
+    base_url: https://lite.duckduckgo.com/lite/
+    weight: 2.0
+    disabled: false
+
+  - name: qwant
+    engine: qwant
+    weight: 1.0
+    disabled: false
+
+  - name: startpage
+    disabled: true
+
+
+  # Common engines
+  - name: google
+    engine: google
+    weight: 0.5
+    disabled: false
+    inactive: false
+
+  - name: google cse
+    inactive: true
+
+  - name: bing
+    engine: bing
+    weight: 2.0
+    disabled: false
+
+
+  # Specialized engines
+  - name: wolframalpha
+    engine: wolframalpha_noapi
+    weight: 1.0
+    disabled: false
+
+  - name: wikipedia
+    engine: wikipedia
+    weight: 1.0
+    disabled: false
+
+  - name: wikidata
+    engine: wikidata
+    weight: 1.0
+    disabled: false
+
+
+  # Disabled tor engines
+  - name: ahmia
+    inactive: true
+    disabled: true
+
+  - name: torch
+    inactive: true
+    disabled: true

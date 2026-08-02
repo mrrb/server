@@ -1,6 +1,10 @@
 networks:
-  server: {}
+  server:
+    ipam:
+      config:
+        - subnet: 172.22.0.0/16
   server-metrics: {}
+  server-searxng: {}
   immich-internal: {}
   vikunja-internal: {}
   dawarich-internal: {}
