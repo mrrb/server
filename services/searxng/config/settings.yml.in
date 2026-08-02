@@ -74,7 +74,7 @@ engines:
   - name: wolframalpha
     engine: wolframalpha_noapi
     weight: 1.0
-    disabled: false
+    disabled: true
 
   - name: wikipedia
     engine: wikipedia
