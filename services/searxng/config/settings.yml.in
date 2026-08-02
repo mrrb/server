@@ -12,8 +12,8 @@ server:
   limiter: true
   image_proxy: true
 
-redis:
-  url: redis://searxng-valkey:6379/0
+valkey:
+  url: valkey://searxng-valkey:6379/0
 
 engines:
   # Brave (higher priority)

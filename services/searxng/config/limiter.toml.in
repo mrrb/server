@@ -1,4 +1,7 @@
 # See https://github.com/searxng/searxng/blob/master/searx/limiter.toml
 
+[botdetection]
+trusted_proxies = ["172.22.0.0/16"]
+
 [botdetection.ip_limit]
 link_token = true
