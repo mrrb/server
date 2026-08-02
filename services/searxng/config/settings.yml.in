@@ -47,7 +47,7 @@ engines:
 
   - name: qwant
     engine: qwant
-    weight: 2.0
+    weight: 1.0
     disabled: false
 
   - name: startpage
