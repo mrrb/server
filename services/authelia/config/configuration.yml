@@ -2,11 +2,6 @@ theme: dark
 
 server:
   address: 'tcp://0.0.0.0:9091/'
-  trusted_proxies:
-    - '10.0.0.0/8'
-    - '172.16.0.0/12'
-    - '192.168.0.0/16'
-    - 'fc00::/7'
 
 log:
   level: 'info'
@@ -14,7 +9,7 @@ log:
 
 totp:
   disable: false
-  issuer: '{{ env "AUTHELIA_SESSION_DOMAIN" }}'
+  issuer: '{{ env "X_AUTHELIA_SESSION_DOMAIN" }}'
 
 webauthn:
   disable: false
@@ -34,15 +29,15 @@ access_control:
   default_policy: deny
   rules:
     ## Bypass the auth portal itself
-    - domain: '{{ env "AUTHELIA_HOST" }}'
+    - domain: '{{ env "X_AUTHELIA_HOST" }}'
       policy: bypass
 
     ## Example: require one-factor for a service
-    # - domain: 'myservice.{{ env "AUTHELIA_SESSION_DOMAIN" }}'
+    # - domain: 'myservice.{{ env "X_AUTHELIA_SESSION_DOMAIN" }}'
     #   policy: one_factor
 
     ## Example: require two-factor for a sensitive service
-    # - domain: 'admin.{{ env "AUTHELIA_SESSION_DOMAIN" }}'
+    # - domain: 'admin.{{ env "X_AUTHELIA_SESSION_DOMAIN" }}'
     #   policy: two_factor
 
 session:
@@ -53,9 +48,9 @@ session:
   remember_me: '1M'
   cookies:
     - name: 'authelia_session'
-      domain: '{{ env "AUTHELIA_SESSION_DOMAIN" }}'
-      authelia_url: 'https://{{ env "AUTHELIA_HOST" }}'
-      default_redirection_url: 'https://{{ env "AUTHELIA_SESSION_DOMAIN" }}'
+      domain: '{{ env "X_AUTHELIA_SESSION_DOMAIN" }}'
+      authelia_url: 'https://{{ env "X_AUTHELIA_HOST" }}'
+      default_redirection_url: 'https://{{ env "X_AUTHELIA_SESSION_DOMAIN" }}'
   redis:
     host: 'authelia-valkey'
     port: 6379
@@ -71,7 +66,7 @@ storage:
 
 notifier:
   smtp:
-    address: 'smtp+submissions://{{ env "MAIL_HOST" }}:{{ env "MAIL_PORT" }}'
+    address: 'submission://{{ env "MAIL_HOST" }}:{{ env "MAIL_PORT" }}'
     sender: '{{ env "MAIL_FROM" }}'
     tls:
       skip_verify: false

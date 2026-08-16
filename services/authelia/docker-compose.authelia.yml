@@ -8,8 +8,8 @@ services:
     environment:
       X_AUTHELIA_CONFIG_FILTERS: template
 
-      AUTHELIA_HOST: ${AUTHELIA_HOST:-auth.${SITE:-localhost}}
-      AUTHELIA_SESSION_DOMAIN: ${AUTHELIA_SESSION_DOMAIN:-${SITE:-localhost}}
+      X_AUTHELIA_HOST: ${AUTHELIA_HOST:-auth.${SITE:-localhost}}
+      X_AUTHELIA_SESSION_DOMAIN: ${AUTHELIA_SESSION_DOMAIN:-${SITE:-localhost}}
 
       AUTHELIA_JWT_SECRET: ${AUTHELIA_JWT_SECRET:-insecure_jwt_secret_change_me_now}
       AUTHELIA_SESSION_SECRET: ${AUTHELIA_SESSION_SECRET:-insecure_session_secret_change_me}
