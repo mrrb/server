@@ -10,6 +10,7 @@ services:
       - server-searxng
       - immich-internal
       - vikunja-internal
+      - authelia-internal
       - dawarich-internal
       - open-webui-internal
 

@@ -1,0 +1,89 @@
+services:
+  authelia:
+    image: authelia/authelia:${AUTHELIA_IMAGE_VERSION:-latest}
+    restart: unless-stopped
+    platform: ${PLATFORM_ARCH:-linux/amd64}
+    container_name: authelia
+
+    environment:
+      X_AUTHELIA_CONFIG_FILTERS: template
+
+      X_AUTHELIA_HOST: ${AUTHELIA_HOST:-auth.${SITE:-localhost}}
+      X_AUTHELIA_SESSION_DOMAIN: ${AUTHELIA_SESSION_DOMAIN:-${SITE:-localhost}}
+
+      AUTHELIA_JWT_SECRET: ${AUTHELIA_JWT_SECRET:-insecure_jwt_secret_change_me_now}
+      AUTHELIA_SESSION_SECRET: ${AUTHELIA_SESSION_SECRET:-insecure_session_secret_change_me}
+      AUTHELIA_STORAGE_ENCRYPTION_KEY: ${AUTHELIA_STORAGE_ENCRYPTION_KEY:-insecure_storage_encryption_key_32c}
+
+      # AUTHELIA_NOTIFIER_SMTP_USERNAME: ${MAIL_USERNAME}
+      # AUTHELIA_NOTIFIER_SMTP_PASSWORD: ${MAIL_PASSWORD}
+
+      # MAIL_HOST: '${MAIL_HOST:-mail.localhost}'
+      # MAIL_PORT: ${MAIL_PORT:-587}
+      # MAIL_FROM: '${MAIL_FROM:-me@mail.localhost}'
+
+    healthcheck:
+      test: ['CMD', 'wget', '--no-verbose', '--tries=1', '--spider', 'http://localhost:9091/api/health']
+      start_period: 30s
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+    depends_on:
+      authelia-valkey:
+        condition: service_healthy
+
+    networks:
+      - server
+      - authelia-internal
+
+    volumes:
+      - './services/authelia/config:/config'
+      - './services/authelia/data:/data'
+
+    labels:
+      ## Traefik
+      traefik.enable: true
+
+      traefik.http.services.authelia.loadbalancer.server.port: 9091
+      traefik.http.services.authelia.loadbalancer.healthcheck.path: /api/health
+      traefik.http.services.authelia.loadbalancer.healthcheck.interval: 30s
+      traefik.http.services.authelia.loadbalancer.healthcheck.timeout: 10s
+
+      traefik.http.routers.authelia.entrypoints: web,websecure
+      traefik.http.routers.authelia.service: authelia
+      traefik.http.routers.authelia.rule: Host(`${AUTHELIA_HOST:-auth.${SITE:-localhost}}`)
+
+      ## Forward auth middleware (reference as authelia@docker in other routers)
+      traefik.http.middlewares.authelia.forwardauth.address: http://authelia:9091/api/authz/forward-auth
+      traefik.http.middlewares.authelia.forwardauth.trustForwardHeader: true
+      traefik.http.middlewares.authelia.forwardauth.authResponseHeaders: Remote-User,Remote-Groups,Remote-Name,Remote-Email
+
+      ## Homepage
+      homepage.group: System
+      homepage.name: Authelia
+      homepage.icon: authelia.png
+      homepage.href: https://${AUTHELIA_HOST:-auth.${SITE:-localhost}}
+      homepage.description: Single Sign-On and Multi-Factor Authentication portal.
+
+  authelia-valkey:
+    image: valkey/valkey:${AUTHELIA_VALKEY_IMAGE_VERSION:-8-alpine}
+    restart: unless-stopped
+    platform: ${PLATFORM_ARCH:-linux/amd64}
+    container_name: authelia-valkey
+
+    healthcheck:
+      test: ['CMD', 'valkey-cli', 'ping']
+      start_period: 10s
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+    networks:
+      - authelia-internal
+
+    volumes:
+      - './services/authelia/valkey:/data'
+
+    labels:
+      traefik.enable: false

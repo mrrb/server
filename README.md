@@ -59,14 +59,18 @@ If using Hetzner storage, the required box structure must be already created. Ch
     * Set `SEARXNG_SECRET_KEY` and `OPEN_WEBUI_SECRET_KEY` (python3 -c "import secrets; print(secrets.token_hex(32))").
     * Set `SEARXNG_BRAVE_API_KEY` [(https://brave.com/search/api/)](https://brave.com/search/api/).
     * Set `SIMPLYSHORTEN_USER` and `SIMPLYSHORTEN_PASS`.
-    <!-- * Set `AUTHENTIK_POSTGRES_PASSWORD`. -->
     * Set `VIKUNJA_JWTSECRET` and `VIKUNJA_DB_PASSWORD`.
     * Set API keys `FIREFLYIII_APP_KEY` and `FIREFLYIII_STATIC_CRON_TOKEN` (32 long strings).
     * Set mail vars `MAIL_ENCRYPTION`, `MAIL_FROM`, `MAIL_HOST`, `MAIL_PASSWORD`, `MAIL_PORT` and `MAIL_USERNAME`.
     * Set `STORAGE_SSH_HOST`, `STORAGE_SSH_USER_OTHER` and `STORAGE_SSH_USER_VAULT`.
     * Set `MARIADB_ROOT_PASSWORD` and `GHOST_DB_PASSWORD`.
+    * Set Authelia secrets `AUTHELIA_JWT_SECRET`, `AUTHELIA_SESSION_SECRET` and `AUTHELIA_STORAGE_ENCRYPTION_KEY` (`openssl rand -hex 32` for each).
     * Set, if needed, `STORAGE_UID` and `STORAGE_GID`.
     * Set, if needed, `PLATFORM_ARCH` (Ex. 'linux/amd64' or 'linux/arm64')
+1. Set up Authelia.
+    * Add a user: generate a password hash (`docker run --rm authelia/authelia:latest authelia crypto hash generate argon2 --password 'PASSWORD'`) and add it to `services/authelia/config/users_database.yml`.
+    * Set access control rules for each protected service in `services/authelia/config/configuration.yml` → `access_control.rules` (`bypass`, `one_factor` or `two_factor`).
+    * To protect a service with Traefik, add `authelia@docker` to its router middlewares label.
 1. Create a new SSH key pair for the storage box.
     * `sudo ssh-keygen -t ed25519 -C "VPS1-HetznerStorageBox" -f /srv/server/storage/.ssh/id_ed25519 -q -N ""`.
     * Convert public key to RFC4716 format: `sudo bash -c 'ssh-keygen -e -f /srv/server/storage/.ssh/id_ed25519.pub > /srv/server/storage/.ssh/id_ed25519_rfc.pub'`

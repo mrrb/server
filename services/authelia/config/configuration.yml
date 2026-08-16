@@ -1,0 +1,75 @@
+theme: dark
+
+server:
+  address: 'tcp://0.0.0.0:9091/'
+
+log:
+  level: 'info'
+  format: 'json'
+
+totp:
+  disable: false
+  issuer: '{{ env "X_AUTHELIA_SESSION_DOMAIN" }}'
+
+webauthn:
+  disable: false
+  display_name: 'Authelia'
+  attestation_conveyance_preference: indirect
+  selection_criteria:
+    user_verification: preferred
+  timeout: '60s'
+
+authentication_backend:
+  file:
+    path: '/config/users_database.yml'
+    watch: true
+    password:
+      algorithm: argon2
+
+access_control:
+  default_policy: deny
+  rules:
+    ## Bypass the auth portal itself
+    - domain: '{{ env "X_AUTHELIA_HOST" }}'
+      policy: bypass
+
+    ## Example: require one-factor for a service
+    # - domain: 'myservice.{{ env "X_AUTHELIA_SESSION_DOMAIN" }}'
+    #   policy: one_factor
+
+    ## Example: require two-factor for a sensitive service
+    # - domain: 'admin.{{ env "X_AUTHELIA_SESSION_DOMAIN" }}'
+    #   policy: two_factor
+
+session:
+  name: 'authelia_session'
+  same_site: 'lax'
+  inactivity: '5m'
+  expiration: '1h'
+  remember_me: '1M'
+  cookies:
+    - name: 'authelia_session'
+      domain: '{{ env "X_AUTHELIA_SESSION_DOMAIN" }}'
+      authelia_url: 'https://{{ env "X_AUTHELIA_HOST" }}'
+      default_redirection_url: 'https://{{ env "X_AUTHELIA_SESSION_DOMAIN" }}'
+  redis:
+    host: 'authelia-valkey'
+    port: 6379
+
+regulation:
+  max_retries: 3
+  find_time: '2m'
+  ban_time: '5m'
+
+storage:
+  local:
+    path: '/data/db.sqlite3'
+
+notifier:
+  filesystem:
+    filename: '/data/notification.txt'
+  # smtp:
+  #   address: 'submission://{{ env "MAIL_HOST" }}:{{ env "MAIL_PORT" }}'
+  #   sender: '{{ env "MAIL_FROM" }}'
+  #   tls:
+  #     skip_verify: false
