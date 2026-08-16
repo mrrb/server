@@ -59,7 +59,6 @@ If using Hetzner storage, the required box structure must be already created. Ch
     * Set `SEARXNG_SECRET_KEY` and `OPEN_WEBUI_SECRET_KEY` (python3 -c "import secrets; print(secrets.token_hex(32))").
     * Set `SEARXNG_BRAVE_API_KEY` [(https://brave.com/search/api/)](https://brave.com/search/api/).
     * Set `SIMPLYSHORTEN_USER` and `SIMPLYSHORTEN_PASS`.
-    <!-- * Set `AUTHENTIK_POSTGRES_PASSWORD`. -->
     * Set `VIKUNJA_JWTSECRET` and `VIKUNJA_DB_PASSWORD`.
     * Set API keys `FIREFLYIII_APP_KEY` and `FIREFLYIII_STATIC_CRON_TOKEN` (32 long strings).
     * Set mail vars `MAIL_ENCRYPTION`, `MAIL_FROM`, `MAIL_HOST`, `MAIL_PASSWORD`, `MAIL_PORT` and `MAIL_USERNAME`.
