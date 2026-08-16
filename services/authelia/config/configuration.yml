@@ -66,8 +66,10 @@ storage:
     path: '/data/db.sqlite3'
 
 notifier:
-  smtp:
-    address: 'submission://{{ env "MAIL_HOST" }}:{{ env "MAIL_PORT" }}'
-    sender: '{{ env "MAIL_FROM" }}'
-    tls:
-      skip_verify: false
+  filesystem:
+    filename: '/data/notification.txt'
+  # smtp:
+  #   address: 'submission://{{ env "MAIL_HOST" }}:{{ env "MAIL_PORT" }}'
+  #   sender: '{{ env "MAIL_FROM" }}'
+  #   tls:
+  #     skip_verify: false
