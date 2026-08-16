@@ -18,6 +18,10 @@ services:
       AUTHELIA_NOTIFIER_SMTP_USERNAME: ${MAIL_USERNAME}
       AUTHELIA_NOTIFIER_SMTP_PASSWORD: ${MAIL_PASSWORD}
 
+      MAIL_HOST: '${MAIL_HOST:-mail.localhost}'
+      MAIL_PORT: ${MAIL_PORT:-587}
+      MAIL_FROM: '${MAIL_FROM:-me@mail.localhost}'
+
     healthcheck:
       test: ['CMD', 'wget', '--no-verbose', '--tries=1', '--spider', 'http://localhost:9091/api/health']
       start_period: 30s
