@@ -10,6 +10,8 @@
   * [dashboard.vps1.infra.mrrb.xyz](https://dashboard.vps1.infra.mrrb.xyz)
 * [Immich](immich)
   * To be added
+* [LanguageTool](languagetool)
+  * [lt.mrrb.eu](https://lt.mrrb.eu)
 * [Memos](memos)
   * To be added
 * [Nginx](nginx)

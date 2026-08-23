@@ -1,0 +1,37 @@
+services:
+  languagetool:
+    image: meyay/languagetool-java:${LANGUAGETOOL_IMAGE_VERSION:-latest}
+    restart: unless-stopped
+    platform: ${PLATFORM_ARCH:-linux/amd64}
+    container_name: languagetool
+
+    environment:
+      Java_Xms: 256m
+      Java_Xmx: 1g
+
+    healthcheck:
+      test: ['CMD', 'curl', '-f', 'http://localhost:8010/v2/info']
+      start_period: 90s
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+    networks:
+      - server
+
+    labels:
+      ## Traefik
+      traefik.enable: true
+
+      traefik.http.services.languagetool.loadbalancer.server.port: 8010
+
+      traefik.http.routers.languagetool.entrypoints: web,websecure
+      traefik.http.routers.languagetool.service: languagetool
+      traefik.http.routers.languagetool.rule: Host(`${LANGUAGETOOL_HOST:-lt.${SITE:-localhost}}`)
+
+      ## Homepage
+      homepage.group: Web
+      homepage.name: LanguageTool
+      homepage.icon: languagetool.png
+      homepage.href: https://${LANGUAGETOOL_HOST:-lt.${SITE:-localhost}}
+      homepage.description: Grammar and spell checker API.

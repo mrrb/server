@@ -33,6 +33,10 @@ access_control:
     - domain: '{{ env "X_AUTHELIA_HOST" }}'
       policy: bypass
 
+    ## LanguageTool public API (used by API clients, not browsers)
+    - domain: 'lt.{{ env "X_AUTHELIA_SESSION_DOMAIN" }}'
+      policy: bypass
+
     ## Example: require one-factor for a service
     # - domain: 'myservice.{{ env "X_AUTHELIA_SESSION_DOMAIN" }}'
     #   policy: one_factor
