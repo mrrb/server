@@ -41,35 +41,51 @@ function gen_server_env () {
   _gen_server_env > "$_SCRIPTPATH/.env"
 }
 
+# Expand ${VAR:-default} bash-style parameter defaults left over after envsubst,
+# without eval'ing file content (envsubst alone doesn't support the ":-default" form).
+function _expand_defaults () {
+  local _content=$1
+  local _var _default _val
+  while [[ "$_content" =~ \$\{([A-Za-z_][A-Za-z0-9_]*):-([^}]*)\} ]]; do
+    _var="${BASH_REMATCH[1]}"
+    _default="${BASH_REMATCH[2]}"
+    _val="${!_var:-$_default}"
+    _content="${_content//${BASH_REMATCH[0]}/$_val}"
+  done
+  printf '%s' "$_content"
+}
+
+function _render_template () {
+  local _in=$1 _out=$2
+  envsubst < "$_in" > "$_out"
+  _expand_defaults "$(cat "$_out")" > "$_out"
+}
+
 function gen_homepage_config () {
   for i in $(find $_SERVICESPATH/homepage/config -type f ! -path "*/refs/*" -name '*.yaml.in')
   do
-    envsubst < $i > ${i::-3}
-    eval "echo \"$(cat ${i::-3})\"" > ${i::-3}
+    _render_template "$i" "${i::-3}"
   done
 }
 
 function gen_traefik_config () {
   for i in $(find $_SERVICESPATH/traefik/dynamic -type f ! -path "*/refs/*" -name '*.yml.in')
   do
-    envsubst < $i > ${i::-3}
-    eval "echo \"$(cat ${i::-3})\"" > ${i::-3}
+    _render_template "$i" "${i::-3}"
   done
 }
 
 function gen_server_services () {
   for i in $(find "$_SCRIPTPATH/systemd" -type f -name '*.in')
   do
-    envsubst < $i > ${i::-3}
-    eval "echo \"$(cat ${i::-3})\"" > ${i::-3}
+    _render_template "$i" "${i::-3}"
   done
 }
 
 function gen_searxng_config () {
   for i in $(find $_SERVICESPATH/searxng/config -type f ! -path "*/refs/*" -name '*.in')
   do
-    envsubst < $i > ${i::-3}
-    eval "echo \"$(cat ${i::-3})\"" > ${i::-3}
+    _render_template "$i" "${i::-3}"
   done
 }
 
@@ -117,7 +133,7 @@ function _chown_storage () {
 function _srv_docker_compose () {
   _curr_pwd=$(pwd)
   cd $_SCRIPTPATH
-	/usr/bin/docker compose -p ${SERVER_NAME:-server} $(find -maxdepth 3 -name 'docker-compose*.yml' -not -path "*/.*/*" -not -name '*disable*' -type f -printf '%p\t%d\n'  2>/dev/null | grep -v 'refs' | sort -n -k2 | cut -f 1 | awk '{print "-f "$0}') $@
+	/usr/bin/docker compose -p ${SERVER_NAME:-server} $(find -maxdepth 3 -name 'docker-compose*.yml' -not -path "*/.*/*" ! -path "*/refs/*" ! -path "*/disable/*" -type f -printf '%p\t%d\n'  2>/dev/null | sort -n -k2 | cut -f 1 | awk '{print "-f "$0}') $@
   cd $_curr_pwd
 }
 
@@ -185,7 +201,7 @@ function server_up () {
 }
 
 function server_down () {
-  _srv_docker_compose down
+  _srv_docker_compose down --remove-orphans
 }
 
 function server_install_services () {
@@ -210,7 +226,7 @@ function server_set_storage_permissions () {
   # _chown_storage $_SERVICESPATH/pydio/data/ || true
   _chown_storage $_SERVICESPATH/syncthing/data/ || true
 
-  _chown_storage ${STORAGE_SSH_MOUNT_OTHER:-${SERVER_PATH}/storage/mount/sshfs/vault} || true
+  _chown_storage ${STORAGE_SSH_MOUNT_VAULT:-${SERVER_PATH}/storage/mount/sshfs/vault} || true
   _chown_storage ${STORAGE_SSH_MOUNT_OTHER:-${SERVER_PATH}/storage/mount/sshfs/other} || true
 
   # _chown_storage ${STORAGE_SSH_MOUNT_VAULT:-${SERVER_PATH}/storage/mount/sshfs/vault}/gocryptfs/generic.crypt
