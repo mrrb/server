@@ -185,7 +185,7 @@ function server_up () {
 }
 
 function server_down () {
-  _srv_docker_compose down
+  _srv_docker_compose down --remove-orphans
 }
 
 function server_install_services () {
