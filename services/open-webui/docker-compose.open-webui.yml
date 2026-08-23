@@ -28,7 +28,7 @@ services:
 
     networks:
       server:
-        ipv4_address: ${_OPEN_WEBUI_NET_IP:-172.22.0.10}
+        ipv4_address: ${_OPEN_WEBUI_NET_IP:-172.22.0.100}
       open-webui-internal:
 
     volumes:

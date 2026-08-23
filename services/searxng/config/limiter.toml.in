@@ -7,4 +7,4 @@ trusted_proxies = ['172.22.0.0/16']
 link_token = true
 
 [botdetection.ip_lists]
-pass_ip = ['${_OPEN_WEBUI_NET_IP:-172.22.0.10}/32']
+pass_ip = ['${_OPEN_WEBUI_NET_IP:-172.22.0.100}/32']
