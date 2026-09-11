@@ -1,0 +1,15 @@
+# Sandbox runtime dependencies
+fastmcp>=2.6,<5
+uvicorn
+
+# Common dependencies
+httpx
+json5
+numpy
+pandas
+pillow
+polars
+seaborn
+openpyxl
+requests
+matplotlib
