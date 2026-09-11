@@ -12,3 +12,6 @@
 .env
 env*.json
 !env.json
+
+# Python
+**/__pycache__/
