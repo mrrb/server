@@ -1,0 +1,117 @@
+services:
+  nanobot-kai:
+    image: nanobot-local:${NANOBOT_BUILD_REF:-v0.3.0}
+    build:
+      context: https://github.com/HKUDS/nanobot.git#${NANOBOT_BUILD_REF:-v0.3.0}
+      args:
+        NANOBOT_CHANNELS: ${NANOBOT_CHANNELS:-telegram,whatsapp,signal}
+    restart: unless-stopped
+    platform: ${PLATFORM_ARCH:-linux/amd64}
+    container_name: nanobot-kai
+
+    environment:
+      MISTRAL_API_KEY: ${AGENT_KAI_MISTRAL_API_KEY:-}
+      OPENROUTER_API_KEY: ${AGENT_KAI_OPENROUTER_API_KEY:-}
+      TELEGRAM_BOT_TOKEN: ${AGENT_KAI_TELEGRAM_BOT_TOKEN:-}
+
+      NANOBOT_WEB_TOKEN: ${AGENT_KAI_WEB_TOKEN:-}
+      NANOBOT_WS_TOKEN_ISSUE_SECRET: ${AGENT_KAI_WS_TOKEN_ISSUE_SECRET:-}
+      NANOBOT_SANDBOX_TOKEN: ${AGENT_KAI_SANDBOX_TOKEN:-}
+
+      SEARXNG_BASE_URL: http://searxng:8080
+
+    healthcheck:
+      test:
+        - CMD
+        - python3
+        - '-c'
+        - 'import socket; socket.create_connection(("127.0.0.1", 8765), timeout=5)'
+      start_period: 60s
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+    networks:
+      - server
+      - agent-kai-internal
+
+    cap_drop:
+      - ALL
+    cap_add:
+      - CHOWN
+      - SETUID
+      - SETGID
+    security_opt:
+      - no-new-privileges:true
+
+    volumes:
+      - './services/agents/kai/data/:/home/nanobot/.nanobot'
+      - './services/agents/kai/exchange/:/exchange'
+
+    labels:
+      ## Traefik
+      traefik.enable: true
+
+      traefik.http.services.nanobot.loadbalancer.server.port: 8765
+
+      traefik.http.routers.nanobot.entrypoints: web,websecure
+      traefik.http.routers.nanobot.service: nanobot
+      traefik.http.routers.nanobot.rule: Host(`${AGENT_KAI_HOST:-kai.agent.${SITE:-localhost}}`)
+      traefik.http.routers.nanobot.middlewares: authelia@docker
+
+      ## Homepage
+      homepage.group: Web
+      homepage.name: nanobot
+      homepage.icon: mdi-robot
+      homepage.href: https://${AGENT_KAI_HOST:-kai.agent.${SITE:-localhost}}
+      homepage.description: Self-hosted personal AI agent gateway (nanobot).
+
+      ## Watchtower
+      com.centurylinkfoundation.watchtower.enable: "false"
+
+  nanobot-kai-sandbox:
+    image: nanobot-sandbox-local:kai
+    build:
+      context: ./services/sandbox
+    restart: unless-stopped
+    platform: ${PLATFORM_ARCH:-linux/amd64}
+    container_name: nanobot-kai-sandbox
+
+    environment:
+      NANOBOT_SANDBOX_TOKEN: ${AGENT_KAI_SANDBOX_TOKEN:-}
+
+    healthcheck:
+      test:
+        - CMD
+        - python3
+        - '-c'
+        - 'import urllib.request; urllib.request.urlopen("http://127.0.0.1:8000/health", timeout=5)'
+      start_period: 30s
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+    networks:
+      - agent-kai-internal
+
+    volumes:
+      - './services/agents/kai/exchange/:/exchange'
+
+    user: '1000:1000'
+    read_only: true
+    tmpfs:
+      - /tmp:size=256m
+    mem_limit: 512m
+    cpus: '1.0'
+    pids_limit: 128
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+
+    labels:
+      ## Traefik
+      traefik.enable: false
+
+      ## Watchtower
+      com.centurylinkfoundation.watchtower.enable: "false"
