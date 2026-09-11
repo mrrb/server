@@ -11,3 +11,8 @@ networks:
   authelia-internal: {}
   dawarich-internal: {}
   open-webui-internal: {}
+  agent-kai-internal:
+    internal: true
+    ipam:
+      config:
+        - subnet: 172.23.0.0/16
