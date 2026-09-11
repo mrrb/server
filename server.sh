@@ -30,7 +30,7 @@ load_env
 
 ## Environment functions
 function _gen_server_env () {
-  "$_SCRIPTPATH/env.py" $(find $_SCRIPTPATH -maxdepth 4 -type f ! -path "*/.*/*" ! -path "*/refs/*" ! -path "*/disable/*" -name 'docker-compose.*.yml' -o -name '*.yaml.in' -o -name '*.yml.in') $(find $_SCRIPTPATH/systemd -type f -name '*.in') -s -v "$_SCRIPTPATH/env.json" -e "$_SCRIPTPATH/env.extra.json" -E "SERVER_PATH=$_SCRIPTPATH"
+  "$_SCRIPTPATH/env.py" $(find $_SCRIPTPATH -type f ! -path "*/.*/*" ! -path "*/refs/*" ! -path "*/disable/*" -name 'docker-compose.*.yml' -o -name '*.yaml.in' -o -name '*.yml.in') $(find $_SCRIPTPATH/systemd -type f -name '*.in') -s -v "$_SCRIPTPATH/env.json" -e "$_SCRIPTPATH/env.extra.json" -E "SERVER_PATH=$_SCRIPTPATH"
 }
 
 function gen_server_default_env () {
@@ -111,6 +111,99 @@ function store_gocrypt_password () {
   chmod 600 $_SCRIPTPATH/storage/.keys/$1.key
 }
 
+function server_authelia_user_add () {
+  ## Add a user to the Authelia users database (users_database.yml)
+  ##   Usage: server_authelia_user_add <username> [displayname] [groups,comma,separated]
+  ##    - Prompts for the password (hidden). Existing users are refused (edit manually)
+  ##    - The existing DB is backed up to config/.backup/ before any modification
+  ##    - Authelia watches the file (watch: true), so the change applies without a restart
+
+  # Vars
+  local _username=$1 _displayname=$2 _groups=$3 _password _hash _users_file
+  _users_file=$_SERVICESPATH/authelia/config/users_database.yml
+
+  # Sanity checks
+  if [ -z "$_username" ]; then
+    >&2 echo "usage: server_authelia_user_add <username> [displayname] [groups,comma,separated]"
+    return 1
+  fi
+  if [[ ! "$_username" =~ ^[a-zA-Z0-9_-]+$ ]]; then
+    >&2 echo "error: username may only contain letters, digits, '_' and '-'"
+    return 1
+  fi
+
+  # Ask for password
+  echo -n "password for $_username: "
+  read -s _password
+  echo
+  if [ -z "$_password" ]; then
+    >&2 echo "error: empty password"
+    return 1
+  fi
+
+  # Backup the existing database before touching it (git-ignored via **/.backup)
+  if [ -f "$_users_file" ]; then
+    local _backup_dir=$_SERVICESPATH/authelia/config/.backup
+    _check_create_dir "$_backup_dir"
+
+    cp -p "$_users_file" "$_backup_dir/users_database.yml.$(date +%Y%m%d-%H%M%S)"
+    echo "backup: $_backup_dir/users_database.yml.$(date +%Y%m%d-%H%M%S)"
+  fi
+
+  # Gen password hash using authelia CLI (docker)
+  if ! _raw=$(/usr/bin/docker run --rm authelia/authelia:${AUTHELIA_IMAGE_VERSION:-latest} \
+      authelia crypto hash generate argon2 --password "$_password"); then
+    >&2 echo "error: failed to generate password hash (docker/authelia CLI)"
+    return 1
+  fi
+
+  # CLI prints "Digest: $argon2id$...". Keep only the hash itself
+  _hash=$(printf '%s\n' "$_raw" | tail -n 1 | sed 's/^Digest: //')
+  if [[ ! "$_hash" =~ ^\$argon2 ]]; then
+    >&2 echo "error: unexpected hash output from authelia CLI: '$_hash'"
+    return 1
+  fi
+
+  # Update users file (w/ python)
+  python3 - "$_users_file" "$_username" "${_displayname:-$_username}" "$_groups" "$_hash" <<'PY'
+import os
+import sys
+
+import yaml
+
+users_file, username, displayname, groups_csv, password_hash = sys.argv[1:6]
+
+if os.path.exists(users_file):
+  try:
+    data = yaml.safe_load(open(users_file)) or {}
+  except yaml.YAMLError as exc:
+    sys.exit(f"error: cannot parse {users_file}: {exc}")
+
+  if not isinstance(data, dict) or not isinstance(data.get("users", {}), dict):
+    sys.exit(f"error: unexpected structure in {users_file}")
+else:
+  data = {"users": {}}
+
+users = data.setdefault("users", {})
+if username in users:
+  sys.exit(f"error: user '{username}' already exists in {users_file} (edit manually)")
+
+entry = {"displayname": displayname, "password": password_hash}
+groups = [g.strip() for g in groups_csv.split(",") if g.strip()] if groups_csv else []
+if groups:
+  entry["groups"] = groups
+
+users[username] = entry
+
+with open(users_file, "w") as fh:
+  yaml.safe_dump(data, fh, sort_keys=False, default_flow_style=False)
+os.chmod(users_file, 0o600)
+
+yaml.safe_load(open(users_file))
+print(f"user '{username}' written to {users_file} (groups: {groups or 'none'})")
+PY
+}
+
 
 ## Control functions
 function _check_create () {
@@ -133,8 +226,21 @@ function _chown_storage () {
 function _srv_docker_compose () {
   _curr_pwd=$(pwd)
   cd $_SCRIPTPATH
-	/usr/bin/docker compose -p ${SERVER_NAME:-server} $(find -maxdepth 3 -name 'docker-compose*.yml' -not -path "*/.*/*" ! -path "*/refs/*" ! -path "*/disable/*" -type f -printf '%p\t%d\n'  2>/dev/null | sort -n -k2 | cut -f 1 | awk '{print "-f "$0}') $@
+	/usr/bin/docker compose -p ${SERVER_NAME:-server} $(find -name 'docker-compose*.yml' -not -path "*/.*/*" ! -path "*/refs/*" ! -path "*/disable/*" -type f -printf '%p\t%d\n'  2>/dev/null | sort -n -k2 | cut -f 1 | awk '{print "-f "$0}') $@
   cd $_curr_pwd
+}
+
+
+function server_build () {
+  ## Build (or update) locally built images (e.g. nanobot, nanobot-sandbox)
+  ##   Usage: server_build [SERVICE...]
+  ##     - No args builds every service with a build section
+  _srv_docker_compose build --pull "$@"
+}
+
+function server_compose () {
+  ## Run one-off compose commands against the full stack
+  _srv_docker_compose "$@"
 }
 
 
@@ -176,6 +282,16 @@ function server_vikunja_chk_fix () {
   chown -R 1000 $_SERVICESPATH/vikunja/data/
 }
 
+function server_nanobot_chk_fix () {
+  # Create data/exchange directories if not exists
+  _check_create_dir $_SERVICESPATH/agents/kai/data/
+  _check_create_dir $_SERVICESPATH/agents/kai/exchange/
+
+  # Containers run as non-root UID/GID 1000
+  chown -R 1000:1000 $_SERVICESPATH/agents/kai/data/
+  chown -R 1000:1000 $_SERVICESPATH/agents/kai/exchange/
+}
+
 
 ## Server functions
 function server_up () {
@@ -195,6 +311,9 @@ function server_up () {
 
   # Check and set correct permissions for vikunja
   server_vikunja_chk_fix
+
+  # Check and set correct permissions for nanobot
+  server_nanobot_chk_fix
 
   # Start services
   _srv_docker_compose up -d

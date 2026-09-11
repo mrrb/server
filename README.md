@@ -15,6 +15,9 @@ Based on [tomMoulard / make-my-server](https://github.com/tomMoulard/make-my-ser
 * Init the server -> `source server.sh && server_init`
 * Start server -> `source server.sh && server_up`
 * Stop server -> `source server.sh && server_down`
+* Build (or update) locally built images -> `source server.sh && server_build`
+* Run one-off compose commands against the full stack -> `source server.sh && server_compose <args>`
+* Add a user to the Authelia users database -> `source server.sh && server_authelia_user_add <user> [displayname] [groups]`
 * Move permanent filestash files -> `source server.sh && server_perma_filestash`
 
 ## Configuration
@@ -68,7 +71,7 @@ If using Hetzner storage, the required box structure must be already created. Ch
     * Set, if needed, `STORAGE_UID` and `STORAGE_GID`.
     * Set, if needed, `PLATFORM_ARCH` (Ex. 'linux/amd64' or 'linux/arm64')
 1. Set up Authelia.
-    * Add a user: generate a password hash (`docker run --rm authelia/authelia:latest authelia crypto hash generate argon2 --password 'PASSWORD'`) and add it to `services/authelia/config/users_database.yml`.
+    * Add a user: `sudo bash -c 'source /srv/server/server.sh && server_authelia_user_add <username> [displayname] [groups,comma,separated]'` (creates/updates `services/authelia/config/users_database.yml`; or generate a hash manually with `docker run --rm authelia/authelia:latest authelia crypto hash generate argon2 --password 'PASSWORD'` and edit the file).
     * Set access control rules for each protected service in `services/authelia/config/configuration.yml` → `access_control.rules` (`bypass`, `one_factor` or `two_factor`).
     * To protect a service with Traefik, add `authelia@docker` to its router middlewares label.
 1. Create a new SSH key pair for the storage box.
