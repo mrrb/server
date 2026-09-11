@@ -4,8 +4,9 @@ networks:
       config:
         - subnet: 172.22.0.0/16
   server-metrics: {}
-  server-searxng: {}
+
   immich-internal: {}
+  searxng-internal: {}
   vikunja-internal: {}
   authelia-internal: {}
   dawarich-internal: {}

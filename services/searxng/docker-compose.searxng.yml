@@ -13,7 +13,7 @@ services:
 
     networks:
       - server
-      - server-searxng
+      - searxng-internal
 
     volumes:
       - './services/searxng/config/:/etc/searxng:rw'
@@ -43,7 +43,7 @@ services:
     container_name: searxng-valkey
 
     networks:
-      - server-searxng
+      - searxng-internal
 
     command: valkey-server --save "" --appendonly no
 
