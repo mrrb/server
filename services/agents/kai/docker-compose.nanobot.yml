@@ -4,7 +4,7 @@ services:
     build:
       context: https://github.com/HKUDS/nanobot.git#${NANOBOT_BUILD_REF:-v0.3.0}
       args:
-        NANOBOT_CHANNELS: ${NANOBOT_CHANNELS:-telegram,whatsapp,signal}
+        NANOBOT_CHANNELS: ${NANOBOT_CHANNELS:-telegram,whatsapp}
     restart: unless-stopped
     platform: ${PLATFORM_ARCH:-linux/amd64}
     container_name: nanobot-kai
@@ -72,7 +72,7 @@ services:
   nanobot-kai-sandbox:
     image: nanobot-sandbox-local:kai
     build:
-      context: ./services/sandbox
+      context: ./services/agents/sandbox
     restart: unless-stopped
     platform: ${PLATFORM_ARCH:-linux/amd64}
     container_name: nanobot-kai-sandbox
