@@ -4,7 +4,6 @@
       "workspace": "~/.nanobot/workspace",
       "modelPreset": "daily",
       "fallbackModels": ["coding"],
-      "model": null,
       "provider": "auto",
       "maxTokens": 8192,
       "contextWindowTokens": 200000,
@@ -162,7 +161,7 @@
       "enabled": true,
       "token": "${TELEGRAM_BOT_TOKEN}",
       "proxy": "",
-      "allowFrom": [],
+      "allowFrom": ["mrrb96"],
       "groupPolicy": "mention"
     },
     "websocket": {

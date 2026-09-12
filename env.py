@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 
+import sys
 import argparse
 
 if __name__ == "__main__":
@@ -55,21 +56,36 @@ if __name__ == "__main__":
   env_data = {}
   if args.set_value:
     try:
+      import json5 as json
+    except ImportError:
       import json
 
-      values_file = args.values_file
-      if not values_file:
-        values_file = './env.json'
+    values_file = args.values_file
+    if not values_file:
+      values_file = './env.json'
 
+    try:
       with open(values_file) as data:
         env_data = json.load(data)
+    except OSError:
+      sys.exit(f"error: cannot read values file: {values_file}")
+    except ValueError as exc:
+      sys.exit(f"error: invalid JSON in {values_file}: {exc}")
 
-      extra_values_file = args.extra_values_file
-      if extra_values_file:
+    extra_values_file = args.extra_values_file
+    if extra_values_file:
+      try:
         with open(extra_values_file) as data:
-          env_data = env_data | json.load(data)
-    except Exception:
-      pass
+          extra_data = json.load(data)
+      except FileNotFoundError:
+        # env.extra.json is untracked and optional (absent on non-server clones)
+        extra_data = {}
+      except OSError:
+        sys.exit(f"error: cannot read extra values file: {extra_values_file}")
+      except ValueError as exc:
+        sys.exit(f"error: invalid JSON in {extra_values_file}: {exc}")
+
+      env_data = env_data | extra_data
 
   extra_env_data = {}
   if args.extra_env_pair:
