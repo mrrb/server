@@ -6,6 +6,7 @@ import shutil
 import signal
 import uvicorn
 import subprocess
+import hmac
 import importlib.metadata
 
 from typing import Any
@@ -15,12 +16,12 @@ from starlette.responses import JSONResponse
 
 
 # Config
-TOKEN = os.environ.get("NANOBOT_SANDBOX_TOKEN", "")
+TOKEN = os.environ.get("SANDBOX_TOKEN", "")
 
-HOST = os.environ.get("NANOBOT_SANDBOX_HOST", "0.0.0.0")
-PORT = int(os.environ.get("NANOBOT_SANDBOX_PORT", "8000"))
+HOST = os.environ.get("SANDBOX_HOST", "0.0.0.0")
+PORT = int(os.environ.get("SANDBOX_PORT", "8000"))
 
-EXCHANGE_PATH = Path(os.environ.get("NANOBOT_SANDBOX_EXCHANGE", "/exchange"))
+EXCHANGE_PATH = Path(os.environ.get("SANDBOX_EXCHANGE", "/exchange"))
 RUNS_PATH = EXCHANGE_PATH / "runs"
 
 OUTPUT_CAP = 64 * 1024
@@ -368,7 +369,9 @@ class BearerAuthMiddleware:
           k.decode("latin-1").lower(): v.decode("latin-1")
           for k, v in scope.get("headers", [])
         }
-        if headers.get("authorization") != f"Bearer {self.token}":
+        expected = f"Bearer {self.token}".encode("utf-8")
+        provided = headers.get("authorization", "").encode("utf-8")
+        if not hmac.compare_digest(expected, provided):
           response = JSONResponse({"error": "unauthorized"}, status_code=401)
           await response(scope, receive, send)
           return
@@ -381,7 +384,7 @@ def main():
   RUNS_PATH.mkdir(parents=True, exist_ok=True)
 
   # MCP instance
-  mcp = FastMCP("nanobot-sandbox")
+  mcp = FastMCP("agent-sandbox")
 
   # Register tools
   mcp.tool(run_code)

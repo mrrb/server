@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-"""Smoke test for the nanobot-sandbox MCP server.
+"""Smoke test for the agent-sandbox MCP server.
 
 Verifies, against a RUNNING server:
   1. /health endpoint (no auth)
@@ -12,10 +12,10 @@ Verifies, against a RUNNING server:
 Usage:
   python smoke_test.py [URL] [TOKEN]
 
-Defaults: URL=http://127.0.0.1:8000, token from $NANOBOT_SANDBOX_TOKEN.
+Defaults: URL=http://127.0.0.1:8000, token from $SANDBOX_TOKEN.
 
 Inside the sandbox container (token already in env):
-  server_compose exec nanobot-sandbox python /app/smoke_test.py
+  server_compose exec agent-sandbox python /app/smoke_test.py
 """
 
 import asyncio
@@ -28,7 +28,7 @@ import urllib.request
 
 # Config
 BASE = (sys.argv[1] if len(sys.argv) > 1 else "http://127.0.0.1:8000").rstrip("/")
-TOKEN = sys.argv[2] if len(sys.argv) > 2 else os.environ.get("NANOBOT_SANDBOX_TOKEN", "")
+TOKEN = sys.argv[2] if len(sys.argv) > 2 else os.environ.get("SANDBOX_TOKEN", "")
 
 EXPECTED_TOOLS = {"run_code", "read_file", "list_packages", "cleanup"}
 
