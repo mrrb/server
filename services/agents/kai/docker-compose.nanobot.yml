@@ -5,6 +5,8 @@ services:
       context: https://github.com/HKUDS/nanobot.git#${NANOBOT_BUILD_REF:-v0.3.0}
       args:
         NANOBOT_CHANNELS: ${NANOBOT_CHANNELS:-telegram,whatsapp}
+    command:
+      - "gateway"
     restart: unless-stopped
     platform: ${PLATFORM_ARCH:-linux/amd64}
     container_name: nanobot-kai
