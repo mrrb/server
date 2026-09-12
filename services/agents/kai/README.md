@@ -23,17 +23,20 @@ sudo bash -c 'source /srv/server/server.sh && server_compose run --rm nanobot-ka
 
 State (config, workspace, skills, sessions, memory) lives in `services/agents/kai/data/` → mounted at `/home/nanobot/.nanobot` in-container.
 
-For Docker access to the WebUI, `config.json` must bind externally, the channel refuses to start on `0.0.0.0` without auth:
+For Docker access to the WebUI, `config.json` must bind externally, the channel refuses to start on `0.0.0.0` without auth. Merge into `config.json`:
 
 ```json
 {
-  "gateway": { "host": "0.0.0.0" },
+  "gateway": {
+    "host": "0.0.0.0"
+  },
   "channels": {
     "websocket": {
+      "enabled": true,
       "host": "0.0.0.0",
       "port": 8765,
-      "token": "<NANOBOT_WEB_TOKEN>",                       # AGENT_KAI_WEB_TOKEN     
-      "tokenIssueSecret": "<NANOBOT_WS_TOKEN_ISSUE_SECRET>" # AGENT_KAI_WS_TOKEN_ISSUE_SECRET
+      "token": "${NANOBOT_WEB_TOKEN}",
+      "tokenIssueSecret": "${NANOBOT_WS_TOKEN_ISSUE_SECRET}"
     }
   }
 }
@@ -43,31 +46,34 @@ Both secrets are defined in `env.extra.json`; Authelia protects the route in fro
 
 ## Recommended/example config
 
-EU-first model lineup (Mistral direct for daily work, OpenRouter + BYOK for the rest), SearXNG search, Voxtral voice transcription.
+Cost-first model lineup (Mistral small for daily work, big Mistral on demand, GLM/DeepSeek via OpenRouter for coding+lab, a free 550B for experiments), SearXNG search, Voxtral voice transcription.
 Merge into `config.json` after `onboard`, alongside the gateway/websocket block above:
 
 ```json
 {
   "providers": {
     "openrouter": { "apiKey": "${OPENROUTER_API_KEY}" },
-    "mistral":    { "apiKey": "${MISTRAL_API_KEY}" }
+    "mistral":    { "apiKey": "${MISTRAL_API_KEY}" },
+    "openai":     { "apiKey": "${MISTRAL_API_KEY}", "apiBase": "https://api.mistral.ai/v1" }
   },
   "modelPresets": {
-    "daily":  { "provider": "mistral",    "model": "mistral-medium-latest",  "maxTokens": 8192, "contextWindowTokens": 131072 },
-    "coding": { "provider": "mistral",    "model": "codestral-latest",       "maxTokens": 8192, "contextWindowTokens": 131072 },
-    "cheap":  { "provider": "openrouter", "model": "mistralai/mistral-small-latest" },
-    "lab":    { "provider": "openrouter", "model": "anthropic/claude-haiku-4.5" }
+    "daily":       { "provider": "mistral",    "model": "mistral-small-latest", "maxTokens": 8192, "contextWindowTokens": 262144 },
+    "daily-upper": { "provider": "mistral",    "model": "mistral-medium-latest", "maxTokens": 8192 },
+    "coding":      { "provider": "openrouter", "model": "z-ai/glm-5.3-flash" },
+    "lab":         { "provider": "openrouter", "model": "deepseek/deepseek-v4-flash" },
+    "free":        { "provider": "openrouter", "model": "nvidia/nemotron-3-ultra-550b-a55b:free" }
   },
   "agents": {
     "defaults": {
       "modelPreset": "daily",
-      "fallbackModels": ["cheap"]
+      "fallbackModels": ["coding"]
     }
   },
   "transcription": {
     "enabled": true,
     "provider": "openrouter",
-    "model": "mistralai/voxtral-small-15b"
+    "model": "mistralai/voxtral-small-15b",
+    "language": "es"
   },
   "tools": {
     "exec": { "enable": false },
@@ -106,6 +112,8 @@ Notes:
 * `ssrfWhitelist` covers the compose networks so the agent can reach the internal SearXNG (`http://searxng:8080`) and the code sandbox (`http://nanobot-kai-sandbox:8000`). SearXNG's limiter bypasses the whole internal compose subnet (`pass_ip = 172.22.0.0/16`); bot detection stays active for public traffic arriving via Traefik.
 * `tools.exec.enable: false` removes nanobot's own shell, all code execution goes through the sandbox sidecar (see below). Re-enable only if you accept an unsandboxed path.
 * Register Mistral as BYOK under OpenRouter → Integrations so `mistralai/*` slugs draw from your Mistral quota; other models use OpenRouter credits.
+* Transcription (Voxtral) runs through **OpenRouter** (`mistralai/voxtral-small-15b`), nanobot's transcription registry has no native `mistral` provider (upstream: [#1680](https://github.com/HKUDS/nanobot/pull/1680) closed unmerged, [#3513](https://github.com/HKUDS/nanobot/pull/3513) open). If OR rejects the model on its STT endpoint, fall back to `openai/whisper-1`. Billing goes through OpenRouter (BYOK for `mistralai/*` if configured).
+* A complete reference `config.json` (full schema dump with every provider/channel/tool section) lives in [example.config.json](example.config.json), it is the source of truth for this README's snippets.
 * Image generation stays disabled until you pick a backend, BFL Flux.2 Pro has no native provider here: check if OpenRouter lists an image-capable Flux model ID and drop it in, or front BFL's API with an OpenAI-Images-compatible gateway and use `provider: "custom"`.
 * WhatsApp is preinstalled in the image: link with `server_compose run --rm nanobot-kai channels login whatsapp`, then add a `channels.whatsapp.allowFrom` block.
 
@@ -179,3 +187,6 @@ The built image is tagged with the build ref (`nanobot-local:v0.3.0`).
 * Container runs as non-root UID/GID 1000.
 * Default capabilities are dropped except `CHOWN`/`SETUID`/`SETGID`, with `no-new-privileges`. If enabling `"tools.exec.sandbox": "bwrap"`, extra privileges are required.
 * Gateway health port `18790` stays internal (not published, not routed by Traefik).
+* Parked features (recipes ready, not deployed):
+  * [SIGNAL.md](SIGNAL.md), signal-cli sidecar, needs a real phone number
+  * [TTS.md](TTS.md), voice replies via Voxtral TTS, needs the small voice sidecar.
