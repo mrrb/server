@@ -1,16 +1,49 @@
 networks:
+  # Every network is pinned to an explicit, non-overlapping subnet.
+  # IPAM allocation table:
+  #   server               172.22.0.0/16   (SearXNG limiter pass_ip covers it)
+  #   agent-kai-internal   172.23.0.0/16   (offline sandbox network)
+  #   agent-kai-signal     172.24.0.0/16   (parked, see kai SIGNAL.md)
+  #   searxng-internal     172.25.1.0/24
+  #   vikunja-internal     172.25.2.0/24
+  #   authelia-internal    172.25.3.0/24
+  #   dawarich-internal    172.25.4.0/24
+  #   open-webui-internal  172.25.5.0/24
+  #   immich-internal      172.25.6.0/24
+  #   server-metrics       172.25.7.0/24
   server:
     ipam:
       config:
         - subnet: 172.22.0.0/16
-  server-metrics: {}
+  server-metrics:
+    ipam:
+      config:
+        - subnet: 172.25.7.0/24
 
-  immich-internal: {}
-  searxng-internal: {}
-  vikunja-internal: {}
-  authelia-internal: {}
-  dawarich-internal: {}
-  open-webui-internal: {}
+  immich-internal:
+    ipam:
+      config:
+        - subnet: 172.25.6.0/24
+  searxng-internal:
+    ipam:
+      config:
+        - subnet: 172.25.1.0/24
+  vikunja-internal:
+    ipam:
+      config:
+        - subnet: 172.25.2.0/24
+  authelia-internal:
+    ipam:
+      config:
+        - subnet: 172.25.3.0/24
+  dawarich-internal:
+    ipam:
+      config:
+        - subnet: 172.25.4.0/24
+  open-webui-internal:
+    ipam:
+      config:
+        - subnet: 172.25.5.0/24
   agent-kai-internal:
     internal: true
     ipam:
