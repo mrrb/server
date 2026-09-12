@@ -12,6 +12,8 @@
   * To be added
 * [Memos](memos)
   * To be added
+* [nanobot](agents/kai)
+  * [kai.agent.mrrb.eu](https://kai.agent.mrrb.eu)
 * [Nginx](nginx)
   * [Default](nginx/default)
     * [vps1.infra.mrrb.xyz](https://vps1.infra.mrrb.xyz)
