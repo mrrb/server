@@ -8,6 +8,9 @@
 **/.bck
 **/.backup
 
+*.bak
+*.bck
+
 # Environment
 .env
 env*.json
