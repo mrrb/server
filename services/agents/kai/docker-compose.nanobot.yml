@@ -14,9 +14,10 @@ services:
       OPENROUTER_API_KEY: ${AGENT_KAI_OPENROUTER_API_KEY:-}
       TELEGRAM_BOT_TOKEN: ${AGENT_KAI_TELEGRAM_BOT_TOKEN:-}
 
+      SANDBOX_TOKEN: ${AGENT_KAI_SANDBOX_TOKEN:-}
+
       NANOBOT_WEB_TOKEN: ${AGENT_KAI_WEB_TOKEN:-}
       NANOBOT_WS_TOKEN_ISSUE_SECRET: ${AGENT_KAI_WS_TOKEN_ISSUE_SECRET:-}
-      NANOBOT_SANDBOX_TOKEN: ${AGENT_KAI_SANDBOX_TOKEN:-}
 
       SEARXNG_BASE_URL: http://searxng:8080
 
@@ -78,7 +79,7 @@ services:
     container_name: nanobot-kai-sandbox
 
     environment:
-      NANOBOT_SANDBOX_TOKEN: ${AGENT_KAI_SANDBOX_TOKEN:-}
+      SANDBOX_TOKEN: ${AGENT_KAI_SANDBOX_TOKEN:-}
 
     healthcheck:
       test:
