@@ -168,7 +168,7 @@
       "enabled": true,
       "host": "0.0.0.0",
       "port": 8765,
-      "token": "${NANOBOT_WEB_TOKEN}",
+      "token": "${NANOBOT_WS_TOKEN}",
       "tokenIssueSecret": "${NANOBOT_WS_TOKEN_ISSUE_SECRET}"
     },
     "wecom": {

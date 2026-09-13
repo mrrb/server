@@ -11,7 +11,7 @@ Set in `env.extra.json`:
 - `AGENT_KAI_OPENROUTER_API_KEY` → Obtained from [OpenRouter](https://openrouter.ai/)
 - `AGENT_KAI_SANDBOX_TOKEN` → `openssl rand -hex 32`
 - `AGENT_KAI_TELEGRAM_BOT_TOKEN` → Obtained from [BotFather](https://t.me/BotFather)
-- `AGENT_KAI_WEB_TOKEN` → `openssl rand -hex 32`
+- `AGENT_KAI_WS_TOKEN` → `openssl rand -hex 32`
 - `AGENT_KAI_WS_TOKEN_ISSUE_SECRET` → `openssl rand -hex 32`
 
 ```sh
@@ -35,14 +35,14 @@ For Docker access to the WebUI, `config.json` must bind externally, the channel 
       "enabled": true,
       "host": "0.0.0.0",
       "port": 8765,
-      "token": "${NANOBOT_WEB_TOKEN}",
+      "token": "${NANOBOT_WS_TOKEN}",
       "tokenIssueSecret": "${NANOBOT_WS_TOKEN_ISSUE_SECRET}"
     }
   }
 }
 ```
 
-Both secrets are defined in `env.extra.json`; Authelia protects the route in front of this, so the token is a second layer.
+Secrets resolve from `env.extra.json` and have distinct roles (`AGENT_KAI_WS_TOKEN_ISSUE_SECRET` = the WebUI unlock page / token issuance · `AGENT_KAI_WS_TOKEN` = static token for direct WS/REST clients). Authelia protects the route in front of all this, so these are a second layer. If the WebUI unlock says "Invalid" after a rename, the container may hold stale env — recreate (`server_compose up -d --force-recreate nanobot-kai`), a plain restart keeps old env.
 
 ## Recommended/example config
 
