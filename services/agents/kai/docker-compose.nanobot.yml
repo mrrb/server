@@ -12,6 +12,7 @@ services:
     container_name: nanobot-kai
 
     environment:
+      TZ: '${TIMEZONE:-Europe/Madrid}'
       MISTRAL_API_KEY: ${AGENT_KAI_MISTRAL_API_KEY:-}
       OPENROUTER_API_KEY: ${AGENT_KAI_OPENROUTER_API_KEY:-}
       TELEGRAM_BOT_TOKEN: ${AGENT_KAI_TELEGRAM_BOT_TOKEN:-}
@@ -81,6 +82,7 @@ services:
     container_name: nanobot-kai-sandbox
 
     environment:
+      TZ: '${TIMEZONE:-Europe/Madrid}'
       SANDBOX_TOKEN: ${AGENT_KAI_SANDBOX_TOKEN:-}
 
     healthcheck:

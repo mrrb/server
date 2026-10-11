@@ -7,12 +7,12 @@ Ultra-lightweight, open-source, self-hosted personal AI agent framework in Pytho
 ## First run
 
 Set in `env.extra.json`:
-- `AGENT_KAI_MISTRAL_API_KEY` → Obtained from [Mistral AI](https://mistral.ai/)
-- `AGENT_KAI_OPENROUTER_API_KEY` → Obtained from [OpenRouter](https://openrouter.ai/)
-- `AGENT_KAI_SANDBOX_TOKEN` → `openssl rand -hex 32`
-- `AGENT_KAI_TELEGRAM_BOT_TOKEN` → Obtained from [BotFather](https://t.me/BotFather)
-- `AGENT_KAI_WS_TOKEN` → `openssl rand -hex 32`
-- `AGENT_KAI_WS_TOKEN_ISSUE_SECRET` → `openssl rand -hex 32`
+- `AGENT_KAI_MISTRAL_API_KEY` -> Obtained from [Mistral AI](https://mistral.ai/)
+- `AGENT_KAI_OPENROUTER_API_KEY` -> Obtained from [OpenRouter](https://openrouter.ai/)
+- `AGENT_KAI_SANDBOX_TOKEN` -> `openssl rand -hex 32`
+- `AGENT_KAI_TELEGRAM_BOT_TOKEN` -> Obtained from [BotFather](https://t.me/BotFather)
+- `AGENT_KAI_WS_TOKEN` -> `openssl rand -hex 32`
+- `AGENT_KAI_WS_TOKEN_ISSUE_SECRET` -> `openssl rand -hex 32`
 
 ```sh
 sudo bash -c 'source /srv/server/server.sh && server_build'                                 # Pre-build images
@@ -21,7 +21,7 @@ sudo bash -c 'source /srv/server/server.sh && server_compose run --rm nanobot-ka
 
 ## Configuration
 
-State (config, workspace, skills, sessions, memory) lives in `services/agents/kai/data/` → mounted at `/home/nanobot/.nanobot` in-container.
+State (config, workspace, skills, sessions, memory) lives in `services/agents/kai/data/` -> mounted at `/home/nanobot/.nanobot` in-container.
 
 For Docker access to the WebUI, `config.json` must bind externally, the channel refuses to start on `0.0.0.0` without auth. Merge into `config.json`:
 
@@ -111,7 +111,7 @@ Notes:
 * `${VAR}` placeholders resolve from the container environment (already wired in the compose file).
 * `ssrfWhitelist` covers the compose networks so the agent can reach the internal SearXNG (`http://searxng:8080`) and the code sandbox (`http://nanobot-kai-sandbox:8000`). SearXNG's limiter bypasses the whole internal compose subnet (`pass_ip = 172.22.0.0/16`); bot detection stays active for public traffic arriving via Traefik.
 * `tools.exec.enable: false` removes nanobot's own shell, all code execution goes through the sandbox sidecar (see below). Re-enable only if you accept an unsandboxed path.
-* Register Mistral as BYOK under OpenRouter → Integrations so `mistralai/*` slugs draw from your Mistral quota; other models use OpenRouter credits.
+* Register Mistral as BYOK under OpenRouter -> Integrations so `mistralai/*` slugs draw from your Mistral quota; other models use OpenRouter credits.
 * Transcription (Voxtral) runs through **OpenRouter** (`mistralai/voxtral-small-15b`), nanobot's transcription registry has no native `mistral` provider (upstream: [#1680](https://github.com/HKUDS/nanobot/pull/1680) closed unmerged, [#3513](https://github.com/HKUDS/nanobot/pull/3513) open). If OR rejects the model on its STT endpoint, fall back to `openai/whisper-1`. Billing goes through OpenRouter (BYOK for `mistralai/*` if configured).
 * A complete reference `config.json` (full schema dump with every provider/channel/tool section) lives in [example.config.json](example.config.json), it is the source of truth for this README's snippets.
 * Image generation stays disabled until you pick a backend, BFL Flux.2 Pro has no native provider here: check if OpenRouter lists an image-capable Flux model ID and drop it in, or front BFL's API with an OpenAI-Images-compatible gateway and use `provider: "custom"`.
@@ -139,7 +139,7 @@ Exchange layout (`services/agents/kai/exchange/`, UID/GID 1000, git-ignored):
 
 Usage patterns to teach the agent (it discovers them from the tool description, but prompt them too):
 
-* **Fetch → compute**: "download X to /exchange/downloads, then run_code to process it", untrusted code never makes network requests; every inbound byte flows through nanobot's guarded fetch.
+* **Fetch -> compute**: "download X to /exchange/downloads, then run_code to process it", untrusted code never makes network requests; every inbound byte flows through nanobot's guarded fetch.
 * **Missing library**: agent downloads the wheel into `/exchange/wheels/`, then the script does `pip install --no-index --find-links /exchange/wheels --target /tmp/libs <pkg>` and runs with `PYTHONPATH=/tmp/libs`. Common libs (pandas, openpyxl, Pillow, requests, matplotlib) are baked into the image.
 * **Artifacts**: scripts write results to `outputs/`; nanobot reads them from the volume and sends them back over chat.
 
@@ -180,7 +180,7 @@ Images are built from source (nanobot pinned to a release tag, sandbox from this
 source server.sh && gen_server_env && server_build nanobot-kai nanobot-kai-sandbox && server_up
 ```
 
-The built image is tagged with the build ref (`nanobot-local:v0.3.0`).
+The built image is tagged with the build ref (`nanobot-local:v0.3.5`).
 
 ## Notes
 

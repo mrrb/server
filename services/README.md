@@ -37,3 +37,5 @@
 * [WatchTower](watchtower)
 * [Whoami](whoami)
   * [whoami.vps1.infra.mrrb.xyz](https://whoami.vps1.infra.mrrb.xyz)
+* [xray](xray)
+  * [proxy.mrrb.eu](https://proxy.mrrb.eu)
