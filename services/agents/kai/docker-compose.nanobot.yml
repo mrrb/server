@@ -1,8 +1,8 @@
 services:
   nanobot-kai:
-    image: nanobot-local:${NANOBOT_BUILD_REF:-v0.3.0}
+    image: nanobot-local:${NANOBOT_BUILD_REF:-v0.3.5}
     build:
-      context: https://github.com/HKUDS/nanobot.git#${NANOBOT_BUILD_REF:-v0.3.0}
+      context: https://github.com/HKUDS/nanobot.git#${NANOBOT_BUILD_REF:-v0.3.5}
       args:
         NANOBOT_CHANNELS: ${NANOBOT_CHANNELS:-telegram,whatsapp}
     command:
