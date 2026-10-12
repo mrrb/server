@@ -1,19 +1,20 @@
-import os
-import time
-import uuid
 import base64
-import shutil
-import signal
-import uvicorn
-import subprocess
 import hmac
 import importlib.metadata
-
-from typing import Any
+import os
+import shutil
+import signal
+import string
+import subprocess
+import sys
+import time
+import uuid
 from pathlib import Path
+from typing import Any
+
+import uvicorn
 from fastmcp import FastMCP
 from starlette.responses import JSONResponse
-
 
 # Config
 TOKEN = os.environ.get("SANDBOX_TOKEN", "")
@@ -26,10 +27,13 @@ RUNS_PATH = EXCHANGE_PATH / "runs"
 
 OUTPUT_CAP = 64 * 1024
 READ_CAP = 256 * 1024
-MAX_TIMEOUT = 300
+TIMEOUT_TIERS = (60, 300, 900)  # run_code timeouts snap UP to one of these
 MAX_RUNS = 100
 RUN_TTL_S = 24 * 3600
 MIN_FREE_BYTES = 512 * 1024 * 1024
+
+TEMPLATES_PATH = Path("/app/templates")
+MAX_TEMPLATE_PARAMS = 32
 
 
 # Helpers
@@ -114,6 +118,16 @@ def _truncate(text: str | None, max_len: int = OUTPUT_CAP):
   return text, False
 
 
+def _snap_timeout(requested: int) -> int:
+  """Snap a requested timeout UP to the nearest tier (caps at the max tier)."""
+
+  for tier in TIMEOUT_TIERS:
+    if requested <= tier:
+      return tier
+
+  return TIMEOUT_TIERS[-1]
+
+
 def run_code(language: str, code: str, timeout_s: int = 60) -> dict[str, Any]:
   """Execute code inside the offline sandbox.
 
@@ -121,6 +135,7 @@ def run_code(language: str, code: str, timeout_s: int = 60) -> dict[str, Any]:
   - Input files must be placed in /exchange beforehand (e.g. /exchange/downloads).
   - No network access is available.
   - Supported languages: python, bash.
+  - timeout_s snaps UP to one of the tiers: 60, 300, 900 seconds.
   """
 
   # Sanitize inputs
@@ -138,7 +153,7 @@ def run_code(language: str, code: str, timeout_s: int = 60) -> dict[str, Any]:
     return {"error": reason}
 
   # Prepare run
-  timeout = min(max(int(timeout_s or 60), 1), MAX_TIMEOUT)
+  timeout = _snap_timeout(timeout_s or 60)
   _cleanup_old_runs()
 
   run_id = uuid.uuid4().hex[:12]
@@ -151,7 +166,7 @@ def run_code(language: str, code: str, timeout_s: int = 60) -> dict[str, Any]:
   script_path.write_text(code)
   script_path.chmod(0o700)
 
-  cmd = ("python3", script_name) if lang == "python" else ("bash", script_name)
+  cmd = (sys.executable, script_name) if lang == "python" else ("bash", script_name)
 
   started = time.monotonic()
   timed_out = False
@@ -315,6 +330,109 @@ def cleanup(wipe_runs: bool = False) -> dict[str, Any]:
   }
 
 
+def save_artifact(src: str, name: str) -> dict[str, Any]:
+  """Copy a file from /exchange into /exchange/outputs/ (the persistent artifact dir).
+
+  - Run directories (/exchange/runs/<id>) are recycled automatically, so anything
+    worth keeping must be saved here first.
+  - Typical sources: files produced in a run_dir (e.g. .../outputs/chart.png),
+    /exchange/downloads, or anywhere else inside /exchange.
+  - `name` is a plain filename (letters, digits, dash, underscore, dot); it is
+    sanitized and never allowed to escape the outputs directory.
+  """
+
+  # Check disk space
+  ok, reason = _disk_guard()
+  if not ok:
+    return {"error": reason}
+
+  # Validate source path
+  try:
+    source = Path(src).resolve()
+    source.relative_to(EXCHANGE_PATH.resolve())
+  except (ValueError, OSError):
+    return {"error": "src must be inside /exchange"}
+
+  if not source.is_file():
+    return {"error": f"not a file: {src}"}
+
+  # Sanitize the artifact name (plain filename only)
+  clean = Path(name or "").name.strip()
+  if not clean or set(clean) - set("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_."):
+    return {"error": "name must be a plain filename (letters, digits, '-', '_', '.')"}
+
+  if clean.startswith("."):
+    return {"error": "name must not start with '.'"}
+
+  # Copy to the persistent outputs dir
+  outputs_path = EXCHANGE_PATH / "outputs"
+  outputs_path.mkdir(parents=True, exist_ok=True)
+
+  target = outputs_path / clean
+  try:
+    shutil.copy2(source, target)
+  except OSError as exc:
+    return {"error": f"copy failed: {exc}"}
+
+  size = target.stat().st_size
+
+  return {"path": str(target), "size": size}
+
+
+def run_template(name: str, params: dict[str, str] | None = None) -> dict[str, Any]:
+  """Execute a baked template script from the sandbox image with {{param}} substitution.
+
+  - List available templates with read_file (they live in /app/templates inside the image).
+  - Every `{{param}}` placeholder in the template is replaced by the matching value
+    in `params`; every `{{param}}` used by the template MUST be provided.
+  - Execution reuses the run_code machinery: fresh run dir, timeout tiers, output caps.
+  - Params must be plain strings — they are inserted verbatim, so never put user
+    secrets into template params.
+  """
+
+  # Validate the template name (plain filename, .py only)
+  clean = Path(name or "").name.strip()
+
+  if not clean or set(clean) - set(string.ascii_letters + string.digits + "-_"):
+    return {"error": "name must be a plain filename (letters, digits, '-', '_')"}
+
+  template_path = TEMPLATES_PATH / f"{clean}.py"
+
+  try:
+    template = template_path.read_text(encoding="utf-8")
+  except OSError:
+    available = sorted(p.stem for p in TEMPLATES_PATH.glob("*.py"))
+    return {"error": f"unknown template: {name}", "available": available}
+
+  # Substitute {{param}} placeholders
+  params = params or {}
+
+  if not isinstance(params, dict) or len(params) > MAX_TEMPLATE_PARAMS:
+    return {"error": "params must be a small object of string values"}
+
+  placeholders = set()
+
+  for key, value in params.items():
+    if not isinstance(key, str) or not isinstance(value, str):
+      return {"error": "params values must be strings"}
+
+    placeholder = "{{" + key + "}}"
+    placeholders.add(placeholder)
+    template = template.replace(placeholder, value)
+
+  missing = {
+    m.split("}}")[0].strip()
+    for m in template.split("{{")[1:]
+    if "}}" in m
+  }
+
+  if missing:
+    return {"error": f"template has unbound placeholders: {sorted(missing)}", "provided": sorted(params)}
+
+  # Delegate to run_code (venv python, tiers, run dir, caps)
+  return run_code("python", template)
+
+
 def read_file(path: str) -> dict[str, Any]:
   """Read a text file from /exchange (small files only, binary not supported).
 
@@ -388,6 +506,8 @@ def main():
 
   # Register tools
   mcp.tool(run_code)
+  mcp.tool(run_template)
+  mcp.tool(save_artifact)
   mcp.tool(list_packages)
   mcp.tool(cleanup)
   mcp.tool(read_file)

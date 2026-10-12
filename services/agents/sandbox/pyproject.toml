@@ -1,0 +1,33 @@
+[project]
+name = "agent-sandbox"
+version = "0.2.0"
+description = "Offline MCP code-execution sandbox"
+requires-python = ">=3.14"
+
+dependencies = [
+    # Server
+    "fastmcp>=2.6,<5",
+    "uvicorn",
+    "httpx",
+
+    # Baked libraries
+    "json5",
+    "numpy",
+    "pandas",
+    "pillow",
+    "polars",
+    "seaborn",
+    "openpyxl",
+    "requests",
+    "matplotlib",
+    "pdfplumber",
+    "pypdf",
+    "qrcode[pil]",
+    "icalendar",
+    "pyyaml",
+]
+
+[dependency-groups]
+dev = [
+    "isort>=9.0.2",
+]

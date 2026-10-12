@@ -25,12 +25,15 @@ import sys
 import urllib.error
 import urllib.request
 
+from pathlib import Path
 
 # Config
 BASE = (sys.argv[1] if len(sys.argv) > 1 else "http://127.0.0.1:8000").rstrip("/")
 TOKEN = sys.argv[2] if len(sys.argv) > 2 else os.environ.get("SANDBOX_TOKEN", "")
 
-EXPECTED_TOOLS = {"run_code", "read_file", "list_packages", "cleanup"}
+EXPECTED_TOOLS = {
+  "run_code", "run_template", "save_artifact", "read_file", "list_packages", "cleanup"
+}
 
 
 # Globals
@@ -132,6 +135,75 @@ def main():
           "list_packages returns catalog", isinstance(count, int) and count > 0,
           f"{count} packages"
         )
+
+        # e2e: run_code writes a file, save_artifact publishes it
+        code = (
+          "from pathlib import Path\n"
+          "Path('/exchange/runs/../outputs/.smoketest').mkdir(parents=True, exist_ok=True)\n"
+          "p = Path('/exchange/runs/../outputs/.smoketest/hello.txt')\n"
+          "p.write_text('sandbox v0.2')\n"
+          "print(str(p))\n"
+        )
+        res = await client.call_tool("run_code", {"language": "python", "code": code})
+        data = res.data if hasattr(res, "data") else {}
+        run_ok = isinstance(data, dict) and data.get("exit_code") == 0
+        check("run_code writes artifact", run_ok, f"exit={data.get('exit_code') if isinstance(data, dict) else '?'}")
+
+        res = await client.call_tool(
+          "save_artifact",
+          {"src": "/exchange/outputs/.smoketest/hello.txt", "name": "smoketest-hello.txt"},
+        )
+        data = res.data if hasattr(res, "data") else {}
+        art_ok = isinstance(data, dict) and data.get("size") == len("sandbox v0.2")
+        check("save_artifact publishes to /exchange/outputs", art_ok, f"{data if isinstance(data, dict) else '?'}")
+
+        if art_ok:
+          res = await client.call_tool("read_file", {"path": data["path"]})
+          rdata = res.data if hasattr(res, "data") else {}
+          check(
+            "read_file reads published artifact",
+            isinstance(rdata, dict) and rdata.get("content") == "sandbox v0.2",
+            f"content={rdata.get('content', '?')[:40] if isinstance(rdata, dict) else '?'}",
+          )
+        else:
+          check("read_file reads published artifact", False, "artifact step failed")
+
+        res = await client.call_tool("run_template", {"name": "does-not-exist"})
+        data = res.data if hasattr(res, "data") else {}
+        ok = isinstance(data, dict) and "unknown template" in data.get("error", "")
+        check("run_template rejects unknown template", ok, f"{data.get('error', '?') if isinstance(data, dict) else '?'}")
+
+        # run_template e2e: pdf_to_text on the bundled example.pdf
+        pdf_src = Path("/exchange/tests/example.pdf")
+        pdf_out = "/exchange/outputs/.smoketest/example.txt"
+
+        if pdf_src.is_file():
+          res = await client.call_tool(
+            "run_template",
+            {
+              "name": "pdf_to_text",
+              "params": {"input_path": str(pdf_src), "output_path": pdf_out},
+            },
+          )
+          data = res.data if hasattr(res, "data") else {}
+          ok = isinstance(data, dict) and data.get("exit_code") == 0
+          check("run_template pdf_to_text executes", ok, f"exit={data.get('exit_code') if isinstance(data, dict) else '?'} stderr={str(data.get('stderr', ''))[:120] if isinstance(data, dict) else '?'}")
+
+          if ok:
+            res = await client.call_tool("read_file", {"path": pdf_out})
+            rdata = res.data if hasattr(res, "data") else {}
+            content = rdata.get("content", "") if isinstance(rdata, dict) else ""
+            pages = content.count("\f") + 1 if content else 0
+            has_text = "Sample PDF" in content and "ipsum" in content
+            check(
+              "pdf_to_text output has expected text (3 pages)",
+              pages == 3 and has_text,
+              f"pages={pages}, 'Sample PDF' present: {'Sample PDF' in content}",
+            )
+          else:
+            check("pdf_to_text output has expected text (3 pages)", False, "execution failed")
+        else:
+          check("run_template pdf_to_text executes", False, f"{pdf_src} not in /exchange/tests")
 
         res = await client.call_tool("cleanup", {"wipe_runs": False})
         data = res.data if hasattr(res, "data") else {}

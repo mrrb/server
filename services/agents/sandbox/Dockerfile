@@ -1,18 +1,23 @@
-FROM python:3.14-slim
+# Offline MCP code-execution sandbox
+
+FROM ghcr.io/astral-sh/uv:python3.14-bookworm-slim
 
 ENV PYTHONUNBUFFERED=1 \
-  PYTHONDONTWRITEBYTECODE=1
+  PYTHONDONTWRITEBYTECODE=1 \
+  UV_COMPILE_BYTECODE=1 \
+  MPLCONFIGDIR=/tmp/mpl
 
-COPY requirements.txt /app/requirements.txt
-RUN pip install --no-cache-dir -r /app/requirements.txt
+COPY pyproject.toml /app/
+WORKDIR /app
+RUN uv sync --no-dev --no-install-project
 
 RUN useradd --uid 1000 --create-home app
 
 COPY server.py /app/server.py
-COPY smoke_test.py /app/smoke_test.py
+COPY templates/ /app/templates/
 
 USER 1000
 
 EXPOSE 8000
 
-CMD ["python", "/app/server.py"]
+CMD ["/app/.venv/bin/python", "/app/server.py"]
