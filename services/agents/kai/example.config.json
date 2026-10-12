@@ -3,7 +3,7 @@
     "defaults": {
       "workspace": "~/.nanobot/workspace",
       "modelPreset": "daily",
-      "fallbackModels": ["coding"],
+      "fallbackModels": ["coding", "daily-upper"],
       "provider": "auto",
       "maxTokens": 8192,
       "contextWindowTokens": 200000,
@@ -16,10 +16,10 @@
       "providerRetryMode": "standard",
       "toolHintMaxLength": 40,
       "reasoningEffort": null,
-      "timezone": "UTC",
+      "timezone": "${TIMEZONE:-Europe/Madrid}",
       "botName": "nanobot",
       "botIcon": "🐈",
-      "unifiedSession": false,
+      "unifiedSession": true,
       "disabledSkills": [],
       "idleCompactAfterMinutes": 15,
       "consolidationRatio": 0.5,
@@ -688,7 +688,7 @@
   },
   "modelPresets": {
     "daily":       { "provider": "mistral",    "model": "mistral-small-latest", "maxTokens": 8192, "contextWindowTokens": 262144 },
-    "daily-upper": { "provider": "mistral",    "model": "mistral-medium-latest", "maxTokens": 8192 },
+    "daily-upper": { "provider": "mistral",    "model": "mistral-large-4", "maxTokens": 8192 },
     "coding":      { "provider": "openrouter", "model": "z-ai/glm-5.3-flash" },
     "lab":         { "provider": "openrouter", "model": "deepseek/deepseek-v4-flash" },
     "free":        { "provider": "openrouter", "model": "nvidia/nemotron-3-ultra-550b-a55b:free" }
