@@ -8,7 +8,13 @@
 **/.bck
 **/.backup
 
+*.bak
+*.bck
+
 # Environment
 .env
 env*.json
 !env.json
+
+# Python
+**/__pycache__/

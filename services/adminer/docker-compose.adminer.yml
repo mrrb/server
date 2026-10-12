@@ -7,8 +7,8 @@ services:
 
     networks:
       - server
-      - server-searxng
       - immich-internal
+      - searxng-internal
       - vikunja-internal
       - authelia-internal
       - dawarich-internal

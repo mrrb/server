@@ -33,6 +33,14 @@ access_control:
     - domain: '{{ env "X_AUTHELIA_HOST" }}'
       policy: bypass
 
+    ## Agent Kai (nanobot dashboard [WebUI])
+    #  Users must be in the `agents` or `agent-kai` groups
+    - domain: '{{ env "X_AGENT_KAI_HOST" }}'
+      policy: one_factor
+      subject:
+        - 'group:agents'
+        - 'group:agent-kai'
+
     ## Example: require one-factor for a service
     # - domain: 'myservice.{{ env "X_AUTHELIA_SESSION_DOMAIN" }}'
     #   policy: one_factor

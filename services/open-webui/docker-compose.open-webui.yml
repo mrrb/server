@@ -27,9 +27,8 @@ services:
         condition: service_healthy
 
     networks:
-      server:
-        ipv4_address: ${_OPEN_WEBUI_NET_IP:-172.22.0.100}
-      open-webui-internal:
+      - server
+      - open-webui-internal
 
     volumes:
       - './services/open-webui/data/:/app/backend/data'

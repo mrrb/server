@@ -5,13 +5,6 @@ services:
     platform: ${PLATFORM_ARCH:-linux/amd64}
     container_name: fireflyiii
 
-    healthcheck:
-      test: ['CMD', 'curl', '-f', 'http://localhost:8080']
-      start_period: 60s
-      interval: 30s
-      timeout: 60s
-      retries: 5
-
     environment:
       ## App config
       APP_URL: 'https://${FIREFLYIII_HOST:-firefly.${SITE:-localhost}}'
@@ -42,6 +35,17 @@ services:
       ENABLE_EXTERNAL_RATES: ${FIREFLYIII_ENABLE_EXTERNAL_RATES:-true}
       MAP_DEFAULT_LAT: ${FIREFLYIII_MAP_DEFAULT_LAT:-40.41663}
       MAP_DEFAULT_LONG: ${FIREFLYIII_MAP_DEFAULT_LONG:--3.7038}
+
+    healthcheck:
+      test:
+        - 'CMD'
+        - 'curl'
+        - '-f'
+        - 'http://localhost:8080'
+      start_period: 60s
+      interval: 30s
+      timeout: 60s
+      retries: 5
 
     networks:
       - server
