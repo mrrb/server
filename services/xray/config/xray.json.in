@@ -33,6 +33,16 @@
   "routing": {
     "domainStrategy": "AsIs",
     "rules": [
+      // Rules are evaluated in order; first match wins. `domain:` matches the
+      // domain and all its subdomains. IP rules match the resolved destination.
+      //
+      // Examples to allow ONLY certain domains, insert a domain rule first and
+      // change the catch-all below to "block":
+      //   { "type": "field", "domain": ["domain:openrouter.ai", "domain:mistral.ai"], "outboundTag": "direct" }
+      //
+      // Examples to block specific destinations, insert before the catch-all:
+      //   { "type": "field", "domain": ["domain:tracker.example.com"], "outboundTag": "block" }
+      //   { "type": "field", "ip": ["203.0.113.0/24"], "outboundTag": "block" }
       {
         "type": "field",
         "ip": ["geoip:private"],
