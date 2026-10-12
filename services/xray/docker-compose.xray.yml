@@ -1,0 +1,51 @@
+services:
+  xray:
+    # Image
+    image: ghcr.io/xtls/xray-core:${XRAY_IMAGE_VERSION:-latest}
+    restart: unless-stopped
+    platform: ${PLATFORM_ARCH:-linux/amd64}
+    container_name: xray
+
+    command:
+      - 'run'
+      - '-c'
+      - '/etc/xray/config.json'
+
+    # Resources and security
+    cpus: '0.5'
+    mem_limit: 128m
+    read_only: true
+    pids_limit: 64
+
+    tmpfs:
+      - /tmp:size=16m
+
+    cap_drop:
+      - ALL
+
+    security_opt:
+      - no-new-privileges:true
+
+    # Network and volumes
+    networks:
+      - server
+
+    volumes:
+      - './services/xray/config/xray.json:/etc/xray/config.json:ro'
+
+    # Others
+    logging:
+      driver: json-file
+      options:
+        max-size: '10m'
+        max-file: '3'
+
+    labels:
+      ## Traefik
+      traefik.enable: true
+
+      traefik.tcp.services.xray.loadbalancer.server.port: 8080
+
+      traefik.tcp.routers.xray.entrypoints: websecure
+      traefik.tcp.routers.xray.tls.certresolver: letsEncrypt
+      traefik.tcp.routers.xray.rule: HostSNI(`${XRAY_HOST:-proxy.${SITE:-localhost}}`)

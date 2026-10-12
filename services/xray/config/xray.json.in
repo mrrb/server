@@ -1,0 +1,48 @@
+{
+  "log": {
+    "loglevel": "warning",
+    "access": "none"
+  },
+  "inbounds": [
+    {
+      "tag": "webproxy-in",
+      "listen": "0.0.0.0",
+      "port": 8080,
+      "protocol": "http",
+      "settings": {
+        "accounts": [
+          {
+            "user": "${XRAY_USER}",
+            "pass": "${XRAY_PASSWORD}"
+          }
+        ],
+        "allowTransparent": false
+      }
+    }
+  ],
+  "outbounds": [
+    {
+      "tag": "direct",
+      "protocol": "freedom"
+    },
+    {
+      "tag": "block",
+      "protocol": "blackhole"
+    }
+  ],
+  "routing": {
+    "domainStrategy": "AsIs",
+    "rules": [
+      {
+        "type": "field",
+        "ip": ["geoip:private"],
+        "outboundTag": "block"
+      },
+      {
+        "type": "field",
+        "inboundTag": ["webproxy-in"],
+        "outboundTag": "direct"
+      }
+    ]
+  }
+}
