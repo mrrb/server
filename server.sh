@@ -89,6 +89,13 @@ function gen_searxng_config () {
   done
 }
 
+function gen_xray_config () {
+  for i in $(find $_SERVICESPATH/xray/config -type f ! -path "*/refs/*" -name '*.in')
+  do
+    _render_template "$i" "${i::-3}"
+  done
+}
+
 
 ## Crypt functions
 function sha256_passwd () {
@@ -364,6 +371,7 @@ function server_init () {
   gen_homepage_config
   gen_server_services
   gen_searxng_config
+  gen_xray_config
 
   server_install_services
 
