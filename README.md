@@ -71,7 +71,7 @@ If using Hetzner storage, the required box structure must be already created. Ch
     * Set, if needed, `STORAGE_UID` and `STORAGE_GID`.
     * Set, if needed, `PLATFORM_ARCH` (Ex. 'linux/amd64' or 'linux/arm64')
 1. Agents setup.
-    * **Kai (nanobot)**. Follow the steps in [services/agents/kai/README.md](services/agents/kai/README.md). Fill the `AGENT_KAI_*` secrets in `env.extra.json`, pre-build the images (`server_build`), run the onboarding wizard.
+    * **Kai (nanobot)**. Follow the steps in [services/agents/kai/README.md](services/agents/kai/README.md). Fill the `AGENT_KAI_*` secrets in `env.extra.json`, pre-build the images (`server_build`), run the onboarding wizard, tweak agent files.
 1. Set up Authelia.
     * Add a user: `sudo bash -c 'source /srv/server/server.sh && server_authelia_user_add <username> [displayname] [groups,comma,separated]'` (creates/updates `services/authelia/config/users_database.yml`; or generate a hash manually with `docker run --rm authelia/authelia:latest authelia crypto hash generate argon2 --password 'PASSWORD'` and edit the file).
     * Set access control rules for each protected service in `services/authelia/config/configuration.yml` -> `access_control.rules` (`bypass`, `one_factor` or `two_factor`).

@@ -43,6 +43,19 @@ Update `NANOBOT_BUILD_REF` in `env.json`, then:
 source server.sh && gen_server_env && server_build nanobot-kai nanobot-kai-sandbox && server_up
 ```
 
+## Instance-only tweaks (reapply after data/ wipe or fresh onboard)
+
+Runtime state in `data/` is not tracked by git — tweaks made there must be reapplied manually if the directory is reset:
+
+* `data/workspace/SOUL.md`: append the section below so the agent never invents dates/times (nanobot (up to v0.3.5) never injects the current time into the prompt, so the model estimates otherwise; its `timezone` config param is parsed but unused):
+
+```markdown
+## Date and time
+Never estimate or recall date/time. Always measure it first with run_code:
+    import time; print(time.strftime("%Y-%m-%d %H:%M %Z"))
+and report the measured value.
+```
+
 ## Notes
 
 * Container runs as non-root UID/GID 1000, capabilities dropped except `CHOWN`/`SETUID`/`SETGID`, `no-new-privileges`.
